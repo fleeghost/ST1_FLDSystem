@@ -1,0 +1,22 @@
+{
+  "name": "st1_fldsystem",
+  "version": "1.0.0",
+  "description": "福路德信息化平台",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fleeghost/ST1_FLDSystem.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fleeghost/ST1_FLDSystem/issues"
+  },
+  "homepage": "https://github.com/fleeghost/ST1_FLDSystem#readme",
+  "devDependencies": {
+    "electron": "^4.1.4"
+  }
+}

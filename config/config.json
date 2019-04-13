@@ -1,0 +1,17 @@
+{
+    "Db_Connection":{
+        "host":"47.110.58.236",
+        "dialect":"mssql",
+        "port":1433,
+        "pool":{
+            "max": 5, 
+            "min": 0, 
+            "idle": 10000
+        },
+        "dbName":"ST1_FLD",
+        "dbAccount":"hzyc",
+        "dbPassword":"hzyc!@#"
+    }
+
+    
+}
