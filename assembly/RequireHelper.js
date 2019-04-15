@@ -11,6 +11,7 @@
             case 'urlRewriter':return require(basePath+'UrlRewriter.js');
             case 'cryptoHelper':return require(basePath+'CryptoHelper.js');
             case 'DbHelper':return require(basePath+'DbHelper.js');
+            case 'httpHelper':return require(basePath+'HttpHelper.js');
         }
     }
     module.exports.SelfService=(moduleName,serviceName)=>{
