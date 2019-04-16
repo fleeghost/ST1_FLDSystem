@@ -30,14 +30,15 @@ function createWindow () {
     center:true,
     minWidth:1366,
     minHeight:768,
-    autoHideMenuBar:true
+    autoHideMenuBar:true,
+    transparent:true
   })
 
 
 
   // and load the index.html of the app.
   win.loadURL(url.format({
-    pathname: '/app/index.html',
+    pathname: '/app/testlogin.html',
     protocol: 'file:',
     slashes: true
   }))
