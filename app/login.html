@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>福路德-登录</title>
+    <link rel="stylesheet" type="text/css" href="assets/element-ui/theme-chalk/index.css" />
+    <link rel="stylesheet" type="text/css" href="assets/base.css" />
+    <script type="text/javascript" src="assets/vue.js"></script>
+    <script type="text/javascript" src="assets/element-ui/index.js"></script>
+    <script type="text/javascript" src="assets/vue-element-bigdata-table.min.js"></script>
+    <style>
+        .full {
+            width: 100%;
+            height: 100%;
+            padding: 8px;
+        }
+
+        .login-bg {
+            background-image: url(image/login-bg.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            width: 100%;
+            height: 100%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+            border-radius: 4px;
+        }
+
+        .login-head {
+            padding: 15px;
+            overflow: hidden;
+            -webkit-app-region: drag;
+        }
+
+        .login-head .logo {
+            float: left;
+        }
+
+        .login-head .logo img {
+            float: left;
+        }
+
+        .login-head .system-operation {
+            float: right;
+            font-size: 20px;
+            color: #fff;
+            -webkit-app-region: no-drag;
+        }
+
+        .login-head .system-operation i {
+            cursor: pointer;
+            vertical-align: top;
+        }
+
+        .login-head .system-operation i:hover {
+            color: #c30303;
+        }
+
+        .login-title {
+            font-weight: 500;
+            font-size: 18px;
+            color: #fff;
+            text-align: center;
+            padding-bottom: 15px;
+            -webkit-user-select: none;
+        }
+
+        .login-title span {
+            display: inline-block;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #b91727;
+        }
+
+        .login-form {
+            padding: 0 60px;
+        }
+
+        .el-form--label-top .el-form-item__label {
+            padding: 0 0 0 15px;
+            -webkit-user-select: none;
+        }
+
+        .el-input__inner {
+            background: rgba(255, 255, 255, .1);
+            border: 0;
+            border-radius: 16px;
+        }
+
+        .el-form-item--mini.el-form-item,
+        .el-form-item--small.el-form-item {
+            margin-bottom: 6px;
+        }
+
+        .el-checkbox {
+            padding-left: 15px;
+        }
+
+        .login-form .forget {
+            color: #606266;
+            float: right;
+            font-size: 14px;
+            cursor: pointer;
+            -webkit-user-select: none;
+        }
+
+        .login-form .forget:active {
+            color: #404143;
+        }
+
+        .login-form .line {
+            border-top: 2px solid #1e2227;
+            margin-top: 20px;
+            color: #606266;
+            line-height: 38px;
+            text-align: center;
+            font-size: 12px;
+            -webkit-user-select: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: #b91727;
+            border-color: #b91727;
+        }
+
+        .login-btn:hover,
+        .login-btn:focus {
+            width: 100%;
+            background: #9f1522;
+            border-color: #9f1522;
+        }
+
+        .login-btn:active {
+            width: 100%;
+            background: #89111d;
+            border-color: #89111d;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <el-collapse-transition>
+            <div v-show="showAnimate" class="full">
+                <div class="login-bg">
+                    <div class="login-head">
+                        <div class="logo">
+                            <img src="image/logo.png">
+                        </div>
+                        <div class="system-operation">
+                            <i class="el-icon-minus"></i>
+                            <i class="el-icon-close"></i>
+                        </div>
+                    </div>
+                    <div class="login-title">
+                        <span>福路德信息化平台</span>
+                    </div>
+                    <div class="login-form">
+                        <el-form label-position="top" :model="form" size="small">
+                            <el-form-item label="账套">
+                                <el-input v-model="form.name"></el-input>
+                            </el-form-item>
+                            <el-form-item label="账号">
+                                <el-input v-model="form.region"></el-input>
+                            </el-form-item>
+                            <el-row>
+                                <el-col :span="11">
+                                    <el-form-item label="密码">
+                                        <el-input v-model="form.type"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="11" push="2">
+                                    <el-form-item label="验证码">
+                                        <el-input v-model="form.type"></el-input>
+                                        <!-- <img class="code" src="image/code.jpg" /> -->
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+
+                            <el-form-item>
+                                <el-checkbox v-model="checked">记住密码</el-checkbox>
+                                <span class="forget">忘记密码?</span>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="danger" round class="login-btn" @click="login">立即创建</el-button>
+                            </el-form-item>
+                        </el-form>
+                        <div class="line">汇智云创技术支持</div>
+                    </div>
+                </div>
+            </div>
+        </el-collapse-transition>
+
+
+    </div>
+</body>
+<script>
+    const vm = new Vue({
+        el: '#app',
+        data: {
+            showAnimate:false,
+            form: {
+                name: '',
+                region: '',
+                type: '',
+            }
+        },
+        created: function () {
+            let that = this;
+            setTimeout(function(){
+                that.showAnimate = true;
+            },500)
+            
+        },
+        methods: {
+            login() {
+                let that = this;
+                that.showAnimate = false;
+            }
+        }
+    })
+</script>
+
+</html>
