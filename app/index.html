@@ -1,28 +1,420 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <meta charset="utf-8" />
-    <title>index</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>福路德-主页</title>
+    <link rel="stylesheet" type="text/css" href="assets/element-ui/theme-chalk/index.css" />
+    <link rel="stylesheet" type="text/css" href="assets/base.css" />
+    <script type="text/javascript" src="assets/vue.js"></script>
+    <script type="text/javascript" src="assets/element-ui/index.js"></script>
+    <script type="text/javascript" src="assets/vue-element-bigdata-table.min.js"></script>
+    <style>
+        .el-container {
+            height: 100%;
+            font-size: 12px;
+        }
+
+        .el-container .el-header {
+            height: auto !important;
+            padding: 0 !important;
+        }
+
+        .el-container .el-header .row-1 {
+            background: #b91727;
+            padding: 0 20px;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        .el-container .el-header .row-1 .logo {
+            float: left;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 5px 0;
+        }
+
+        .el-container .el-header .row-1 .logo img,
+        .el-container .el-header .row-1 .logo span {
+            vertical-align: middle;
+        }
+
+        .el-container .el-header .row-1 .system-operation {
+            float: right;
+            height: 40px;
+            line-height: 40px;
+            overflow: hidden;
+            font-size: 20px;
+        }
+
+        .el-container .el-header .row-1 .system-operation>div {
+            cursor: pointer;
+            vertical-align: top;
+            height: 40px;
+            padding: 0 8px;
+            float: left;
+        }
+
+        .el-container .el-header .row-1 .system-operation>div:hover{
+            background: rgba(255,255,255,.2);
+        }
+
+        .el-container .el-header .row-1 .system-operation .img img {
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+            margin-top: 5px;
+        }
+
+        .el-container .el-header .row-2 {
+            background: #1e2226;
+            color: #fff;
+            position: relative;
+        }
+
+        /* .el-container .el-header .row-2 .tabs-padding{
+            padding-right:160px;
+        } */
+        /* .el-container .el-header .row-2 .calendar{
+            position: absolute;
+            width: 160px;
+            right: 0;
+            top: 0;
+            height: 100%;
+            background: #fff;
+        } */
+        .el-container .el-header .el-tabs--border-card {
+            background: transparent;
+            border: 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+
+
+
+        .el-container .el-header .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(.is-disabled):hover {
+            background: #404346;
+            border-right-color: #404346;
+            border-left-color: #404346;
+            color: #fff;
+        }
+
+        .el-container .el-header .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
+            background: #404346;
+            border-right-color: #404346;
+            border-left-color: #404346;
+            color: #fff;
+        }
+
+        .el-container .el-header .el-tabs__content {
+            display: none
+        }
+
+        .el-container .el-aside {
+            background: #1e2226;
+            width: auto !important;
+        }
+
+        .el-container .el-aside .tree-search {
+            padding: 5px 10px 5px 20px;
+            height: 38px;
+            font-size: 13px;
+        }
+
+        .el-container .el-aside .tree-search button {
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .el-container .el-aside .tree-search .el-button--text{
+            color:#b9b4b4;
+        }
+
+        .el-container .el-aside .tree-search .search-text {
+            display: inline-block;
+            height: 28px;
+            line-height: 28px;
+            margin-left: 10px;
+        }
+
+        .el-container .el-aside .tree-search .search-text input {
+            border: 1px solid #525558;
+            margin: 0;
+            padding: 0 10px 0;
+            width: 100px;
+            height: 22px;
+            border-radius: 11px;
+            background: #35393c;
+            outline: none;
+            color: #fff;
+        }
+
+        .el-container .el-aside .tree-search .el-input-group__append {
+            padding: 0 5px;
+            cursor: pointer;
+        }
+
+        .el-container .el-aside .tree-list {
+            height: calc(100% - 38px);
+            overflow-y: auto;
+        }
+
+        .bg-opacity {
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .el-menu--vertical {
+            background: rgba(30, 34, 38, .97);
+        }
+
+        .el-menu {
+            border: 0;
+        }
+
+        .el-submenu__title {
+            height: 36px;
+            line-height: 36px;
+            font-size: 13px;
+        }
+
+        .el-menu-item {
+            height: 36px;
+            line-height: 36px;
+            font-size: 13px;
+        }
+
+        .el-submenu .el-menu-item {
+            height: 36px;
+            line-height: 36px;
+        }
+
+        .el-menu--popup {
+            padding: 0;
+            margin: 0;
+        }
+
+        .el-submenu [class^=el-icon-] {
+            font-size: 16px;
+        }
+
+        .el-menu-item [class^=el-icon-] {
+            font-size: 16px;
+        }
+
+        .el-submenu__title:focus,
+        .el-submenu__title:hover,
+        .el-menu-item:focus,
+        .el-menu-item:hover {
+            background-color: rgba(116, 14, 24, .3) !important;
+        }
+
+        .el-menu-item.is-active {
+            background-color: rgba(116, 14, 24, .3) !important;
+        }
+
+        .el-menu-vertical-demo:not(.el-menu--collapse) {
+            width: 260px;
+            min-height: 400px;
+        }
+
+        .el-container .el-main {
+            padding: 0;
+            position: relative;
+        }
+
+        .el-container .el-main .tabs {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+        }
+
+        .el-container .el-main .el-tabs--border-card {
+            background: transparent;
+            border: 0;
+            height: 100%;
+        }
+
+        .el-container .el-main .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(.is-disabled):hover {
+            background: #acb0b3;
+            border-right-color: #acb0b3;
+            border-left-color: #acb0b3;
+            color: #fff;
+        }
+
+        .el-container .el-main .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
+            background: #acb0b3;
+            border-right-color: #acb0b3;
+            border-left-color: #acb0b3;
+            color: #fff;
+        }
+
+
+
+        .el-container .el-main .el-tabs__content {
+            height: calc(100% - 29px);
+            padding: 0;
+            background: #e7eded;
+        }
+
+        .el-container .el-main .frame {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .el-container .el-footer {
+            height: 26px !important;
+            line-height: 26px;
+            text-align: center;
+            background: #000000;
+            color: #808080;
+        }
+    </style>
 </head>
+
 <body>
+    <div id="app">
+        <el-container v-cloak>
+            <el-header>
+                <div class="row-1">
+                    <div class="logo">
+                        <img src="image/logo.png" />
+                        <span>福路德信息化平台</span>
+                    </div>
+                    <div class="system-operation">
+                        <div>
+                            <i class="el-icon-bell"></i>
+                        </div>
+                        <div style="font-size:12px;">
+                            <span>金俊杰</span>
+                            <i class="el-icon-arrow-down"></i>
+                        </div>
+                        <div class="img">
+                            <img src="image/header.png" />
+                        </div>
+                        <div style="font-size:12px;">
+                            <i class="el-icon-minus"></i>
+                        </div>
+                        <div style="font-size:12px;">
+                            <span>退出</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-2">
+                    <el-tabs class="tabs-padding" type="border-card" size="mini">
+                        <el-tab-pane label="用户管理"></el-tab-pane>
+                        <el-tab-pane label="配置管理"></el-tab-pane>
+                        <el-tab-pane label="角色管理"></el-tab-pane>
+                        <el-tab-pane label="定时任务补偿"></el-tab-pane>
+                    </el-tabs>
+                    <!-- <div class="calendar"></div> -->
+                </div>
+            </el-header>
+            <el-container>
+                <el-aside>
+                    <div class="tree-search">
+                        <el-button type="text" icon="el-icon-menu" size="mini" @click="toggleTree()"></el-button>
+                        <el-button type="text" icon="el-icon-d-caret" size="mini" v-show="showIcon">伸缩</el-button>
+                        <div class="search-text" v-show="showIcon">
+                            <!-- <el-input placeholder="请输入内容" size="mini">
+                                <template slot="append"><i class="el-icon-search"></i></template>
+                            </el-input> -->
+                            <input type="text" />
+                            <el-button type="text" icon="el-icon-search" size="mini"></el-button>
+                        </div>
+                    </div>
+                    <div class="tree-list">
+                        <el-menu size="mini" background-color="transparent" text-color="#fff" active-text-color="#fff"
+                            :collapse="isCollapse" class="el-menu-vertical-demo">
+                            <el-submenu index="1">
+                                <template slot="title">
+                                    <i class="el-icon-location"></i>
+                                    <span>导航一</span>
+                                </template>
+                                <div class="bg-opacity">
+                                    <el-menu-item index="1-1">选项1</el-menu-item>
+                                    <el-menu-item index="1-2">选项2</el-menu-item>
+                                    <el-submenu index="1-4">
+                                        <template slot="title">选项4</template>
+                                        <el-menu-item index="1-4-1">选项1</el-menu-item>
+                                    </el-submenu>
+                                </div>
 
+                            </el-submenu>
+                            <el-menu-item index="2">
+                                <i class="el-icon-menu"></i>
+                                <span slot="title">导航二</span>
+                            </el-menu-item>
+                            <el-menu-item index="3">
+                                <i class="el-icon-setting"></i>
+                                <span slot="title">导航三</span>
+                            </el-menu-item>
+                        </el-menu>
+                    </div>
+                </el-aside>
+                <el-container>
+                    <el-main>
+                        <div class="tabs">
+                            <el-tabs type="border-card" size="mini" closable>
+                                <el-tab-pane label="用户管理">
+                                    <div class="frame">
+                                        <iframe frameborder="0" scrolling="no" width="100%" height="100%"></iframe>
+                                    </div>
+                                </el-tab-pane>
+                                <el-tab-pane label="配置管理">
+                                    <div class="frame">
+                                        <iframe frameborder="0" scrolling="no" width="100%" height="100%"></iframe>
+                                    </div>
+                                </el-tab-pane>
+                                <el-tab-pane label="角色管理">
+                                    <div class="frame">
+                                        <iframe frameborder="0" scrolling="no" width="100%" height="100%"></iframe>
+                                    </div>
+                                </el-tab-pane>
+                                <el-tab-pane label="定时任务补偿">
+                                    <div class="frame">
+                                        <iframe frameborder="0" scrolling="no" width="100%" height="100%"></iframe>
+                                    </div>
+                                </el-tab-pane>
+                            </el-tabs>
+                        </div>
+
+                    </el-main>
+                    <el-footer>福路德</el-footer>
+                </el-container>
+            </el-container>
+        </el-container>
+    </div>
 </body>
-</html>
 <script>
-    const { ipcRenderer } = require('electron')
-    const {SystemModules,SelfModules} = require(ipcRenderer.sendSync('getRootPath') +'/assembly/RequireHelper')
-    const {post} = SelfModules('httpHelper')
-    post({
-        host: '47.110.58.236',
-        port:9981,
-        path:'/Frame/SqlData'
-    },{
-        cmdname:'PC_Login',
-        P_Name:'admin',
-        P_Password:'123456'
-    },(result)=>{
-        alert(result);
-    });
+    const vm = new Vue({
+        el: '#app',
+        data: {
+            showIcon:true,
+            isCollapse: false
+        },
+        created: function () {
 
 
+        },
+        methods: {
+            toggleTree() {
+                var that = this;
+                that.showIcon = !that.showIcon;
+                setTimeout(function(){
+                    that.isCollapse = !that.showIcon;
+                },100)
+                
+            }
+        }
+    })
 </script>
+
+</html>

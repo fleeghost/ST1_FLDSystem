@@ -38,8 +38,14 @@ function createWindow () {
 
 
   // and load the index.html of the app.
+  // win.loadURL(url.format({
+  //   pathname: '/app/login.html',
+  //   protocol: 'file:',
+  //   slashes: true
+  // }))
+
   win.loadURL(url.format({
-    pathname: '/app/login.html',
+    pathname: path.join(__dirname, "app/login.html"),
     protocol: 'file:',
     slashes: true
   }))
