@@ -163,12 +163,12 @@
                         <span>福路德信息化平台</span>
                     </div>
                     <div class="login-form">
-                        <el-form label-position="top" :model="form" size="small">
+                        <el-form label-position="top" :model="form" size="small" @keyup.enter.native="login">
                             <el-form-item label="账号">
                                 <el-input v-model="form.name"></el-input>
                             </el-form-item>
                             <el-form-item label="密码">
-                                <el-input v-model="form.pwd"></el-input>
+                                <el-input v-model="form.pwd" ></el-input>
                             </el-form-item>
                             <el-row>
                                 <el-col :span="11">
