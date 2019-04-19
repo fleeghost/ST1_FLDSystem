@@ -197,6 +197,7 @@
     </div>
 </body>
 <script>
+    const {ipcRenderer} = require('electron')
     const vm = new Vue({
         el: '#app',
         data: {
@@ -217,7 +218,9 @@
         methods: {
             login() {
                 let that = this;
-                that.showAnimate = false;
+                //that.showAnimate = false;
+                //跳转到主页
+                ipcRenderer.sendSync('redirectMain');
             }
         }
     })

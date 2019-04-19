@@ -7,7 +7,7 @@ const {RewriteUrl} = SelfModules('urlRewriter')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+let winLogin,winMain
 
 //系统内存变量
 let currentUser
@@ -24,7 +24,7 @@ function createWindow () {
 
   // Create the browser window.
   // const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
-  win = new BrowserWindow({
+  winLogin = new BrowserWindow({
     width:526,
     height:466,
     maximizable:false,
@@ -35,8 +35,6 @@ function createWindow () {
     transparent: true
   })
 
-
-
   // and load the index.html of the app.
   // win.loadURL(url.format({
   //   pathname: '/app/login.html',
@@ -44,23 +42,22 @@ function createWindow () {
   //   slashes: true
   // }))
 
-  win.loadURL(url.format({
+  winLogin.loadURL(url.format({
     pathname: path.join(__dirname, "app/login.html"),
     protocol: 'file:',
     slashes: true
   }))
 
   // Open the DevTools.
-  // win.webContents.openDevTools()
+  //winLogin.webContents.openDevTools()
 
   // Emitted when the window is closed.
-  win.on('closed', () => {
+  winLogin.on('closed', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    win = null
+    winLogin = null
   })
-
   moduleFunction()
 }
 
@@ -101,7 +98,82 @@ let moduleFunction = ()=>{
   ipcMain.on('setCurrentUser',(e,arg)=>{
     currentUser = arg;
   })
-  
+  //跳转到主页
+  ipcMain.on('redirectMain',(e,arg)=>{
+    
+    winMain = new BrowserWindow({
+      width:1366,
+      height:768,
+      maximizable:false,
+      center:true,
+      autoHideMenuBar:true,
+      resizable:false,
+      frame:false,
+      transparent: true
+    });
+    winMain.loadURL(url.format({
+      pathname: path.join(__dirname, "app/index.html"),
+      protocol: 'file:',
+      slashes: true
+    }));
+    winMain.show();
+    winMain.on('closed', () => {
+      // Dereference the window object, usually you would store windows
+      // in an array if your app supports multi windows, this is the time
+      // when you should delete the corresponding element.
+      winMain = null
+    })
+    //关闭登录页面
+    winLogin.close();
+  })
+  //跳转到登录
+  ipcMain.on('redirectLogin',(e,arg)=>{
+    winLogin = new BrowserWindow({
+      width:526,
+      height:466,
+      maximizable:false,
+      center:true,
+      autoHideMenuBar:true,
+      resizable:false,
+      frame:false,
+      transparent: true
+    })
+    winLogin.loadURL(url.format({
+      pathname: path.join(__dirname, "app/login.html"),
+      protocol: 'file:',
+      slashes: true
+    }))
+    winLogin.on('closed', () => {
+      winLogin = null
+    })
+    winMain.close();
+  })
+  //关闭软件
+  ipcMain.on('quitApp',(e,arg)=>{
+    app.quit();
+  })
+  //软件最小化
+  ipcMain.on('minWindow',(e,arg)=>{
+    if(winLogin!=null){
+      winLogin.minimize();
+    }
+    else if(winMain!=null){
+      winMain.minimize();
+    }
+  });
+  //软件最大化
+  ipcMain.on('maxWindow',(e,arg)=>{
+    if(winMain!=null){
+      winMain.maximize();
+    }
+  });
+  //取消软件最大化
+  ipcMain.on('unMaxWindow',(e,arg)=>{
+    if(winMain!=null){
+      winMain.unmaximize();
+    }
+  })
+
 }
 
 
