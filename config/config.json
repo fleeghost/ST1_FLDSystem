@@ -11,7 +11,9 @@
         "dbName":"ST1_FLD",
         "dbAccount":"hzyc",
         "dbPassword":"hzyc!@#"
+    },
+    "Http_config":{
+        "ip":"47.110.58.236",
+        "port":"9981"
     }
-
-    
 }

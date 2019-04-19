@@ -104,7 +104,7 @@ let moduleFunction = ()=>{
     winMain = new BrowserWindow({
       width:1366,
       height:768,
-      maximizable:false,
+      maximizable:true,
       center:true,
       autoHideMenuBar:true,
       resizable:false,

@@ -8,9 +8,11 @@
     <title>福路德-登录</title>
     <link rel="stylesheet" type="text/css" href="assets/element-ui/theme-chalk/index.css" />
     <link rel="stylesheet" type="text/css" href="assets/base.css" />
+    <script type="text/javascript" src="assets/jquery/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="assets/vue.js"></script>
     <script type="text/javascript" src="assets/element-ui/index.js"></script>
     <script type="text/javascript" src="assets/vue-element-bigdata-table.min.js"></script>
+    <script type="text/javascript" src="assets/layer/layer.js"></script>
     <style>
         .full {
             width: 100%;
@@ -137,6 +139,9 @@
             background: #89111d;
             border-color: #89111d;
         }
+        .el-form-item__label{
+            height:32px;
+        }
     </style>
 </head>
 
@@ -150,8 +155,8 @@
                             <img src="image/logo.png">
                         </div>
                         <div class="system-operation">
-                            <i class="el-icon-minus"></i>
-                            <i class="el-icon-close"></i>
+                            <i class="el-icon-minus" onclick="vm.min()"></i>
+                            <i class="el-icon-close" onclick="vm.close()"></i>
                         </div>
                     </div>
                     <div class="login-title">
@@ -159,21 +164,21 @@
                     </div>
                     <div class="login-form">
                         <el-form label-position="top" :model="form" size="small">
-                            <el-form-item label="账套">
+                            <el-form-item label="账号">
                                 <el-input v-model="form.name"></el-input>
                             </el-form-item>
-                            <el-form-item label="账号">
-                                <el-input v-model="form.region"></el-input>
+                            <el-form-item label="密码">
+                                <el-input v-model="form.pwd"></el-input>
                             </el-form-item>
                             <el-row>
                                 <el-col :span="11">
-                                    <el-form-item label="密码">
-                                        <el-input v-model="form.type"></el-input>
+                                    <el-form-item label="验证码">
+                                        <el-input></el-input>
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="11" push="2">
-                                    <el-form-item label="验证码">
-                                        <el-input v-model="form.type"></el-input>
+                                    <el-form-item label=" ">
+                                        <el-input></el-input>
                                         <!-- <img class="code" src="image/code.jpg" /> -->
                                     </el-form-item>
                                 </el-col>
@@ -187,7 +192,7 @@
                                 <el-button type="danger" round class="login-btn" @click="login">立即创建</el-button>
                             </el-form-item>
                         </el-form>
-                        <div class="line">汇智云创技术支持</div>
+                        <div class="line">宁波汇智云创技术支持</div>
                     </div>
                 </div>
             </div>
@@ -198,12 +203,17 @@
 </body>
 <script>
     const {ipcRenderer} = require('electron')
+    const {SystemModules,SelfModules} = require(ipcRenderer.sendSync('getRootPath') +'/assembly/RequireHelper')
+    const {post} = SelfModules('httpHelper')
+    const Config = require(ipcRenderer.sendSync('getRootPath')+'/config/config.json')
+    const {md5} = require(ipcRenderer.sendSync('getRootPath') +'/assembly/CryptoHelper')
     const vm = new Vue({
         el: '#app',
         data: {
             showAnimate:true,
             form: {
                 name: '',
+                pwd:'',
                 region: '',
                 type: '',
             }
@@ -216,11 +226,57 @@
             
         },
         methods: {
+            min(){
+                ipcRenderer.send('minWindow');
+            },
+            close(){
+                ipcRenderer.sendSync('quitApp');
+            },
             login() {
                 let that = this;
-                //that.showAnimate = false;
-                //跳转到主页
-                ipcRenderer.sendSync('redirectMain');
+                if(vm.form.name==''){
+                    layer.msg('请先输入账号');
+                }
+                else if(vm.form.pwd==''){
+                    layer.msg('请先输入密码');
+                }
+                else{
+                    post({
+                        host: Config.Http_config.ip,
+                        port:Config.Http_config.port,
+                        path:'/Frame/SqlData'
+                    },{
+                        cmdname:'PC_Login',
+                        P_Name:vm.form.name,
+                        P_Password:md5(vm.form.pwd)
+                    },(result)=>{
+                        result = JSON.parse(result);
+                        if(result.status =="200"){
+                            that.showAnimate = false;
+                            if(result.data.ds.length>0){
+                                if(result.data.ds[0].status=="200"){
+                                    var user = {
+                                        UserID:result.data.ds[0].UserID,
+                                        UserCode:result.data.ds[0].UserCode,
+                                        UserName:result.data.ds[0].UserName
+                                    }
+                                   ipcRenderer.send("setCurrentUser",user);
+                                    //跳转到主页
+                                    ipcRenderer.send('redirectMain');
+                                }
+                                else{
+                                    layer.msg(result.data.ds[0].msg);
+                                }
+                            }
+                        } 
+                        else{
+                            layer.msg(result.msg); 
+                        }
+                        
+                    });
+                    
+                }
+                
             }
         }
     })
