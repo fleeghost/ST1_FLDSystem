@@ -308,10 +308,10 @@
                         <div class="img">
                             <img src="image/header.png" />
                         </div>
-                        <div style="font-size:12px;">
+                        <div style="font-size:12px;" @click="min">
                             <i class="el-icon-minus"></i>
                         </div>
-                        <div style="font-size:12px;">
+                        <div style="font-size:12px;" @click="close">
                             <span>退出</span>
                         </div>
                     </div>
@@ -588,6 +588,7 @@
     </div>
 </body>
 <script>
+    const {ipcRenderer} = require('electron')
     const vm = new Vue({
         el: '#app',
         data: {
@@ -599,6 +600,12 @@
 
         },
         methods: {
+            min(){
+                ipcRenderer.send('minWindow');
+            },
+            close(){
+                ipcRenderer.sendSync('quitApp');
+            },
             toggleTree() {
                 var that = this;
                 that.showIcon = !that.showIcon;
