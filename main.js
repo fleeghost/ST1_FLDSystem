@@ -49,7 +49,7 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  //winLogin.webContents.openDevTools()
+  // winLogin.webContents.openDevTools()
 
   // Emitted when the window is closed.
   winLogin.on('closed', () => {
@@ -104,7 +104,6 @@ let moduleFunction = ()=>{
     winMain = new BrowserWindow({
       width:1366,
       height:768,
-      maximizable:false,
       center:true,
       autoHideMenuBar:true,
       resizable:false,
@@ -125,6 +124,8 @@ let moduleFunction = ()=>{
     })
     //关闭登录页面
     winLogin.close();
+
+    winMain.webContents.openDevTools()
   })
   //跳转到登录
   ipcMain.on('redirectLogin',(e,arg)=>{
