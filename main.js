@@ -124,7 +124,6 @@ let moduleFunction = ()=>{
     })
     //关闭登录页面
     winLogin.close();
-
     // winMain.webContents.openDevTools()
   })
   //跳转到登录

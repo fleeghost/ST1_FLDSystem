@@ -56,3 +56,31 @@ html,body{
     padding-right: 8px;
 }
 
+/* layer样式 */
+.layui-layer-title{
+    background-color: #b91627!important;
+    opacity: 1!important;
+    color: #fff!important;
+}
+.layui-layer-min{
+    display:none !important;
+}
+.layui-layer-max:before {
+    content: "\f264";
+    font-size:14px !important;
+    color:white;
+}
+.layui-layer-hui{
+    background: #b91727!important;
+    box-shadow: 0 3px 12px 0px #b91727!important;
+    font-size: 14px!important;
+    border-radius: 16px!important;
+}
+.layui-layer-hui .layui-layer-content {
+    padding: 4px 25px!important;
+}
+.layui-layer-btn .layui-layer-btn0{
+    border-color: #b91627!important;
+    background-color: #b91627!important;
+}
+

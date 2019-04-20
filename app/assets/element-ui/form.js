@@ -281,6 +281,10 @@ exports.default = {
     validateOnRuleChange: {
       type: Boolean,
       default: true
+    },
+    hideRequiredAsterisk: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -314,7 +318,7 @@ exports.default = {
   methods: {
     resetFields: function resetFields() {
       if (!this.model) {
-        "production" !== 'production' && console.warn('[Element Warn][Form]model is required for resetFields to work.');
+        console.warn('[Element Warn][Form]model is required for resetFields to work.');
         return;
       }
       this.fields.forEach(function (field) {
@@ -324,7 +328,9 @@ exports.default = {
     clearValidate: function clearValidate() {
       var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-      var fields = props.length ? this.fields.filter(function (field) {
+      var fields = props.length ? typeof props === 'string' ? this.fields.filter(function (field) {
+        return props === field.prop;
+      }) : this.fields.filter(function (field) {
         return props.indexOf(field.prop) > -1;
       }) : this.fields;
       fields.forEach(function (field) {
@@ -372,15 +378,19 @@ exports.default = {
         return promise;
       }
     },
-    validateField: function validateField(prop, cb) {
-      var field = this.fields.filter(function (field) {
-        return field.prop === prop;
-      })[0];
-      if (!field) {
-        throw new Error('must call validateField with valid prop string!');
+    validateField: function validateField(props, cb) {
+      props = [].concat(props);
+      var fields = this.fields.filter(function (field) {
+        return props.indexOf(field.prop) !== -1;
+      });
+      if (!fields.length) {
+        confirm.warn('[Element Warn]please pass correct props!');
+        return;
       }
 
-      field.validate('', cb);
+      fields.forEach(function (field) {
+        field.validate('', cb);
+      });
     }
   }
 }; //

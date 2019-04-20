@@ -7,7 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>福路德-主页</title>
     <link rel="stylesheet" type="text/css" href="assets/element-ui/theme-chalk/index.css" />
+    <link rel="stylesheet" type="text/css" href="assets/ionicons/css/ionicons.css" />
     <link rel="stylesheet" type="text/css" href="assets/base.css" />
+    <script type="text/javascript" src="assets/jquery/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="assets/layer/layer.js"></script>
     <script type="text/javascript" src="assets/vue.js"></script>
     <script type="text/javascript" src="assets/element-ui/index.js"></script>
     <script type="text/javascript" src="assets/vue-element-bigdata-table.min.js"></script>
@@ -242,7 +245,7 @@
             height: 100%;
         }
 
-        .el-container .el-main .el-tabs--border-card>.el-tabs__header{
+        .el-container .el-main .el-tabs--border-card>.el-tabs__header {
             background: #fff;
             padding-top: 0;
         }
@@ -550,6 +553,11 @@
                                     </el-submenu>
                                 </div>
                             </el-submenu>
+
+                            <!-- <menu-template v-for="(val,index) in treeData">
+
+                            </menu-template> -->
+
                         </el-menu>
                     </div>
                 </el-aside>
@@ -559,52 +567,72 @@
                             <el-tabs type="border-card" size="mini" closable>
                                 <el-tab-pane label="用户管理">
                                     <div class="frame">
-                                        <iframe frameborder="0" scrolling="no" width="100%" height="100%" src="http://47.110.58.236:9981/TreeFormList/Table?moduleName=仓库树列表"></iframe>
+                                        <iframe frameborder="0" scrolling="no" width="100%" height="100%"
+                                            src="http://47.110.58.236:9981/TreeFormList/Table?moduleName=仓库树列表"></iframe>
                                     </div>
                                 </el-tab-pane>
-                                <el-tab-pane label="配置管理">
-                                    <div class="frame">
-                                        <iframe frameborder="0" scrolling="no" width="100%" height="100%"></iframe>
-                                    </div>
-                                </el-tab-pane>
-                                <el-tab-pane label="角色管理">
-                                    <div class="frame">
-                                        <iframe frameborder="0" scrolling="no" width="100%" height="100%"></iframe>
-                                    </div>
-                                </el-tab-pane>
-                                <el-tab-pane label="定时任务补偿">
-                                    <div class="frame">
-                                        <iframe frameborder="0" scrolling="no" width="100%" height="100%"></iframe>
-                                    </div>
-                                </el-tab-pane>
+                                
                             </el-tabs>
                         </div>
-
                     </el-main>
-                    <el-footer>福路德</el-footer>
+                    <el-footer>福路德<menu-template></menu-template></el-footer>
                 </el-container>
             </el-container>
         </el-container>
     </div>
 </body>
 <script>
-    const {ipcRenderer} = require('electron')
+    const { ipcRenderer } = require('electron')
+    // Vue.component('menu-template', {
+    //     template: '<el-submenu v-if="val.node">'+
+    //               '<el-menu-item>信息管理</el-menu-item>'+
+    //               '</el-submenu>'
+    // })
     const vm = new Vue({
         el: '#app',
         data: {
             showIcon: true,
-            isCollapse: false
+            isCollapse: false,
+            // treeData:[]
         },
         created: function () {
 
+            // this.treeData = [{
+            //     id: '1',
+            //     text: '权限管理',
+            //     node: [{
+            //         id: '1-1',
+            //         text: '商品类',
+            //         node: [{
+            //             id: '1-1-1',
+            //             text: '商品档案'
+            //         }, {
+            //             id: '1-1-2',
+            //             text: '商品类别'
+            //         }, {
+            //             id: '1-1-3',
+            //             text: '商品计量单位'
+            //         }, {
+            //             id: '1-1-4',
+            //             text: '价格单位'
+            //         }]
+            //     }]
+            // }]
 
         },
         methods: {
-            min(){
+            min() {
                 ipcRenderer.send('minWindow');
             },
-            close(){
-                ipcRenderer.sendSync('quitApp');
+            close() {
+                layer.confirm('确定退出吗?', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    ipcRenderer.sendSync('quitApp');
+                }, function () {
+                    layer.closeAll()
+                });
+
             },
             toggleTree() {
                 var that = this;
