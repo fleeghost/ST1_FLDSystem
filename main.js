@@ -26,7 +26,7 @@ function createWindow () {
   // const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
   winLogin = new BrowserWindow({
     width:526,
-    height:466,
+    height:470,
     maximizable:false,
     center:true,
     autoHideMenuBar:true,
@@ -49,7 +49,7 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  // winLogin.webContents.openDevTools()
+  //winLogin.webContents.openDevTools()
 
   // Emitted when the window is closed.
   winLogin.on('closed', () => {
@@ -125,13 +125,13 @@ let moduleFunction = ()=>{
     //关闭登录页面
     winLogin.close();
 
-    // winMain.webContents.openDevTools()
+    //winMain.webContents.openDevTools()
   })
   //跳转到登录
   ipcMain.on('redirectLogin',(e,arg)=>{
     winLogin = new BrowserWindow({
       width:526,
-      height:466,
+      height:470,
       maximizable:false,
       center:true,
       autoHideMenuBar:true,

@@ -88,6 +88,7 @@
             background: rgba(255, 255, 255, .1);
             border: 0;
             border-radius: 16px;
+            color:#fff;
         }
 
         .el-form-item--mini.el-form-item,
@@ -142,6 +143,11 @@
         .el-form-item__label{
             height:32px;
         }
+        .code{
+            border-radius: 16PX;
+            overflow: hidden;
+            height: 32px;
+        }
     </style>
 </head>
 
@@ -168,18 +174,18 @@
                                 <el-input v-model="form.name"></el-input>
                             </el-form-item>
                             <el-form-item label="密码">
-                                <el-input v-model="form.pwd" ></el-input>
+                                <el-input v-model="form.pwd" type="password" ></el-input>
                             </el-form-item>
                             <el-row>
-                                <el-col :span="11">
+                                <el-col :span="16">
                                     <el-form-item label="验证码">
-                                        <el-input></el-input>
+                                        <el-input v-model="form.code"></el-input>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="11" push="2">
+                                <el-col :span="8" push="2">
                                     <el-form-item label=" ">
-                                        <el-input></el-input>
-                                        <!-- <img class="code" src="image/code.jpg" /> -->
+                                        <!-- <el-input></el-input> -->
+                                        <a title="点击切换验证码" @click="changeCode"><img class="code" src="http://47.110.58.236:9981/Frame/ST1_FLD/Handler.aspx?cmd=sendDcode" /></a>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
@@ -216,6 +222,7 @@
                 pwd:'',
                 region: '',
                 type: '',
+                code:''
             }
         },
         created: function () {
@@ -231,6 +238,9 @@
             },
             close(){
                 ipcRenderer.sendSync('quitApp');
+            },
+            changeCode(){
+                $(".code").attr("src","http://47.110.58.236:9981/Frame/ST1_FLD/Handler.aspx?cmd=sendDcode&t="+new Date().getTime());
             },
             login() {
                 let that = this;
@@ -248,7 +258,8 @@
                     },{
                         cmdname:'PC_Login',
                         P_Name:vm.form.name,
-                        P_Password:md5(vm.form.pwd)
+                        P_Password:md5(vm.form.pwd),
+                        code:form.code
                     },(result)=>{
                         result = JSON.parse(result);
                         if(result.status =="200"){
