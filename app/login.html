@@ -116,7 +116,7 @@
             border-top: 2px solid #1e2227;
             margin-top: 20px;
             color: #606266;
-            line-height: 38px;
+            line-height: 32px;
             text-align: center;
             font-size: 12px;
             -webkit-user-select: none;
@@ -185,7 +185,7 @@
                                 <el-col :span="8" push="2">
                                     <el-form-item label=" ">
                                         <!-- <el-input></el-input> -->
-                                        <a title="点击切换验证码" @click="changeCode"><img class="code" src="http://47.110.58.236:9981/Frame/ST1_FLD/Handler.aspx?cmd=sendDcode" /></a>
+                                        <a href="javascript:void" title="点击切换验证码" onclick="vm.changeDcode()"><img class="code" /></a>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
@@ -195,7 +195,7 @@
                                 <span class="forget">忘记密码?</span>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="danger" round class="login-btn" @click="login">立即创建</el-button>
+                                <el-button type="danger" round class="login-btn" @click="login">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</el-button>
                             </el-form-item>
                         </el-form>
                         <div class="line">宁波汇智云创技术支持</div>
@@ -211,8 +211,9 @@
     const {ipcRenderer} = require('electron')
     const {SystemModules,SelfModules} = require(ipcRenderer.sendSync('getRootPath') +'/assembly/RequireHelper')
     const {post} = SelfModules('httpHelper')
-    const Config = require(ipcRenderer.sendSync('getRootPath')+'/config/config.json')
     const {md5} = require(ipcRenderer.sendSync('getRootPath') +'/assembly/CryptoHelper')
+    const Config = require(ipcRenderer.sendSync('getRootPath')+'/config/config.json')
+
     const vm = new Vue({
         el: '#app',
         data: {
@@ -222,13 +223,15 @@
                 pwd:'',
                 region: '',
                 type: '',
-                code:''
+                code:'',
+                clientCode:''
             }
         },
         created: function () {
             let that = this;
             setTimeout(function(){
                 that.showAnimate = true;
+                that.changeDcode();
             },500)
             
         },
@@ -239,8 +242,9 @@
             close(){
                 ipcRenderer.sendSync('quitApp');
             },
-            changeCode(){
-                $(".code").attr("src","http://47.110.58.236:9981/Frame/ST1_FLD/Handler.aspx?cmd=sendDcode&t="+new Date().getTime());
+            changeDcode(){
+                vm.form.clientCode = new Date().getTime().toString()+Math.floor((Math.random()*100)+1).toString();
+                $(".code").attr("src","http://"+ Config.Http_config.ip+":"+Config.Http_config.port +"/Frame/ST1_FLD/Handler.aspx?cmd=sendDcode&clientCode="+vm.form.clientCode);
             },
             login() {
                 let that = this;
@@ -252,18 +256,17 @@
                 }
                 else{
                     post({
-                        host: Config.Http_config.ip,
-                        port:Config.Http_config.port,
-                        path:'/Frame/SqlData'
+                        path:'/Frame/ST1_FLD/Handler.aspx'
                     },{
-                        cmdname:'PC_Login',
+                        cmd:'login',
                         P_Name:vm.form.name,
                         P_Password:md5(vm.form.pwd),
-                        code:form.code
+                        yzm:vm.form.code,
+                        clientCode:vm.form.clientCode
                     },(result)=>{
                         result = JSON.parse(result);
                         if(result.status =="200"){
-                            that.showAnimate = false;
+                            
                             if(result.data.ds.length>0){
                                 if(result.data.ds[0].status=="200"){
                                     var user = {
@@ -272,6 +275,7 @@
                                         UserName:result.data.ds[0].UserName
                                     }
                                    ipcRenderer.send("setCurrentUser",user);
+                                   that.showAnimate = false;
                                     //跳转到主页
                                     ipcRenderer.send('redirectMain');
                                 }
@@ -283,7 +287,6 @@
                         else{
                             layer.msg(result.msg); 
                         }
-                        
                     });
                     
                 }
