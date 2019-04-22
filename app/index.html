@@ -320,7 +320,7 @@
                     </div>
                 </div>
                 <div class="row-2">
-                    <el-tabs class="tabs-padding" type="border-card" size="mini">
+                    <el-tabs class="tabs-padding" type="border-card">
                         <el-tab-pane label="用户管理"></el-tab-pane>
                         <el-tab-pane label="基础数据管理"></el-tab-pane>
                         <el-tab-pane label="权限管理"></el-tab-pane>
@@ -337,18 +337,18 @@
             <el-container>
                 <el-aside>
                     <div class="tree-search">
-                        <el-button type="text" icon="el-icon-menu" size="mini" @click="toggleTree()"></el-button>
-                        <el-button type="text" icon="el-icon-d-caret" size="mini" v-show="showIcon">伸缩</el-button>
+                        <el-button type="text" icon="el-icon-menu" @click="toggleTree()"></el-button>
+                        <el-button type="text" icon="el-icon-d-caret" v-show="showIcon">伸缩</el-button>
                         <div class="search-text" v-show="showIcon">
-                            <!-- <el-input placeholder="请输入内容" size="mini">
+                            <!-- <el-input placeholder="请输入内容">
                                 <template slot="append"><i class="el-icon-search"></i></template>
                             </el-input> -->
                             <input type="text" />
-                            <el-button type="text" icon="el-icon-search" size="mini"></el-button>
+                            <el-button type="text" icon="el-icon-search"></el-button>
                         </div>
                     </div>
                     <div class="tree-list">
-                        <el-menu size="mini" background-color="transparent" text-color="#fff" active-text-color="#fff"
+                        <el-menu background-color="transparent" text-color="#fff" active-text-color="#fff"
                             :collapse="isCollapse" class="el-menu-vertical-demo">
                             <el-submenu index='1'>
                                 <template slot="title">
@@ -554,9 +554,7 @@
                                 </div>
                             </el-submenu>
 
-                            <!-- <menu-template v-for="(val,index) in treeData">
-
-                            </menu-template> -->
+                            <menu-template :menu_data="treeData" @item-click="treeSelect"></menu-template>
 
                         </el-menu>
                     </div>
@@ -564,63 +562,104 @@
                 <el-container>
                     <el-main>
                         <div class="tabs">
-                            <el-tabs type="border-card" size="mini" closable>
+                            <el-tabs type="border-card" closable>
                                 <el-tab-pane label="用户管理">
                                     <div class="frame">
                                         <iframe frameborder="0" scrolling="no" width="100%" height="100%"
                                             src="http://47.110.58.236:9981/TreeFormList/Table?moduleName=仓库树列表"></iframe>
                                     </div>
                                 </el-tab-pane>
-                                
+
                             </el-tabs>
                         </div>
                     </el-main>
-                    <el-footer>福路德<menu-template></menu-template></el-footer>
+                    <el-footer>福路德</el-footer>
                 </el-container>
             </el-container>
         </el-container>
     </div>
 </body>
 <script>
-    const { ipcRenderer } = require('electron')
-    // Vue.component('menu-template', {
-    //     template: '<el-submenu v-if="val.node">'+
-    //               '<el-menu-item>信息管理</el-menu-item>'+
-    //               '</el-submenu>'
-    // })
+    Vue.prototype.$ELEMENT = { size: 'mini' }
+    // const { ipcRenderer } = require('electron')
+    Vue.component('menu-template-sub', {
+        props: ['menu_data'],
+        template:'<div>'+
+                 '<div v-for="(row,index) in menu_data">'+
+                 '<el-submenu v-if="row.node" :index="row.id">'+
+                 '<template slot="title">{{row.text}}</template>'+
+                 '<menu-template-sub :menu_data="row.node" @sub-item-click="menuItemClick"></menu-template-sub>'+
+                 '</el-submenu>' +
+                 '<el-menu-item v-else :index="row.id" @click="menuItemClick(row)">{{row.text}}</el-menu-item>'+
+                 '</div>'+
+                 '</div>',
+        methods:{
+            menuItemClick(row){
+                this.$emit('sub-item-click',row);
+            }
+        }
+
+    })
+    Vue.component('menu-template', {
+        props: ['menu_data'],
+        template:'<div>'+
+                 '<div v-for="(row,index) in menu_data">'+
+                 '<el-submenu v-if="row.node" :index="row.id">'+
+                 '<template slot="title">{{row.text}}</template>'+
+                 '<menu-template-sub :menu_data="row.node" class="bg-opacity" @sub-item-click="menuItemClick" ></menu-template-sub>'+
+                 '</el-submenu>' +
+                 '<el-menu-item v-else :index="row.id" @click="menuItemClick(row)">{{row.text}}</el-menu-item>'+
+                 '</div>'+
+                 '</div>',
+        methods:{
+            menuItemClick(row){
+                this.$emit('item-click',row);
+            }
+        }
+
+    })
     const vm = new Vue({
         el: '#app',
         data: {
             showIcon: true,
             isCollapse: false,
-            // treeData:[]
+            treeData: []
         },
         created: function () {
 
-            // this.treeData = [{
-            //     id: '1',
-            //     text: '权限管理',
-            //     node: [{
-            //         id: '1-1',
-            //         text: '商品类',
-            //         node: [{
-            //             id: '1-1-1',
-            //             text: '商品档案'
-            //         }, {
-            //             id: '1-1-2',
-            //             text: '商品类别'
-            //         }, {
-            //             id: '1-1-3',
-            //             text: '商品计量单位'
-            //         }, {
-            //             id: '1-1-4',
-            //             text: '价格单位'
-            //         }]
-            //     }]
-            // }]
+            this.treeData = [{
+                id: '11',
+                text: '权限管理',
+                node: [{
+                    id: '11-1',
+                    text: '商品类',
+                    node: [{
+                        id: '11-1-1',
+                        text: '商品档案'
+                    }, {
+                        id: '11-1-2',
+                        text: '商品类别'
+                    }, {
+                        id: '11-1-3',
+                        text: '商品计量单位'
+                    }, {
+                        id: '11-1-4',
+                        text: '价格单位'
+                    }]
+                },{
+                    id: '11-2-1',
+                    text: 'hahah '
+                }]
+            },{
+                id:'12',
+                text: '测试'
+            }]
 
         },
         methods: {
+            treeSelect(row){
+                
+            },
             min() {
                 ipcRenderer.send('minWindow');
             },
