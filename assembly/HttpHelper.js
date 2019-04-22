@@ -5,7 +5,7 @@
     const querystring = SystemModules('querystring');
     const Config = require(ipcRenderer.sendSync('getRootPath')+'/config/config.json')
 
-    module.exports.post=(options,queryObj,callBack)=>{
+    module.exports.post=(options,queryObj,callBack,failCallBack)=>{
        //设置默认值
         options = Object.assign({
             host:Config.Http_config.ip,
@@ -32,6 +32,9 @@
         req.on('error', function (e) {  
             layer.msg('网络出现问题，ERROR:'+e.message);
             //console.log('problem with request: ' + e.message);  
+            if(failCallBack){
+                failCallBack(e);
+            }
         });  
         req.write(queryData);
         req.end();

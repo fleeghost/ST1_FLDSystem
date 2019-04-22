@@ -182,7 +182,7 @@
                                         <el-input v-model="form.code"></el-input>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="8" push="2">
+                                <el-col :span="8" :push="2">
                                     <el-form-item label=" ">
                                         <!-- <el-input></el-input> -->
                                         <a href="javascript:void" title="点击切换验证码" onclick="vm.changeDcode()"><img class="code" /></a>
@@ -191,11 +191,11 @@
                             </el-row>
 
                             <el-form-item>
-                                <el-checkbox v-model="checked">记住密码</el-checkbox>
+                                <el-checkbox v-model="form.checkedPwd">记住密码</el-checkbox>
                                 <span class="forget">忘记密码?</span>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="danger" round class="login-btn" @click="login">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</el-button>
+                                <el-button type="danger" round class="login-btn" @click="login" v-html="btnText"></el-button>
                             </el-form-item>
                         </el-form>
                         <div class="line">宁波汇智云创技术支持</div>
@@ -211,7 +211,7 @@
     const {ipcRenderer} = require('electron')
     const {SystemModules,SelfModules} = require(ipcRenderer.sendSync('getRootPath') +'/assembly/RequireHelper')
     const {post} = SelfModules('httpHelper')
-    const {md5} = require(ipcRenderer.sendSync('getRootPath') +'/assembly/CryptoHelper')
+    const {md5,aesEncode,aesDecode} = require(ipcRenderer.sendSync('getRootPath') +'/assembly/CryptoHelper')
     const Config = require(ipcRenderer.sendSync('getRootPath')+'/config/config.json')
 
     const vm = new Vue({
@@ -224,16 +224,24 @@
                 region: '',
                 type: '',
                 code:'',
-                clientCode:''
-            }
+                clientCode:'',
+                checkedPwd:false
+            },
+            cryptoKey:'fld_login',
+            btnText:'登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录',
+            btnEnabled:true
         },
         created: function () {
             let that = this;
             setTimeout(function(){
                 that.showAnimate = true;
                 that.changeDcode();
+                var userLoginPwd = localStorage.getItem("userLoginPwd");
+                if(userLoginPwd!=undefined && userLoginPwd!=''){
+                    vm.form.checkedPwd = true;
+                    vm.form.pwd = aesDecode(userLoginPwd,vm.cryptoKey);
+                }
             },500)
-            
         },
         methods: {
             min(){
@@ -247,6 +255,9 @@
                 $(".code").attr("src","http://"+ Config.Http_config.ip+":"+Config.Http_config.port +"/Frame/ST1_FLD/Handler.aspx?cmd=sendDcode&clientCode="+vm.form.clientCode);
             },
             login() {
+                if(!vm.btnEnabled){
+                    return false;
+                }
                 let that = this;
                 if(vm.form.name==''){
                     layer.msg('请先输入账号');
@@ -255,6 +266,8 @@
                     layer.msg('请先输入密码');
                 }
                 else{
+                    vm.btnText="登录中...";
+                    vm.btnEnabled = false;
                     post({
                         path:'/Frame/ST1_FLD/Handler.aspx'
                     },{
@@ -264,17 +277,29 @@
                         yzm:vm.form.code,
                         clientCode:vm.form.clientCode
                     },(result)=>{
+                        vm.btnText = '登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录';
+                        vm.btnEnabled = true;
                         result = JSON.parse(result);
                         if(result.status =="200"){
-                            
                             if(result.data.ds.length>0){
                                 if(result.data.ds[0].status=="200"){
+                                    //判断是否记住密码
+                                    if(vm.form.checkedPwd){
+                                        var encodePwd = aesEncode(vm.form.pwd,vm.cryptoKey);
+                                        localStorage.setItem("userLoginPwd",encodePwd);
+                                    }
+                                    else{
+                                        localStorage.setItem("userLoginPwd",'');
+                                    }
                                     var user = {
                                         UserID:result.data.ds[0].UserID,
                                         UserCode:result.data.ds[0].UserCode,
                                         UserName:result.data.ds[0].UserName
                                     }
-                                   ipcRenderer.send("setCurrentUser",user);
+                                   ipcRenderer.send("setCurrentUser",{
+                                       path:ipcRenderer.sendSync('getRootPath')+"/storage/login.json",
+                                       userInfo:user
+                                   });
                                    that.showAnimate = false;
                                     //跳转到主页
                                     ipcRenderer.send('redirectMain');
@@ -287,8 +312,10 @@
                         else{
                             layer.msg(result.msg); 
                         }
+                    },(err)=>{
+                        vm.btnText = '登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录';
+                        vm.btnEnabled = true;
                     });
-                    
                 }
                 
             }

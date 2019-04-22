@@ -4,6 +4,7 @@ const {app, BrowserWindow,session,ipcMain} = electron
 const path = SystemModules('path');
 const url = SystemModules('url');
 const {RewriteUrl} = SelfModules('urlRewriter')
+const {writeFile,readFile} = SelfModules('fileHelper');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -49,7 +50,7 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  winLogin.webContents.openDevTools()
+  //winLogin.webContents.openDevTools()
 
   // Emitted when the window is closed.
   winLogin.on('closed', () => {
@@ -96,7 +97,9 @@ let moduleFunction = ()=>{
   })
   //设置用户信息
   ipcMain.on('setCurrentUser',(e,arg)=>{
-    currentUser = arg;
+    currentUser = arg.userInfo;
+    //存储用户信息到本地
+    writeFile(arg.path,JSON.stringify(currentUser));
   })
   //跳转到主页
   ipcMain.on('redirectMain',(e,arg)=>{
@@ -111,11 +114,11 @@ let moduleFunction = ()=>{
       transparent: true
     });
     winMain.loadURL(url.format({
-      pathname: path.join(__dirname, "app/index.html"),
+      pathname: path.join(__dirname, "app/index1.html"),
       protocol: 'file:',
       slashes: true
     }));
-    winMain.show();
+    winMain.maximize();
     winMain.on('closed', () => {
       // Dereference the window object, usually you would store windows
       // in an array if your app supports multi windows, this is the time
@@ -125,7 +128,7 @@ let moduleFunction = ()=>{
     //关闭登录页面
     winLogin.close();
 
-    //winMain.webContents.openDevTools()
+    winMain.webContents.openDevTools()
   })
   //跳转到登录
   ipcMain.on('redirectLogin',(e,arg)=>{
