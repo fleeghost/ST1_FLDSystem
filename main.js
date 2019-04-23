@@ -17,8 +17,13 @@ let currentUser
 function createWindow () {
   //请求前事件
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
-    let originUrl = RewriteUrl(details.url);
-    callback({cancel: false, originUrl});
+    try{
+      let originUrl = RewriteUrl(details.url);
+      callback({cancel: false, originUrl});
+    }
+    catch(e){
+      console.log(details);
+    }
   })
 
 
@@ -44,7 +49,7 @@ function createWindow () {
   // }))
 
   winLogin.loadURL(url.format({
-    pathname: path.join(__dirname, "app/login.html"),
+    pathname: "/app/login.html",
     protocol: 'file:',
     slashes: true
   }))
@@ -114,7 +119,7 @@ let moduleFunction = ()=>{
       transparent: true
     });
     winMain.loadURL(url.format({
-      pathname: path.join(__dirname, "app/index.html"),
+      pathname: "/app/index.html",
       protocol: 'file:',
       slashes: true
     }));
@@ -143,7 +148,7 @@ let moduleFunction = ()=>{
       transparent: true
     })
     winLogin.loadURL(url.format({
-      pathname: path.join(__dirname, "app/login.html"),
+      pathname: "/app/login.html",
       protocol: 'file:',
       slashes: true
     }))
