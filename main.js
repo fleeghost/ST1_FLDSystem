@@ -114,7 +114,7 @@ let moduleFunction = ()=>{
       transparent: true
     });
     winMain.loadURL(url.format({
-      pathname: path.join(__dirname, "app/index1.html"),
+      pathname: path.join(__dirname, "app/index.html"),
       protocol: 'file:',
       slashes: true
     }));

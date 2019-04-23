@@ -320,16 +320,10 @@
                     </div>
                 </div>
                 <div class="row-2">
-                    <el-tabs class="tabs-padding" type="border-card">
-                        <el-tab-pane label="用户管理"></el-tab-pane>
-                        <el-tab-pane label="基础数据管理"></el-tab-pane>
-                        <el-tab-pane label="权限管理"></el-tab-pane>
-                        <el-tab-pane label="销售管理"></el-tab-pane>
-                        <el-tab-pane label="采购管理"></el-tab-pane>
-                        <el-tab-pane label="仓库运输管理"></el-tab-pane>
-                        <el-tab-pane label="往来管理"></el-tab-pane>
-                        <el-tab-pane label="成品费用管理"></el-tab-pane>
-                        <el-tab-pane label="会员管理"></el-tab-pane>
+                    <el-tabs class="tabs-padding" type="border-card" v-model="categoryActive"
+                        @tab-click="categoryToggle">
+                        <el-tab-pane v-for="(row,index) in categoryList" :label="row.Name"
+                            :name="row.Id + '_' + row.Name"></el-tab-pane>
                     </el-tabs>
                     <!-- <div class="calendar"></div> -->
                 </div>
@@ -350,7 +344,7 @@
                     <div class="tree-list">
                         <el-menu background-color="transparent" text-color="#fff" active-text-color="#fff"
                             :collapse="isCollapse" class="el-menu-vertical-demo">
-                            <el-submenu index='1'>
+                            <!-- <el-submenu index='1'>
                                 <template slot="title">
                                     <i class="el-icon-menu"></i>
                                     <span>用户管理</span>
@@ -552,9 +546,9 @@
                                         <el-menu-item index="9-1-2">积分管理</el-menu-item>
                                     </el-submenu>
                                 </div>
-                            </el-submenu>
+                            </el-submenu> -->
 
-                            <menu-template :menu_data="treeData" @item-click="treeSelect"></menu-template>
+                            <menu-template :menu_data="nodeList" @item-click="treeSelect"></menu-template>
 
                         </el-menu>
                     </div>
@@ -562,14 +556,19 @@
                 <el-container>
                     <el-main>
                         <div class="tabs">
-                            <el-tabs type="border-card" closable>
-                                <el-tab-pane label="用户管理">
+                            <el-tabs type="border-card" v-model="rightTabsActive" @tab-remove="rightTabsRemove">
+                                <el-tab-pane label="首页" name="首页">
                                     <div class="frame">
-                                        <iframe frameborder="0" scrolling="no" width="100%" height="100%"
-                                            src="http://47.110.58.236:9981/TreeFormList/Table?moduleName=仓库树列表"></iframe>
+                                        <webview src="http://47.110.58.236:9981/TreeFormList/Table?moduleName=仓库树列表"
+                                            style="width:100%;height:100%"></webview>
                                     </div>
                                 </el-tab-pane>
-
+                                <el-tab-pane closable v-for="(row,index) in rightTabsList" :label="row.Name"
+                                    :name="row.Id + '_' + row.Name">
+                                    <div class="frame">
+                                        <webview :src="row.NavigateUrl" style="width:100%;height:100%"></webview>
+                                    </div>
+                                </el-tab-pane>
                             </el-tabs>
                         </div>
                     </el-main>
@@ -580,40 +579,44 @@
     </div>
 </body>
 <script>
+    const { ipcRenderer } = require('electron')
+    const { SystemModules, SelfModules } = require(ipcRenderer.sendSync('getRootPath') + '/assembly/RequireHelper')
+    const { post } = SelfModules('httpHelper')
+
     Vue.prototype.$ELEMENT = { size: 'mini' }
-    // const { ipcRenderer } = require('electron')
+
     Vue.component('menu-template-sub', {
         props: ['menu_data'],
-        template:'<div>'+
-                 '<div v-for="(row,index) in menu_data">'+
-                 '<el-submenu v-if="row.node" :index="row.id">'+
-                 '<template slot="title">{{row.text}}</template>'+
-                 '<menu-template-sub :menu_data="row.node" @sub-item-click="menuItemClick"></menu-template-sub>'+
-                 '</el-submenu>' +
-                 '<el-menu-item v-else :index="row.id" @click="menuItemClick(row)">{{row.text}}</el-menu-item>'+
-                 '</div>'+
-                 '</div>',
-        methods:{
-            menuItemClick(row){
-                this.$emit('sub-item-click',row);
+        template: '<div>' +
+            '<div v-for="(row,index) in menu_data">' +
+            '<el-submenu v-if="row.node.length" :index="\'self\' + row.Id">' +
+            '<template slot="title">{{row.Name}}</template>' +
+            '<menu-template-sub :menu_data="row.node" @sub-item-click="menuItemClick"></menu-template-sub>' +
+            '</el-submenu>' +
+            '<el-menu-item v-else :index="\'self\' + row.Id" @click="menuItemClick(row)">{{row.Name}}</el-menu-item>' +
+            '</div>' +
+            '</div>',
+        methods: {
+            menuItemClick(row) {
+                this.$emit('sub-item-click', row);
             }
         }
 
     })
     Vue.component('menu-template', {
         props: ['menu_data'],
-        template:'<div>'+
-                 '<div v-for="(row,index) in menu_data">'+
-                 '<el-submenu v-if="row.node" :index="row.id">'+
-                 '<template slot="title">{{row.text}}</template>'+
-                 '<menu-template-sub :menu_data="row.node" class="bg-opacity" @sub-item-click="menuItemClick" ></menu-template-sub>'+
-                 '</el-submenu>' +
-                 '<el-menu-item v-else :index="row.id" @click="menuItemClick(row)">{{row.text}}</el-menu-item>'+
-                 '</div>'+
-                 '</div>',
-        methods:{
-            menuItemClick(row){
-                this.$emit('item-click',row);
+        template: '<div>' +
+            '<div v-for="(row,index) in menu_data">' +
+            '<el-submenu v-if="row.node.length" :index="\'self\' + row.Id">' +
+            '<template slot="title">{{row.Name}}</template>' +
+            '<menu-template-sub :menu_data="row.node" class="bg-opacity" @sub-item-click="menuItemClick" ></menu-template-sub>' +
+            '</el-submenu>' +
+            '<el-menu-item v-else :index="\'self\' + row.Id" @click="menuItemClick(row)">{{row.Name}}</el-menu-item>' +
+            '</div>' +
+            '</div>',
+        methods: {
+            menuItemClick(row) {
+                this.$emit('item-click', row);
             }
         }
 
@@ -623,42 +626,99 @@
         data: {
             showIcon: true,
             isCollapse: false,
-            treeData: []
+            totalList: [],
+            categoryList: [],
+            categoryActive: '',
+            nodeList: [],
+            rightTabsList: [],
+            rightTabsActive: '首页'
         },
         created: function () {
+            var that = this;
 
-            this.treeData = [{
-                id: '11',
-                text: '权限管理',
-                node: [{
-                    id: '11-1',
-                    text: '商品类',
-                    node: [{
-                        id: '11-1-1',
-                        text: '商品档案'
-                    }, {
-                        id: '11-1-2',
-                        text: '商品类别'
-                    }, {
-                        id: '11-1-3',
-                        text: '商品计量单位'
-                    }, {
-                        id: '11-1-4',
-                        text: '价格单位'
-                    }]
-                },{
-                    id: '11-2-1',
-                    text: 'hahah '
-                }]
-            },{
-                id:'12',
-                text: '测试'
-            }]
+            post({
+                path: '/Frame/SqlData'
+            }, {
+                    cmdname: 'getMainMenu'
+                }, (ret) => {
+                    let data = JSON.parse(ret);
+                    if (data.status == 200) {
+                        let that = this;
+                        that.totalList = data.data.ds;
+                        for (let i in that.totalList) {
+                            if (that.totalList[i].ParentID == 0) {
+                                that.categoryList.push(that.totalList[i]);
+                            }
+                        }
+                        if (that.categoryList.length > 0) {
+                            that.categoryActive = that.categoryList[0].Id + '_' + that.categoryList[0].Name
+                            that.setSubClass(that.categoryList[0].Id);
+                        }
+
+
+                    } else {
+                        layer.msg('接口数据异常!请稍后再试');
+                    }
+                }, (err) => {
+
+                })
 
         },
         methods: {
-            treeSelect(row){
-                
+            setSubClass(id) {
+                let that = this;
+                that.nodeList = [];
+                let repeatNode = (id) => {
+                    let node = [];
+                    for (let i in that.totalList) {
+                        if (id == that.totalList[i].ParentID) {
+                            that.totalList[i].node = repeatNode(that.totalList[i].Id);
+                            node.push(that.totalList[i]);
+                        }
+                    }
+                    return node;
+                }
+                that.nodeList = repeatNode(id);
+            },
+            treeSelect(row) {
+                let that = this;
+                let x = 0;
+                for (let i in that.rightTabsList) {
+                    if (that.rightTabsList[i].Id == row.Id) {
+                        x = 1;
+                        that.rightTabsActive = row.Id + '_' + row.Name;
+                    }
+                }
+                if (x == 0) {
+                    that.rightTabsList.push(row);
+                    that.rightTabsActive = row.Id + '_' + row.Name;
+                }
+            },
+            rightTabsRemove(targetName) {
+                let tabs = this.rightTabsList;
+                let activeName = this.rightTabsActive;
+                if (activeName === targetName) {
+                    tabs.forEach((tab, index) => {
+                        if ((tab.Id + '_' + tab.Name) === targetName) {
+                            let nextTab = tabs[index + 1] || tabs[index - 1];
+                            if (nextTab) {
+                                activeName = nextTab.name;
+                            }else{
+                                activeName = '首页'
+                            }
+                        }
+                    });
+                }
+
+                this.rightTabsActive = activeName;
+                this.rightTabsList = tabs.filter(tab => (tab.Id + '_' + tab.Name) !== targetName);
+            },
+            //大类切换
+            categoryToggle(e) {
+                var that = this;
+                let name = e.name;
+                let id = parseInt(name.split('_')[0]);
+                that.setSubClass(id)
             },
             min() {
                 ipcRenderer.send('minWindow');
@@ -666,17 +726,17 @@
             close() {
                 layer.confirm('确定退出吗?', {
                     btn: ['确认', '取消'] //按钮
-                }, function () {
+                }, () => {
                     ipcRenderer.sendSync('quitApp');
-                }, function () {
+                }, () => {
                     layer.closeAll()
                 });
 
             },
             toggleTree() {
-                var that = this;
+                let that = this;
                 that.showIcon = !that.showIcon;
-                setTimeout(function () {
+                setTimeout(() => {
                     that.isCollapse = !that.showIcon;
                 }, 100)
             }
