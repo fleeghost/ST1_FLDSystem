@@ -32,14 +32,15 @@ html,body{
 .el-tabs--border-card>.el-tabs__header{
     background: transparent;
     border: 0;
-    padding-top: 1px;
 }
-
+.el-tabs__nav-wrap{
+    margin-bottom:0;
+}
 .el-tabs__item {
-    padding-left: 8px;
-    padding-right: 8px;
-    height: 30px;
-    line-height: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 32px;
+    line-height: 32px;
     font-size: 12px;
     border: 0;
 }
@@ -50,10 +51,18 @@ html,body{
     background-color: #b91727 !important;
 }
 .el-tabs--bottom .el-tabs--left .el-tabs__item:nth-child(2), .el-tabs--bottom .el-tabs--right .el-tabs__item:nth-child(2), .el-tabs--bottom.el-tabs--border-card .el-tabs__item:nth-child(2), .el-tabs--bottom.el-tabs--card .el-tabs__item:nth-child(2), .el-tabs--top .el-tabs--left .el-tabs__item:nth-child(2), .el-tabs--top .el-tabs--right .el-tabs__item:nth-child(2), .el-tabs--top.el-tabs--border-card .el-tabs__item:nth-child(2), .el-tabs--top.el-tabs--card .el-tabs__item:nth-child(2){
-    padding-left: 8px;
+    padding-left: 20px;
 }
 .el-tabs--bottom .el-tabs--left .el-tabs__item:last-child, .el-tabs--bottom .el-tabs--right .el-tabs__item:last-child, .el-tabs--bottom.el-tabs--border-card .el-tabs__item:last-child, .el-tabs--bottom.el-tabs--card .el-tabs__item:last-child, .el-tabs--top .el-tabs--left .el-tabs__item:last-child, .el-tabs--top .el-tabs--right .el-tabs__item:last-child, .el-tabs--top.el-tabs--border-card .el-tabs__item:last-child, .el-tabs--top.el-tabs--card .el-tabs__item:last-child{
-    padding-right: 8px;
+    padding-right: 20px;
+}
+
+/* 按钮样式 */
+.el-button--primary{
+    background-color: #f2f2f2;
+    border-color: #dad6d6!important;
+    color: #606266;
+    border-radius: 0;
 }
 
 /* layer样式 */
