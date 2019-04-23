@@ -391,6 +391,7 @@
     const { ipcRenderer } = require('electron')
     const { SystemModules, SelfModules } = require(ipcRenderer.sendSync('getRootPath') + '/assembly/RequireHelper')
     const { post } = SelfModules('httpHelper')
+    const Config = require(ipcRenderer.sendSync('getRootPath')+'/config/config.json')
 
     setTimeout(() => {
         const webview = document.querySelector('webview')
@@ -461,7 +462,13 @@
                     let data = JSON.parse(ret);
                     if (data.status == 200) {
                         let that = this;
-                        that.totalList = data.data.ds;
+                        let totalList = data.data.ds
+                        for(let i in totalList){
+                            if(totalList[i].NavigateUrl){
+                                totalList[i].NavigateUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + totalList[i].NavigateUrl;
+                            }
+                        }
+                        that.totalList = totalList;
                         for (let i in that.totalList) {
                             if (that.totalList[i].ParentID == 0) {
                                 that.categoryList.push(that.totalList[i]);
