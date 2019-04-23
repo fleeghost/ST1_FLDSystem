@@ -548,7 +548,8 @@
                 ipcRenderer.send('minWindow');
             },
             close() {
-                layer.confirm('确定退出吗?', {
+                layer.confirm('是否退出福路德云平台?', {
+                    title:'提示',
                     btn: ['确认', '取消'] //按钮
                 }, () => {
                     ipcRenderer.sendSync('quitApp');
