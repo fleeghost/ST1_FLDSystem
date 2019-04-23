@@ -50,7 +50,7 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  //winLogin.webContents.openDevTools()
+  winLogin.webContents.openDevTools()
 
   // Emitted when the window is closed.
   winLogin.on('closed', () => {

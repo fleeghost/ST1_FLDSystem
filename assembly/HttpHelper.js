@@ -21,12 +21,18 @@
         let queryData = querystring.stringify(queryObj);
         options.headers["Content-Length"] = Buffer.byteLength(queryData);
 
-
+        
         let req = http.request(options, function (res) {  
+            let rawData = '';
             res.setEncoding('utf8');  
             res.on('data', function (chunk) {  
-                callBack(chunk);
+                rawData+=chunk;
+                //callBack(chunk);
             });  
+            res.on('end',()=>{
+                callBack(rawData);
+            })
+
         });  
           
         req.on('error', function (e) {  
