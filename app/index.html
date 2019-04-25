@@ -9,6 +9,8 @@
     <link rel="stylesheet" type="text/css" href="assets/element-ui/theme-chalk/index.css" />
     <link rel="stylesheet" type="text/css" href="assets/ionicons/css/ionicons.css" />
     <link rel="stylesheet" type="text/css" href="assets/base.css" />
+    <link rel="stylesheet" type="text/css" href="assets/plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/iconfont/iconfont.css" />
     <script type="text/javascript" src="assets/jquery/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="assets/layer/layer.js"></script>
     <script type="text/javascript" src="assets/vue.js"></script>
@@ -286,6 +288,11 @@
             color: #808080;
         }
 
+        .el-container .el-header .el-tabs__item {
+            height: 36px;
+            line-height: 36px;
+        }
+
         .el-container .el-main .el-tabs__item {
             height: 24px;
             line-height: 24px;
@@ -324,28 +331,29 @@
                 <div class="row-2">
                     <el-tabs class="tabs-padding" type="border-card" v-model="categoryActive"
                         @tab-click="categoryToggle">
-                        <el-tab-pane v-for="(row,index) in categoryList" :label="row.Name"
-                            :name="row.Id + '_' + row.Name"></el-tab-pane>
+                        <el-tab-pane v-for="(row,index) in categoryList"
+                            :name="row.Id + '_' + row.Name">
+                            <span slot="label"><i class="iconfont" :class="row.ImageUrl" style="margin-right:10px;font-size:14px;"></i>{{row.Name}} </span>
+                        </el-tab-pane>
                     </el-tabs>
                     <!-- <div class="calendar"></div> -->
                 </div>
                 <div class="row-3">
                     <div style="float:left;">
                         <div class="tree-search">
-                            <el-button type="text" icon="el-icon-menu" @click="toggleTree()"></el-button>
-                            <el-button type="text" icon="el-icon-d-caret" v-show="showIcon">伸缩</el-button>
+                            <el-button type="text" icon="el-icon-menu" @click="toggleTree"></el-button>
+                            <el-button type="text" icon="el-icon-d-caret" v-show="showIcon" @click="toggleOpen">伸缩</el-button>
                             <div class="search-text" v-show="showIcon">
-                                <input type="text" />
-                                <el-button type="text" icon="el-icon-search"></el-button>
+                                <input type="text" v-model="searchKey" />
+                                <el-button type="text" icon="el-icon-search" @click="searchMenu"></el-button>
                             </div>
                         </div>
                     </div>
                     <el-button-group>
-                        <el-button type="primary">默认按钮</el-button>
-                        <el-button type="primary">默认按钮</el-button>
-                        <el-button type="primary">默认按钮</el-button>
-                        <el-button type="primary">默认按钮</el-button>
-                        <el-button type="primary">默认按钮</el-button>
+                        <el-button type="primary">刷新页签</el-button>
+                        <el-button type="primary">关闭当前页签</el-button>
+                        <el-button type="primary">关闭所有页签</el-button>
+                        <el-button type="primary">关闭其他页签</el-button>
                     </el-button-group>
 
                 </div>
@@ -359,26 +367,8 @@
 
                             <menu-template :menu_data="nodeList" @item-click="treeSelect"></menu-template>
 
-                            <div>
-                                <div>
-                                    <el-submenu index="1">
-                                        <template slot="title">
-                                            <i class="el-icon-menu"></i>
-                                            <span slot="title">类别1</span>
-                                        </template>
-                                        <div class="bg-opacity">
-                                            <div>
-                                                <el-menu-item index="1-1">类别1-1</el-menu-item>
-                                                <el-menu-item index="1-2">类别1-2</el-menu-item>
-                                            </div>
-                                        </div>
-                                    </el-submenu>
-                                </div>
-                            </div>
-
                         </el-menu> -->
-
-                        <menu-template :collapse="isCollapse" :menu_data="nodeList" @item-click="treeSelect"></menu-template>
+                        <menu-template :collapse="isCollapse" :openeds="openeds" :menu_data="nodeList" @item-click="treeSelect"></menu-template>
                     </div>
                 </el-aside>
                 <el-container>
@@ -415,7 +405,7 @@
     setTimeout(() => {
         const webview = document.querySelector('webview')
         webview.addEventListener('dom-ready', () => {
-            webview.openDevTools()
+            //webview.openDevTools()
         })
     }, 2000)
 
@@ -441,14 +431,14 @@
 
     })
     Vue.component('menu-template', {
-        props: ['menu_data','collapse'],
-        template: '<el-menu background-color="transparent" text-color="#fff" active-text-color="#fff" :collapse="collapse" class="el-menu-vertical-demo">' +
+        props: ['menu_data','collapse','openeds'],
+        template: '<el-menu background-color="transparent" text-color="#fff" active-text-color="#fff" :collapse="collapse" :default-openeds="openeds" class="el-menu-vertical-demo">' +
             '<el-submenu v-for="(row,index) in menu_data" v-if="row.node.length" :index="\'self\' + row.Id">' +
-            '<template slot="title"><i class="el-icon-menu"></i><span slot="title">{{row.Name}}</span></template>' +
+            '<template slot="title"><i class="iconfont" :class="row.ImageUrl" style="margin-right:10px;font-size:16px;"></i><span slot="title">{{row.Name}}</span></template>' +
             '<menu-template-sub :menu_data="row.node" class="bg-opacity" @sub-item-click="menuItemClick" ></menu-template-sub>' +
             '</el-submenu>' +
             '<el-menu-item v-else :index="\'self\' + row.Id" @click="menuItemClick(row)">'+
-            '<i class="el-icon-menu"></i>'+
+            '<i class="iconfont" :class="row.ImageUrl" style="margin-right:10px;font-size:16px;"></i>'+
             '<span slot="title">{{row.Name}}</span>'+
             '</el-menu-item>' +
             '</el-menu>',
@@ -459,17 +449,22 @@
         }
 
     })
+
     const vm = new Vue({
         el: '#app',
         data: {
             showIcon: true,
             isCollapse: false,
+            openeds:[],
             totalList: [],
+            originTotalList:[],
             categoryList: [],
             categoryActive: '',
             nodeList: [],
             rightTabsList: [],
-            rightTabsActive: '首页'
+            rightTabsActive: '首页',
+            searchKey:'',
+            currentTypeId:0
         },
         created: function () {
             var that = this;
@@ -494,8 +489,10 @@
                                 that.categoryList.push(that.totalList[i]);
                             }
                         }
+                        that.originTotalList = JSON.parse(JSON.stringify(that.totalList));
                         if (that.categoryList.length > 0) {
-                            that.categoryActive = that.categoryList[0].Id + '_' + that.categoryList[0].Name
+                            that.categoryActive = that.categoryList[0].Id + '_' + that.categoryList[0].Name;
+                            that.currentTypeId = that.categoryList[0].Id;
                             that.setSubClass(that.categoryList[0].Id);
                         }
 
@@ -512,17 +509,45 @@
             setSubClass(id) {
                 let that = this;
                 that.nodeList = [];
-                let repeatNode = (id) => {
-                    let node = [];
-                    for (let i in that.totalList) {
-                        if (id == that.totalList[i].ParentID) {
-                            that.totalList[i].node = repeatNode(that.totalList[i].Id);
-                            node.push(that.totalList[i]);
+                that.openeds = [];
+                if(that.searchKey==''){
+                    let repeatNode = (id) => {
+                        let node = [];
+                        for (let i in that.totalList) {
+                            if (id == that.totalList[i].ParentID) {
+                                that.totalList[i].node = repeatNode(that.totalList[i].Id);
+                                node.push(that.totalList[i]);
+                            }
+                        }
+                        return node;
+                    }
+                    that.nodeList = repeatNode(id);
+                }
+                else{
+                    let node=[];
+                    for (let i in that.originTotalList) {
+                        if (that.originTotalList[i].Name.indexOf(that.searchKey)>=0) {
+                            that.originTotalList[i].node = [];
+                            var isLeaf = true;
+                            for(let j in that.originTotalList){
+                                if(that.originTotalList[j].ParentID==that.originTotalList[i].Id){
+                                    isLeaf = false;
+                                    break;
+                                }
+                            }
+                            if(isLeaf){
+                                node.push(that.originTotalList[i]);
+                            }
+
+                            
                         }
                     }
-                    return node;
+                    that.nodeList = node;
                 }
-                that.nodeList = repeatNode(id);
+                
+                for(let i in that.nodeList){
+                    that.openeds.push('self' + that.nodeList[i].Id);
+                }
             },
             treeSelect(row) {
                 let that = this;
@@ -536,6 +561,17 @@
                 if (x == 0) {
                     that.rightTabsList.push(row);
                     that.rightTabsActive = row.Id + '_' + row.Name;
+                }
+            },
+            toggleOpen(){
+                let that = this;
+                if(!that.openeds.length){
+                    that.openeds = [];
+                    for(let i in that.nodeList){
+                        that.openeds.push('self' + that.nodeList[i].Id);
+                    }
+                }else{
+                    that.openeds = [];
                 }
             },
             rightTabsRemove(targetName) {
@@ -560,16 +596,22 @@
             //大类切换
             categoryToggle(e) {
                 var that = this;
+                that.searchKey="";
                 let name = e.name;
                 let id = parseInt(name.split('_')[0]);
+                that.currentTypeId = id;
                 that.setSubClass(id)
+            },
+            //小类搜索
+            searchMenu(){
+                var that = this;
+                that.setSubClass(that.currentTypeId);
             },
             min() {
                 ipcRenderer.send('minWindow');
             },
             close() {
-                layer.confirm('是否退出福路德云平台?', {
-                    title:'提示',
+                layer.confirm('确定退出吗?', {
                     btn: ['确认', '取消'] //按钮
                 }, () => {
                     ipcRenderer.sendSync('quitApp');
