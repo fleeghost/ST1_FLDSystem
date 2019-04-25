@@ -112,9 +112,11 @@ let moduleFunction = ()=>{
     winMain = new BrowserWindow({
       width:1366,
       height:768,
+      minWidth:1366,
+      minHeight:768,
       center:true,
       autoHideMenuBar:true,
-      resizable:false,
+      resizable:true,
       frame:false,
       transparent: true
     });
@@ -133,7 +135,7 @@ let moduleFunction = ()=>{
     //关闭登录页面
     winLogin.close();
 
-    winMain.webContents.openDevTools()
+    // winMain.webContents.openDevTools()
   })
   //跳转到登录
   ipcMain.on('redirectLogin',(e,arg)=>{
@@ -180,6 +182,21 @@ let moduleFunction = ()=>{
   ipcMain.on('unMaxWindow',(e,arg)=>{
     if(winMain!=null){
       winMain.unmaximize();
+    }
+  })
+
+  ipcMain.on('toggleWindow_min',(e,arg)=>{
+    if(winMain!=null){
+      winMain.setSize(1366,768);
+      winMain.center();
+    }
+  })
+
+  ipcMain.on('toggleWindow_max',(e,arg)=>{
+    if(winMain!=null){
+      const{width,height} = electron.screen.getPrimaryDisplay().workAreaSize;
+      winMain.setSize(width,height);
+      winMain.center();
     }
   })
 

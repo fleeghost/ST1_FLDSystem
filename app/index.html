@@ -57,15 +57,16 @@
             -webkit-app-region: no-drag;
         }
 
-        .el-container .el-header .row-1 .system-operation>div {
+        .el-container .el-header .row-1 .system-operation .item {
             cursor: pointer;
             vertical-align: top;
             height: 40px;
             padding: 0 8px;
             float: left;
+            font-size: 12px;
         }
 
-        .el-container .el-header .row-1 .system-operation>div:hover {
+        .el-container .el-header .row-1 .system-operation .item:hover {
             background: rgba(255, 255, 255, .2);
         }
 
@@ -297,43 +298,141 @@
             height: 24px;
             line-height: 24px;
         }
+
+        .el-container .el-header .el-badge {
+            line-height: normal;
+        }
+
+        .el-badge__content {
+            background-color: #fff;
+            color: #b91727;
+            top: 4px;
+            right: 12px;
+            padding: 0 8px;
+        }
+
+        .el-popover__title {
+            font-size: 12px;
+            margin: 0;
+            padding-bottom: 6px;
+            padding-left: 5px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .bell {
+            font-size: 12px;
+            padding: 4px 0;
+            border-bottom: 1px solid #e5e5e5;
+            cursor: pointer;
+        }
+
+        .bell:hover {
+            background: #fafafa;
+        }
+
+        .bell .bell-content {
+            text-overflow: -o-ellipsis-lastline;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            color: #000;
+            padding: 0 5px;
+        }
+
+        .bell .bell-date {
+            text-align: right;
+            padding: 0 5px;
+        }
+
+        .el-popover {
+            padding: 12px 0 0 0;
+        }
     </style>
 </head>
 
 <body>
     <div id="app">
+
+        <el-popover ref="popover1" placement="top-start" title="标题" width="200" trigger="hover"
+            content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
+        </el-popover>
+
         <el-container v-cloak>
             <el-header>
+                <div class="top-drag"></div>
                 <div class="row-1">
                     <div class="logo">
                         <img src="image/logo.png" />
                         <span>福路德信息化平台</span>
                     </div>
                     <div class="system-operation">
-                        <div>
-                            <i class="el-icon-bell"></i>
-                        </div>
-                        <div style="font-size:12px;">
+                        <el-popover title="最新消息" placement="bottom" width="250" trigger="hover">
+                            <div style="overflow-y:auto;max-height:300px;">
+                                <div class="bell">
+                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
+                                    <div class="bell-date">2019-01-01</div>
+                                </div>
+                                <div class="bell">
+                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
+                                    <div class="bell-date">2019-01-01</div>
+                                </div>
+                                <div class="bell">
+                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
+                                    <div class="bell-date">2019-01-01</div>
+                                </div>
+                                <div class="bell">
+                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
+                                    <div class="bell-date">2019-01-01</div>
+                                </div>
+                                <div class="bell">
+                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
+                                    <div class="bell-date">2019-01-01</div>
+                                </div>
+                                <div class="bell">
+                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
+                                    <div class="bell-date">2019-01-01</div>
+                                </div>
+                                <div class="bell">
+                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
+                                    <div class="bell-date">2019-01-01</div>
+                                </div>
+                            </div>
+                            <div slot="reference" class="item">
+                                <el-badge value="8" :max="99">
+                                    <i class="el-icon-bell" style="font-size: 22px;"></i>
+                                </el-badge>
+                            </div>
+
+
+                        </el-popover>
+
+                        <div class="item">
                             <span>金俊杰</span>
                             <i class="el-icon-arrow-down"></i>
                         </div>
-                        <div class="img">
+                        <div class="item img">
                             <img src="image/header.png" />
                         </div>
-                        <div style="font-size:12px;" @click="min">
-                            <i class="el-icon-minus"></i>
+                        <div class="item" @click="min">
+                            <i class="iconfont icon-suoxiao1"></i>
                         </div>
-                        <div style="font-size:12px;" @click="close">
-                            <span>退出</span>
+                        <div class="item" @click="toggleWinSize">
+                            <i class="iconfont icon-suoxiao" style="font-size:14px;"></i>
+                        </div>
+                        <div class="item" @click="close">
+                            <i class="iconfont icon-close" style="font-size:20px;"></i>
                         </div>
                     </div>
                 </div>
                 <div class="row-2">
                     <el-tabs class="tabs-padding" type="border-card" v-model="categoryActive"
                         @tab-click="categoryToggle">
-                        <el-tab-pane v-for="(row,index) in categoryList"
-                            :name="row.Id + '_' + row.Name">
-                            <span slot="label"><i class="iconfont" :class="row.ImageUrl" style="margin-right:10px;font-size:14px;"></i>{{row.Name}} </span>
+                        <el-tab-pane v-for="(row,index) in categoryList" :name="row.Id + '_' + row.Name">
+                            <span slot="label"><i class="iconfont" :class="row.ImageUrl"
+                                    style="margin-right:10px;font-size:14px;"></i>{{row.Name}} </span>
                         </el-tab-pane>
                     </el-tabs>
                     <!-- <div class="calendar"></div> -->
@@ -342,7 +441,8 @@
                     <div style="float:left;">
                         <div class="tree-search">
                             <el-button type="text" icon="el-icon-menu" @click="toggleTree"></el-button>
-                            <el-button type="text" icon="el-icon-d-caret" v-show="showIcon" @click="toggleOpen">伸缩</el-button>
+                            <el-button type="text" icon="el-icon-d-caret" v-show="showIcon" @click="toggleOpen">伸缩
+                            </el-button>
                             <div class="search-text" v-show="showIcon">
                                 <input type="text" v-model="searchKey" />
                                 <el-button type="text" icon="el-icon-search" @click="searchMenu"></el-button>
@@ -368,7 +468,8 @@
                             <menu-template :menu_data="nodeList" @item-click="treeSelect"></menu-template>
 
                         </el-menu> -->
-                        <menu-template :collapse="isCollapse" :openeds="openeds" :menu_data="nodeList" @item-click="treeSelect"></menu-template>
+                        <menu-template :collapse="isCollapse" :openeds="openeds" :menu_data="nodeList"
+                            @item-click="treeSelect"></menu-template>
                     </div>
                 </el-aside>
                 <el-container>
@@ -395,12 +496,16 @@
             </el-container>
         </el-container>
     </div>
+
+    
 </body>
 <script>
     const { ipcRenderer } = require('electron')
     const { SystemModules, SelfModules } = require(ipcRenderer.sendSync('getRootPath') + '/assembly/RequireHelper')
     const { post } = SelfModules('httpHelper')
-    const Config = require(ipcRenderer.sendSync('getRootPath')+'/config/config.json')
+    const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json')
+
+    let winSizeType = 1;
 
     setTimeout(() => {
         const webview = document.querySelector('webview')
@@ -431,15 +536,15 @@
 
     })
     Vue.component('menu-template', {
-        props: ['menu_data','collapse','openeds'],
+        props: ['menu_data', 'collapse', 'openeds'],
         template: '<el-menu background-color="transparent" text-color="#fff" active-text-color="#fff" :collapse="collapse" :default-openeds="openeds" class="el-menu-vertical-demo">' +
             '<el-submenu v-for="(row,index) in menu_data" v-if="row.node.length" :index="\'self\' + row.Id">' +
             '<template slot="title"><i class="iconfont" :class="row.ImageUrl" style="margin-right:10px;font-size:16px;"></i><span slot="title">{{row.Name}}</span></template>' +
             '<menu-template-sub :menu_data="row.node" class="bg-opacity" @sub-item-click="menuItemClick" ></menu-template-sub>' +
             '</el-submenu>' +
-            '<el-menu-item v-else :index="\'self\' + row.Id" @click="menuItemClick(row)">'+
-            '<i class="iconfont" :class="row.ImageUrl" style="margin-right:10px;font-size:16px;"></i>'+
-            '<span slot="title">{{row.Name}}</span>'+
+            '<el-menu-item v-else :index="\'self\' + row.Id" @click="menuItemClick(row)">' +
+            '<i class="iconfont" :class="row.ImageUrl" style="margin-right:10px;font-size:16px;"></i>' +
+            '<span slot="title">{{row.Name}}</span>' +
             '</el-menu-item>' +
             '</el-menu>',
         methods: {
@@ -455,16 +560,16 @@
         data: {
             showIcon: true,
             isCollapse: false,
-            openeds:[],
+            openeds: [],
             totalList: [],
-            originTotalList:[],
+            originTotalList: [],
             categoryList: [],
             categoryActive: '',
             nodeList: [],
             rightTabsList: [],
             rightTabsActive: '首页',
-            searchKey:'',
-            currentTypeId:0
+            searchKey: '',
+            currentTypeId: 0
         },
         created: function () {
             var that = this;
@@ -478,8 +583,8 @@
                     if (data.status == 200) {
                         let that = this;
                         let totalList = data.data.ds
-                        for(let i in totalList){
-                            if(totalList[i].NavigateUrl){
+                        for (let i in totalList) {
+                            if (totalList[i].NavigateUrl) {
                                 totalList[i].NavigateUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + totalList[i].NavigateUrl;
                             }
                         }
@@ -510,7 +615,7 @@
                 let that = this;
                 that.nodeList = [];
                 that.openeds = [];
-                if(that.searchKey==''){
+                if (that.searchKey == '') {
                     let repeatNode = (id) => {
                         let node = [];
                         for (let i in that.totalList) {
@@ -523,29 +628,29 @@
                     }
                     that.nodeList = repeatNode(id);
                 }
-                else{
-                    let node=[];
+                else {
+                    let node = [];
                     for (let i in that.originTotalList) {
-                        if (that.originTotalList[i].Name.indexOf(that.searchKey)>=0) {
+                        if (that.originTotalList[i].Name.indexOf(that.searchKey) >= 0) {
                             that.originTotalList[i].node = [];
                             var isLeaf = true;
-                            for(let j in that.originTotalList){
-                                if(that.originTotalList[j].ParentID==that.originTotalList[i].Id){
+                            for (let j in that.originTotalList) {
+                                if (that.originTotalList[j].ParentID == that.originTotalList[i].Id) {
                                     isLeaf = false;
                                     break;
                                 }
                             }
-                            if(isLeaf){
+                            if (isLeaf) {
                                 node.push(that.originTotalList[i]);
                             }
 
-                            
+
                         }
                     }
                     that.nodeList = node;
                 }
-                
-                for(let i in that.nodeList){
+
+                for (let i in that.nodeList) {
                     that.openeds.push('self' + that.nodeList[i].Id);
                 }
             },
@@ -563,14 +668,14 @@
                     that.rightTabsActive = row.Id + '_' + row.Name;
                 }
             },
-            toggleOpen(){
+            toggleOpen() {
                 let that = this;
-                if(!that.openeds.length){
+                if (!that.openeds.length) {
                     that.openeds = [];
-                    for(let i in that.nodeList){
+                    for (let i in that.nodeList) {
                         that.openeds.push('self' + that.nodeList[i].Id);
                     }
-                }else{
+                } else {
                     that.openeds = [];
                 }
             },
@@ -596,19 +701,28 @@
             //大类切换
             categoryToggle(e) {
                 var that = this;
-                that.searchKey="";
+                that.searchKey = "";
                 let name = e.name;
                 let id = parseInt(name.split('_')[0]);
                 that.currentTypeId = id;
                 that.setSubClass(id)
             },
             //小类搜索
-            searchMenu(){
+            searchMenu() {
                 var that = this;
                 that.setSubClass(that.currentTypeId);
             },
             min() {
                 ipcRenderer.send('minWindow');
+            },
+            toggleWinSize(){
+                if(winSizeType == 1){
+                    winSizeType = 0;
+                    ipcRenderer.send('toggleWindow_min');
+                }else{
+                    winSizeType = 1;
+                    ipcRenderer.send('toggleWindow_max');
+                }
             },
             close() {
                 layer.confirm('确定退出吗?', {
