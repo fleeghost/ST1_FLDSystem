@@ -354,12 +354,31 @@
                 <el-aside>
 
                     <div class="tree-list">
-                        <el-menu background-color="transparent" text-color="#fff" active-text-color="#fff"
+                        <!-- <el-menu background-color="transparent" text-color="#fff" active-text-color="#fff"
                             :collapse="isCollapse" class="el-menu-vertical-demo">
 
                             <menu-template :menu_data="nodeList" @item-click="treeSelect"></menu-template>
 
-                        </el-menu>
+                            <div>
+                                <div>
+                                    <el-submenu index="1">
+                                        <template slot="title">
+                                            <i class="el-icon-menu"></i>
+                                            <span slot="title">类别1</span>
+                                        </template>
+                                        <div class="bg-opacity">
+                                            <div>
+                                                <el-menu-item index="1-1">类别1-1</el-menu-item>
+                                                <el-menu-item index="1-2">类别1-2</el-menu-item>
+                                            </div>
+                                        </div>
+                                    </el-submenu>
+                                </div>
+                            </div>
+
+                        </el-menu> -->
+
+                        <menu-template :collapse="isCollapse" :menu_data="nodeList" @item-click="treeSelect"></menu-template>
                     </div>
                 </el-aside>
                 <el-container>
@@ -408,7 +427,7 @@
         template: '<div>' +
             '<div v-for="(row,index) in menu_data">' +
             '<el-submenu v-if="row.node.length" :index="\'self\' + row.Id">' +
-            '<template slot="title">{{row.Name}}</template>' +
+            '<span slot="title">{{row.Name}}</span>' +
             '<menu-template-sub :menu_data="row.node" @sub-item-click="menuItemClick"></menu-template-sub>' +
             '</el-submenu>' +
             '<el-menu-item v-else :index="\'self\' + row.Id" @click="menuItemClick(row)">{{row.Name}}</el-menu-item>' +
@@ -422,16 +441,17 @@
 
     })
     Vue.component('menu-template', {
-        props: ['menu_data'],
-        template: '<div>' +
-            '<div v-for="(row,index) in menu_data">' +
-            '<el-submenu v-if="row.node.length" :index="\'self\' + row.Id">' +
-            '<template slot="title">{{row.Name}}</template>' +
+        props: ['menu_data','collapse'],
+        template: '<el-menu background-color="transparent" text-color="#fff" active-text-color="#fff" :collapse="collapse" class="el-menu-vertical-demo">' +
+            '<el-submenu v-for="(row,index) in menu_data" v-if="row.node.length" :index="\'self\' + row.Id">' +
+            '<template slot="title"><i class="el-icon-menu"></i><span slot="title">{{row.Name}}</span></template>' +
             '<menu-template-sub :menu_data="row.node" class="bg-opacity" @sub-item-click="menuItemClick" ></menu-template-sub>' +
             '</el-submenu>' +
-            '<el-menu-item v-else :index="\'self\' + row.Id" @click="menuItemClick(row)">{{row.Name}}</el-menu-item>' +
-            '</div>' +
-            '</div>',
+            '<el-menu-item v-else :index="\'self\' + row.Id" @click="menuItemClick(row)">'+
+            '<i class="el-icon-menu"></i>'+
+            '<span slot="title">{{row.Name}}</span>'+
+            '</el-menu-item>' +
+            '</el-menu>',
         methods: {
             menuItemClick(row) {
                 this.$emit('item-click', row);
@@ -470,7 +490,7 @@
                         }
                         that.totalList = totalList;
                         for (let i in that.totalList) {
-                            if (that.totalList[i].ParentID == 0) {
+                            if (that.totalList[i].ParentID == 1) {
                                 that.categoryList.push(that.totalList[i]);
                             }
                         }
