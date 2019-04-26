@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>福路德-主页</title>
+    <title>福路德信息化平台</title>
     <link rel="stylesheet" type="text/css" href="assets/element-ui/theme-chalk/index.css" />
     <link rel="stylesheet" type="text/css" href="assets/ionicons/css/ionicons.css" />
     <link rel="stylesheet" type="text/css" href="assets/base.css" />
@@ -30,7 +30,7 @@
 
         .el-container .el-header .row-1 {
             background: #b91727;
-            padding: 0 20px;
+            padding: 0 0 0 20px;
             overflow: hidden;
             color: #fff;
             -webkit-app-region: drag;
@@ -475,7 +475,7 @@
                 <el-container>
                     <el-main>
                         <div class="tabs">
-                            <el-tabs type="border-card" v-model="rightTabsActive" @tab-remove="rightTabsRemove">
+                            <el-tabs type="border-card" v-model="rightTabsActive" @tab-remove="rightTabsRemove" @tab-click="openDevTools">
                                 <el-tab-pane label="首页" name="首页">
                                     <div class="frame">
                                         <webview src="http://47.110.58.236:9981/TreeFormList/Table?moduleName=仓库树列表"
@@ -507,13 +507,9 @@
 
     let winSizeType = 1;
 
-    setTimeout(() => {
-        const webview = document.querySelector('webview')
-        webview.addEventListener('dom-ready', () => {
-            debugger;
-            webview.openDevTools()
-        })
-    }, 3000)
+    // setTimeout(() => {
+    //     document.querySelector('webview').getWebContents().openDevTools()
+    // }, 2000)
 
 
     Vue.prototype.$ELEMENT = { size: 'mini' }
@@ -612,6 +608,9 @@
 
         },
         methods: {
+            openDevTools(e){
+                $(e.$el).find('webview')[0].getWebContents().openDevTools()
+            },
             setSubClass(id) {
                 let that = this;
                 that.nodeList = [];
