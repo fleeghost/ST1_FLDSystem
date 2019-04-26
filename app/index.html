@@ -510,9 +510,10 @@
     setTimeout(() => {
         const webview = document.querySelector('webview')
         webview.addEventListener('dom-ready', () => {
-            //webview.openDevTools()
+            debugger;
+            webview.openDevTools()
         })
-    }, 2000)
+    }, 3000)
 
 
     Vue.prototype.$ELEMENT = { size: 'mini' }
