@@ -11,6 +11,7 @@
     module.exports.RewriteUrl=(staticUrl)=>{
         let staticPath = url.parse(staticUrl).pathname;
         let actualPath = staticPath;
+        console.log(staticUrl);
         for(let rule of rewriterRules){
             let reg = new RegExp(rule.lookFor);
             if(reg.test(staticPath)){

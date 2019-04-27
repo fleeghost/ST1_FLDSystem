@@ -19,6 +19,7 @@ function createWindow () {
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
     try{
       let originUrl = RewriteUrl(details.url);
+      console.log(originUrl);
       callback({cancel: false, originUrl});
     }
     catch(e){
@@ -49,13 +50,14 @@ function createWindow () {
   // }))
 
   winLogin.loadURL(url.format({
-    pathname: "/app/login.html",
+    //pathname: "/app/login.html",
+    pathname:path.join(__dirname,"/app/login.html"),
     protocol: 'file:',
     slashes: true
   }))
 
   // Open the DevTools.
-  //winLogin.webContents.openDevTools()
+  winLogin.webContents.openDevTools()
 
   // Emitted when the window is closed.
   winLogin.on('closed', () => {
@@ -121,7 +123,7 @@ let moduleFunction = ()=>{
       transparent: true
     });
     winMain.loadURL(url.format({
-      pathname: "/app/index.html",
+      pathname: path.join(__dirname,"/app/index.html"),
       protocol: 'file:',
       slashes: true
     }));
@@ -150,7 +152,7 @@ let moduleFunction = ()=>{
       transparent: true
     })
     winLogin.loadURL(url.format({
-      pathname: "/app/login.html",
+      pathname: path.join(__dirname,"/app/login.html"),
       protocol: 'file:',
       slashes: true
     }))
