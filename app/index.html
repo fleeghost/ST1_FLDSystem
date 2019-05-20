@@ -475,7 +475,7 @@
                 <el-container>
                     <el-main>
                         <div class="tabs">
-                            <el-tabs type="border-card" v-model="rightTabsActive" @tab-remove="rightTabsRemove" @tab-click="openDevTools">
+                            <el-tabs type="border-card" v-model="rightTabsActive" @tab-remove="rightTabsRemove" @tab-click="openDevTools" @tab-add="openDevTools">
                                 <el-tab-pane label="首页" name="首页">
                                     <div class="frame">
                                         <webview src="http://47.110.58.236:9981/TreeFormList/Table?moduleName=仓库树列表"
@@ -609,7 +609,8 @@
         },
         methods: {
             openDevTools(e){
-                $(e.$el).find('webview')[0].getWebContents().openDevTools()
+                $(e.$el).find('webview')[0].getWebContents().openDevTools();
+                $(e.$el).find('webview')[0].reloadIgnoringCache();
             },
             setSubClass(id) {
                 let that = this;
