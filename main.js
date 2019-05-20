@@ -1,28 +1,28 @@
-const {SystemModules,SelfModules} = require('./assembly/RequireHelper')
-const electron =  SystemModules('electron');
-const {app, BrowserWindow,session,ipcMain} = electron
+const { SystemModules, SelfModules } = require('./assembly/RequireHelper')
+const electron = SystemModules('electron');
+const { app, BrowserWindow, session, ipcMain, ipcRenderer } = electron
 const path = SystemModules('path');
 const url = SystemModules('url');
-const {RewriteUrl} = SelfModules('urlRewriter')
-const {writeFile,readFile} = SelfModules('fileHelper');
+const { RewriteUrl } = SelfModules('urlRewriter')
+const { writeFile, readFile } = SelfModules('fileHelper');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let winLogin,winMain
+let winLogin, winMain
 
 //系统内存变量
 let currentUser
 
 
-function createWindow () {
+function createWindow() {
   //请求前事件
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
-    try{
+    try {
       let originUrl = RewriteUrl(details.url);
       console.log(originUrl);
-      callback({cancel: false, originUrl});
+      callback({ cancel: false, originUrl });
     }
-    catch(e){
+    catch (e) {
       console.log(details);
     }
   })
@@ -32,13 +32,13 @@ function createWindow () {
   // Create the browser window.
   // const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
   winLogin = new BrowserWindow({
-    width:526,
-    height:470,
-    maximizable:false,
-    center:true,
-    autoHideMenuBar:true,
-    resizable:false,
-    frame:false,
+    width: 526,
+    height: 470,
+    maximizable: false,
+    center: true,
+    autoHideMenuBar: true,
+    resizable: false,
+    frame: false,
     transparent: true
   })
 
@@ -51,13 +51,13 @@ function createWindow () {
 
   winLogin.loadURL(url.format({
     //pathname: "/app/login.html",
-    pathname:path.join(__dirname,"/app/login.html"),
+    pathname: path.join(__dirname, "/app/login.html"),
     protocol: 'file:',
     slashes: true
   }))
 
   // Open the DevTools.
-  //winLogin.webContents.openDevTools()
+  winLogin.webContents.openDevTools()
 
   // Emitted when the window is closed.
   winLogin.on('closed', () => {
@@ -92,38 +92,38 @@ app.on('activate', () => {
 })
 
 //模块方法
-let moduleFunction = ()=>{
+let moduleFunction = () => {
   //页面请求函数
   //获取页面根目录
-  ipcMain.on('getRootPath',(e, arg)=>{
-      e.returnValue = __dirname
+  ipcMain.on('getRootPath', (e, arg) => {
+    e.returnValue = __dirname
   })
   //保存用户信息
-  ipcMain.on('getCurrentUser',(e,arg)=>{
+  ipcMain.on('getCurrentUser', (e, arg) => {
     e.returnValue = currentUser
   })
   //设置用户信息
-  ipcMain.on('setCurrentUser',(e,arg)=>{
+  ipcMain.on('setCurrentUser', (e, arg) => {
     currentUser = arg.userInfo;
     //存储用户信息到本地
-    writeFile(arg.path,JSON.stringify(currentUser));
+    writeFile(arg.path, JSON.stringify(currentUser));
   })
   //跳转到主页
-  ipcMain.on('redirectMain',(e,arg)=>{
-    
+  ipcMain.on('redirectMain', (e, arg) => {
+
     winMain = new BrowserWindow({
-      width:1366,
-      height:768,
-      minWidth:1366,
-      minHeight:768,
-      center:true,
-      autoHideMenuBar:true,
-      resizable:true,
-      frame:false,
+      width: 1366,
+      height: 768,
+      minWidth: 1366,
+      minHeight: 768,
+      center: true,
+      autoHideMenuBar: true,
+      resizable: true,
+      frame: false,
       transparent: true
     });
     winMain.loadURL(url.format({
-      pathname: path.join(__dirname,"/app/index.html"),
+      pathname: path.join(__dirname, "/app/index.html"),
       protocol: 'file:',
       slashes: true
     }));
@@ -137,22 +137,22 @@ let moduleFunction = ()=>{
     //关闭登录页面
     winLogin.close();
 
-     //winMain.webContents.openDevTools()
+    winMain.webContents.openDevTools()
   })
   //跳转到登录
-  ipcMain.on('redirectLogin',(e,arg)=>{
+  ipcMain.on('redirectLogin', (e, arg) => {
     winLogin = new BrowserWindow({
-      width:526,
-      height:470,
-      maximizable:false,
-      center:true,
-      autoHideMenuBar:true,
-      resizable:false,
-      frame:false,
+      width: 526,
+      height: 470,
+      maximizable: false,
+      center: true,
+      autoHideMenuBar: true,
+      resizable: false,
+      frame: false,
       transparent: true
     })
     winLogin.loadURL(url.format({
-      pathname: path.join(__dirname,"/app/login.html"),
+      pathname: path.join(__dirname, "/app/login.html"),
       protocol: 'file:',
       slashes: true
     }))
@@ -162,43 +162,49 @@ let moduleFunction = ()=>{
     winMain.close();
   })
   //关闭软件
-  ipcMain.on('quitApp',(e,arg)=>{
+  ipcMain.on('quitApp', (e, arg) => {
     app.quit();
   })
   //软件最小化
-  ipcMain.on('minWindow',(e,arg)=>{
-    if(winLogin!=null){
+  ipcMain.on('minWindow', (e, arg) => {
+    if (winLogin != null) {
       winLogin.minimize();
     }
-    else if(winMain!=null){
+    else if (winMain != null) {
       winMain.minimize();
     }
   });
   //软件最大化
-  ipcMain.on('maxWindow',(e,arg)=>{
-    if(winMain!=null){
+  ipcMain.on('maxWindow', (e, arg) => {
+    if (winMain != null) {
       winMain.maximize();
     }
   });
   //取消软件最大化
-  ipcMain.on('unMaxWindow',(e,arg)=>{
-    if(winMain!=null){
+  ipcMain.on('unMaxWindow', (e, arg) => {
+    if (winMain != null) {
       winMain.unmaximize();
     }
   })
 
-  ipcMain.on('toggleWindow_min',(e,arg)=>{
-    if(winMain!=null){
-      winMain.setSize(1366,768);
+  ipcMain.on('toggleWindow_min', (e, arg) => {
+    if (winMain != null) {
+      winMain.setSize(1366, 768);
       winMain.center();
     }
   })
 
-  ipcMain.on('toggleWindow_max',(e,arg)=>{
-    if(winMain!=null){
-      const{width,height} = electron.screen.getPrimaryDisplay().workAreaSize;
-      winMain.setSize(width,height);
+  ipcMain.on('toggleWindow_max', (e, arg) => {
+    if (winMain != null) {
+      const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
+      winMain.setSize(width, height);
       winMain.center();
+    }
+  })
+
+  ipcMain.on('win_click', (e, arg) => {
+    if (winMain != null) {
+      winMain.webContents.send('win_lock')
     }
   })
 

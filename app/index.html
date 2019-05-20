@@ -16,6 +16,7 @@
     <script type="text/javascript" src="assets/vue.js"></script>
     <script type="text/javascript" src="assets/element-ui/index.js"></script>
     <script type="text/javascript" src="assets/vue-element-bigdata-table.min.js"></script>
+    <script type="text/javascript" src="assets/base.js"></script>
     <style>
         .el-container {
             height: 100%;
@@ -283,10 +284,43 @@
 
         .el-container .el-footer {
             height: 26px !important;
-            line-height: 26px;
             text-align: center;
             background: #000000;
             color: #808080;
+            position: relative;
+        }
+
+        .el-container .el-footer .footer-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            line-height: 26px;
+        }
+
+        .el-container .el-footer .footer-right span {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .el-container .el-footer .footer-right .signal {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            overflow: hidden;
+            border-radius: 9px;
+        }
+
+        .ping-offLine {
+            background: #cc1212;
+        }
+
+        .ping-onLine1 {
+            background: #2cc522;
+        }
+
+        .ping-onLine2 {
+            background: #d4931c;
         }
 
         .el-container .el-header .el-tabs__item {
@@ -349,6 +383,36 @@
 
         .el-popover {
             padding: 12px 0 0 0;
+        }
+
+        .twinkling {
+            -webkit-animation: twinkling 1.2s ease-out infinite alternate;
+            animation: twinkling 1.2s ease-out infinite alternate;
+        }
+
+        @-webkit-keyframes twinkling {
+
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes twinkling {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .fun-button button {
+            padding: 7px 10px;
         }
     </style>
 </head>
@@ -449,11 +513,11 @@
                             </div>
                         </div>
                     </div>
-                    <el-button-group>
-                        <el-button type="primary">刷新页签</el-button>
-                        <el-button type="primary">关闭当前页签</el-button>
-                        <el-button type="primary">关闭所有页签</el-button>
-                        <el-button type="primary">关闭其他页签</el-button>
+                    <el-button-group class="fun-button">
+                        <el-button type="primary" @click="dealTabs(1)">刷新页签</el-button>
+                        <el-button type="primary" @click="dealTabs(2)">关闭当前页签</el-button>
+                        <el-button type="primary" @click="dealTabs(3)">关闭所有页签</el-button>
+                        <el-button type="primary" @click="dealTabs(4)">关闭其他页签</el-button>
                     </el-button-group>
 
                 </div>
@@ -475,41 +539,50 @@
                 <el-container>
                     <el-main>
                         <div class="tabs">
-                            <el-tabs type="border-card" v-model="rightTabsActive" @tab-remove="rightTabsRemove" @tab-click="openDevTools" @tab-add="openDevTools">
+                            <el-tabs type="border-card" v-model="rightTabsActive" @tab-remove="rightTabsRemove"
+                                @tab-click="openDevTools">
                                 <el-tab-pane label="首页" name="首页">
                                     <div class="frame">
                                         <webview src="http://47.110.58.236:9981/TreeFormList/Table?moduleName=仓库树列表"
-                                            style="width:100%;height:100%"></webview>
+                                            style="width:100%;height:100%" nodeintegration ></webview>
                                     </div>
                                 </el-tab-pane>
                                 <el-tab-pane closable v-for="(row,index) in rightTabsList" :label="row.Name"
                                     :name="row.Id + '_' + row.Name">
                                     <div class="frame">
-                                        <webview :src="row.NavigateUrl" style="width:100%;height:100%"></webview>
+                                        <webview :src="row.NavigateUrl" style="width:100%;height:100%" nodeintegration></webview>
                                     </div>
                                 </el-tab-pane>
                             </el-tabs>
                         </div>
                     </el-main>
-                    <el-footer>福路德</el-footer>
+                    <el-footer>
+                        <div style="line-height: 26px;">宁波市汇智云创信息科技有限公司技术支持</div>
+                        <div class="footer-right">
+                            <span
+                                class="ip_port">当前登录端口:{{config.Http_config.ip + ':' + config.Http_config.port}}</span>
+                            <span class="signal" :class="pingStatus"></span>
+                        </div>
+                    </el-footer>
                 </el-container>
             </el-container>
         </el-container>
     </div>
 
-    
+
 </body>
 <script>
     const { ipcRenderer } = require('electron')
+    const ping = require('ping');
     const { SystemModules, SelfModules } = require(ipcRenderer.sendSync('getRootPath') + '/assembly/RequireHelper')
     const { post } = SelfModules('httpHelper')
-    const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json')
+    const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json');
 
     let winSizeType = 1;
 
-    // setTimeout(() => {
-    //     document.querySelector('webview').getWebContents().openDevTools()
-    // }, 2000)
+    ipcRenderer.on('win_lock', (e, arg) => {
+        // alert('接收到')
+    })
 
 
     Vue.prototype.$ELEMENT = { size: 'mini' }
@@ -566,10 +639,31 @@
             rightTabsList: [],
             rightTabsActive: '首页',
             searchKey: '',
-            currentTypeId: 0
+            currentTypeId: 0,
+            config: Config,
+            pingStatus: ''
         },
         created: function () {
             var that = this;
+            var host = Config.Http_config.ip;
+            var getPing = function () {
+                ping.promise.probe(host)
+                    .then(function (res) {
+                        if (typeof (res.time) == 'string') {
+                            that.pingStatus = 'ping-offLine';
+                        } else if (typeof (res.time) == 'number') {
+                            if (0 < res.time && res.time < 200) {
+                                that.pingStatus = 'ping-onLine1';
+                            } else {
+                                that.pingStatus = 'ping-onLine2';
+                            }
+                        } else {
+                            that.pingStatus = 'ping-offLine';
+                        }
+                    });
+            }
+            setInterval(getPing, 2000)
+            getPing();
 
             post({
                 path: '/Frame/SqlData'
@@ -608,9 +702,25 @@
 
         },
         methods: {
-            openDevTools(e){
+            openDevTools(e) {
                 $(e.$el).find('webview')[0].getWebContents().openDevTools();
                 $(e.$el).find('webview')[0].reloadIgnoringCache();
+            },
+            dealTabs(index) {
+                let that = this;
+                if (index == 1) {
+                    $('#pane-' + that.rightTabsActive).find('webview')[0].reload();
+                } else if (index == 2) {
+                    if (that.rightTabsActive == '首页') {
+                        layer.msg('首页不允许关闭!');
+                        return false;
+                    }
+                    that.rightTabsRemove(that.rightTabsActive);
+                } else if (index == 3) {
+                    that.rightTabsList = [];
+                } else if (index == 4) {
+                    this.rightTabsList = that.rightTabsList.filter(tab => (tab.Id + '_' + tab.Name) === that.rightTabsActive);
+                }
             },
             setSubClass(id) {
                 let that = this;
@@ -665,8 +775,13 @@
                     }
                 }
                 if (x == 0) {
-                    that.rightTabsList.push(row);
-                    that.rightTabsActive = row.Id + '_' + row.Name;
+                    if (that.rightTabsList.length >= 10) {
+                        layer.msg('当前窗口打开过多,请关闭部分窗口后重试!');
+                    } else {
+                        that.rightTabsList.push(row);
+                        that.rightTabsActive = row.Id + '_' + row.Name;
+                    }
+
                 }
             },
             toggleOpen() {
@@ -688,7 +803,7 @@
                         if ((tab.Id + '_' + tab.Name) === targetName) {
                             let nextTab = tabs[index + 1] || tabs[index - 1];
                             if (nextTab) {
-                                activeName = nextTab.name;
+                                activeName = nextTab.Id + '_' + nextTab.Name;
                             } else {
                                 activeName = '首页'
                             }
@@ -716,11 +831,11 @@
             min() {
                 ipcRenderer.send('minWindow');
             },
-            toggleWinSize(){
-                if(winSizeType == 1){
+            toggleWinSize() {
+                if (winSizeType == 1) {
                     winSizeType = 0;
                     ipcRenderer.send('toggleWindow_min');
-                }else{
+                } else {
                     winSizeType = 1;
                     ipcRenderer.send('toggleWindow_max');
                 }
