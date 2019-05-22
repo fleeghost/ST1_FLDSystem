@@ -19,15 +19,13 @@ function createWindow() {
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
     try {
       let originUrl = RewriteUrl(details.url);
-      console.log(originUrl);
+      // console.log(originUrl + '-------');
       callback({ cancel: false, originUrl });
     }
     catch (e) {
       console.log(details);
     }
   })
-
-
 
   // Create the browser window.
   // const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
@@ -39,7 +37,8 @@ function createWindow() {
     autoHideMenuBar: true,
     resizable: false,
     frame: false,
-    transparent: true
+    transparent: true,
+    icon:__dirname + '/app/image/logo.png'
   })
 
   // and load the index.html of the app.
@@ -120,7 +119,8 @@ let moduleFunction = () => {
       autoHideMenuBar: true,
       resizable: true,
       frame: false,
-      transparent: true
+      transparent: true,
+      icon:__dirname + '/app/image/logo.png'
     });
     winMain.loadURL(url.format({
       pathname: path.join(__dirname, "/app/index.html"),
@@ -202,11 +202,12 @@ let moduleFunction = () => {
     }
   })
 
-  ipcMain.on('win_click', (e, arg) => {
+  ipcMain.on('openTool', (e, arg) => {
     if (winMain != null) {
-      winMain.webContents.send('win_lock')
+      winMain.webContents.openDevTools();
     }
   })
+
 
 }
 

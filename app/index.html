@@ -12,12 +12,19 @@
     <link rel="stylesheet" type="text/css" href="assets/plugins/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="assets/iconfont/iconfont.css" />
     <script type="text/javascript" src="assets/jquery/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="assets/jquery.signalR-2.4.1.min.js"></script>
+    <script type="text/javascript" src="http://47.110.58.236:9981/signalr/hubs"></script>
+    <script type="text/javascript" src="assets/signalr-mediate.js"></script>
     <script type="text/javascript" src="assets/layer/layer.js"></script>
     <script type="text/javascript" src="assets/vue.js"></script>
     <script type="text/javascript" src="assets/element-ui/index.js"></script>
     <script type="text/javascript" src="assets/vue-element-bigdata-table.min.js"></script>
     <script type="text/javascript" src="assets/base.js"></script>
     <style>
+        .iconfont {
+            font-size: 20px;
+        }
+
         .el-container {
             height: 100%;
             font-size: 12px;
@@ -71,11 +78,16 @@
             background: rgba(255, 255, 255, .2);
         }
 
+        .el-container .el-header .row-1 .system-operation .img {
+            padding: 0 8px 0 12px;
+        }
+
         .el-container .el-header .row-1 .system-operation .img img {
             width: 30px;
             height: 30px;
             border-radius: 15px;
             margin-top: 5px;
+            vertical-align: top;
         }
 
         .el-container .el-header .row-2 {
@@ -300,7 +312,12 @@
 
         .el-container .el-footer .footer-right span {
             margin-right: 10px;
-            vertical-align: middle;
+            color: #fff;
+        }
+
+        .el-container .el-footer .footer-right span .detail {
+            text-shadow: 0px 0px 15px #ffbe05;
+            color: #ffbe05;
         }
 
         .el-container .el-footer .footer-right .signal {
@@ -324,8 +341,8 @@
         }
 
         .el-container .el-header .el-tabs__item {
-            height: 36px;
-            line-height: 36px;
+            height: 30px;
+            line-height: 26px;
         }
 
         .el-container .el-main .el-tabs__item {
@@ -414,6 +431,26 @@
         .fun-button button {
             padding: 7px 10px;
         }
+
+        .el-dropdown {
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .loginOut {
+            color: #b91727;
+        }
+
+        .loginOut:hover {
+            color: #b91727 !important;
+            background: #e6ced1 !important;
+        }
+
+        .dropdown_button img {
+            width: 16px;
+            vertical-align: text-top;
+            margin-right: 10px;
+        }
     </style>
 </head>
 
@@ -469,16 +506,34 @@
                                     <i class="el-icon-bell" style="font-size: 22px;"></i>
                                 </el-badge>
                             </div>
-
-
                         </el-popover>
 
-                        <div class="item">
-                            <span>金俊杰</span>
-                            <i class="el-icon-arrow-down"></i>
-                        </div>
+
                         <div class="item img">
-                            <img src="image/header.png" />
+                            <el-dropdown placement="bottom" trigger="hover" @command="handleCommand">
+                                <div trigger="hover">
+                                    <img src="image/header.png" />
+                                    <span>金俊杰</span>
+                                    <i class="el-icon-arrow-down"></i>
+                                </div>
+                                <el-dropdown-menu slot="dropdown" style="width: 140px;">
+                                    <el-dropdown-item class="dropdown_button loginOut" command="注销"><img
+                                            src="image/loginOut.png" />注销</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
+                        <div class="item">
+                            <el-dropdown placement="bottom" trigger="hover" @command="handleCommand">
+                                <div trigger="hover">
+                                    <i class="iconfont icon-menu"></i>
+                                </div>
+                                <el-dropdown-menu slot="dropdown" style="width: 140px;">
+                                    <el-dropdown-item class="dropdown_button" command="软件更新"><img
+                                            src="image/update.png" />软件更新</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" command="调试模式"><img
+                                            src="image/debugger.png" />{{ifDebugger?'关闭调试':'开启调试'}}</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
                         </div>
                         <div class="item" @click="min">
                             <i class="iconfont icon-suoxiao1"></i>
@@ -543,14 +598,16 @@
                                 @tab-click="openDevTools">
                                 <el-tab-pane label="首页" name="首页">
                                     <div class="frame">
-                                        <webview src="http://47.110.58.236:9981/TreeFormList/Table?moduleName=仓库树列表"
-                                            style="width:100%;height:100%" nodeintegration ></webview>
+                                        <webview
+                                            :src="'http://' + config.Http_config.ip + ':' + config.Http_config.port + '/index.html'"
+                                            style="width:100%;height:100%" nodeintegration></webview>
                                     </div>
                                 </el-tab-pane>
                                 <el-tab-pane closable v-for="(row,index) in rightTabsList" :label="row.Name"
                                     :name="row.Id + '_' + row.Name">
                                     <div class="frame">
-                                        <webview :src="row.NavigateUrl" style="width:100%;height:100%" nodeintegration></webview>
+                                        <webview :src="row.NavigateUrl" style="width:100%;height:100%" nodeintegration>
+                                        </webview>
                                     </div>
                                 </el-tab-pane>
                             </el-tabs>
@@ -559,8 +616,10 @@
                     <el-footer>
                         <div style="line-height: 26px;">宁波市汇智云创信息科技有限公司技术支持</div>
                         <div class="footer-right">
-                            <span
-                                class="ip_port">当前登录端口:{{config.Http_config.ip + ':' + config.Http_config.port}}</span>
+                            <span class="ip_port">当前登录
+                                <span class="detail">【{{config.Http_config.ip + ':' + config.Http_config.port}}】</span>
+                            </span>
+                            <span>当前网络</span>
                             <span class="signal" :class="pingStatus"></span>
                         </div>
                     </el-footer>
@@ -572,17 +631,19 @@
 
 </body>
 <script>
+
+    // require('update-electron-app')()
+
     const { ipcRenderer } = require('electron')
+
     const ping = require('ping');
     const { SystemModules, SelfModules } = require(ipcRenderer.sendSync('getRootPath') + '/assembly/RequireHelper')
     const { post } = SelfModules('httpHelper')
     const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json');
+    const package = require(ipcRenderer.sendSync('getRootPath') + '/package.json');
 
     let winSizeType = 1;
 
-    ipcRenderer.on('win_lock', (e, arg) => {
-        // alert('接收到')
-    })
 
 
     Vue.prototype.$ELEMENT = { size: 'mini' }
@@ -641,12 +702,13 @@
             searchKey: '',
             currentTypeId: 0,
             config: Config,
-            pingStatus: ''
+            pingStatus: '',
+            ifDebugger: false
         },
         created: function () {
-            var that = this;
-            var host = Config.Http_config.ip;
-            var getPing = function () {
+            let that = this;
+            let host = Config.Http_config.ip;
+            let getPing = function () {
                 ping.promise.probe(host)
                     .then(function (res) {
                         if (typeof (res.time) == 'string') {
@@ -703,8 +765,11 @@
         },
         methods: {
             openDevTools(e) {
-                $(e.$el).find('webview')[0].getWebContents().openDevTools();
-                $(e.$el).find('webview')[0].reloadIgnoringCache();
+                let that = this;
+                if (that.ifDebugger) {
+                    $(e.$el).find('webview')[0].getWebContents().openDevTools();
+                    $(e.$el).find('webview')[0].reloadIgnoringCache();
+                }
             },
             dealTabs(index) {
                 let that = this;
@@ -717,6 +782,7 @@
                     }
                     that.rightTabsRemove(that.rightTabsActive);
                 } else if (index == 3) {
+                    that.rightTabsActive = '首页';
                     that.rightTabsList = [];
                 } else if (index == 4) {
                     this.rightTabsList = that.rightTabsList.filter(tab => (tab.Id + '_' + tab.Name) === that.rightTabsActive);
@@ -744,7 +810,7 @@
                     for (let i in that.originTotalList) {
                         if (that.originTotalList[i].Name.indexOf(that.searchKey) >= 0) {
                             that.originTotalList[i].node = [];
-                            var isLeaf = true;
+                            let isLeaf = true;
                             for (let j in that.originTotalList) {
                                 if (that.originTotalList[j].ParentID == that.originTotalList[i].Id) {
                                     isLeaf = false;
@@ -816,7 +882,7 @@
             },
             //大类切换
             categoryToggle(e) {
-                var that = this;
+                let that = this;
                 that.searchKey = "";
                 let name = e.name;
                 let id = parseInt(name.split('_')[0]);
@@ -825,7 +891,7 @@
             },
             //小类搜索
             searchMenu() {
-                var that = this;
+                let that = this;
                 that.setSubClass(that.currentTypeId);
             },
             min() {
@@ -841,7 +907,8 @@
                 }
             },
             close() {
-                layer.confirm('确定退出吗?', {
+                layer.confirm('确定退出' + package.description + '?', {
+                    title:'提示',
                     btn: ['确认', '取消'] //按钮
                 }, () => {
                     ipcRenderer.sendSync('quitApp');
@@ -856,8 +923,69 @@
                 setTimeout(() => {
                     that.isCollapse = !that.showIcon;
                 }, 100)
+            },
+            handleCommand(command) {
+                let that = this;
+                if (command == '注销') {
+                    localStorage.removeItem("userLoginPwd");
+                    localStorage.removeItem("userLoginName")
+                    ipcRenderer.send('redirectLogin');
+                } else if (command == '调试模式') {
+                    if (!that.ifDebugger) {
+                        ipcRenderer.send('openTool');
+                    }
+                    that.ifDebugger = !that.ifDebugger;
+                } else if (command == '软件更新') {
+
+                }
+
             }
         }
+    })
+
+    let signtime = new Date().getTime();
+
+    $(function () {
+        $.signalrApi({
+            serverUrl: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port,
+            clientHub: "PageHub",
+            clientEvents: [
+                {
+                    name: "onGlobalConnect",
+                    method: function (data) {
+                        $.signalrApi.server.applyInstruct(data, 'sss')
+                    }
+                },
+
+                {
+                    name: "onClientLive",
+                    method: function (data) {
+                        signtime = new Date().getTime();
+                    }
+                },
+
+                {
+                    name: "onApplyInstruct",
+                    method: function (data) {
+
+                    }
+                }
+            ]
+        });
+        //socket连接
+        $.signalrApi.start(function () {
+            $.signalrApi.server.globalConnect();
+        });
+
+        setInterval(function () {
+            $.signalrApi.server.clientLive();
+            if (new Date().getTime() - signtime > 100000) {
+                //socket连接
+                $.signalrApi.start(function () {
+                    $.signalrApi.server.globalConnect();
+                });
+            }
+        }, 10000);
     })
 </script>
 

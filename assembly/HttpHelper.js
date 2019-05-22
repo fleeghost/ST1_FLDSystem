@@ -21,7 +21,7 @@
         let queryData = querystring.stringify(queryObj);
         options.headers["Content-Length"] = Buffer.byteLength(queryData);
 
-        
+        console.log('11111')
         let req = http.request(options, function (res) {  
             let rawData = '';
             res.setEncoding('utf8');  
