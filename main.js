@@ -1,10 +1,16 @@
 const { SystemModules, SelfModules } = require('./assembly/RequireHelper')
 const electron = SystemModules('electron');
+const { autoUpdater } = require('electron-updater');
 const { app, BrowserWindow, session, ipcMain, ipcRenderer } = electron
 const path = SystemModules('path');
 const url = SystemModules('url');
 const { RewriteUrl } = SelfModules('urlRewriter')
 const { writeFile, readFile } = SelfModules('fileHelper');
+const Config = require('./config/config.json');
+
+
+
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -15,6 +21,10 @@ let currentUser
 
 
 function createWindow() {
+
+  // console.log(session.defaultSession.cookies)
+
+
   //请求前事件
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
     try {
@@ -38,7 +48,7 @@ function createWindow() {
     resizable: false,
     frame: false,
     transparent: true,
-    icon:__dirname + '/app/image/logo.png'
+    icon: __dirname + '/app/image/logo.png'
   })
 
   // and load the index.html of the app.
@@ -56,7 +66,7 @@ function createWindow() {
   }))
 
   // Open the DevTools.
-  winLogin.webContents.openDevTools()
+  // winLogin.webContents.openDevTools()
 
   // Emitted when the window is closed.
   winLogin.on('closed', () => {
@@ -120,7 +130,7 @@ let moduleFunction = () => {
       resizable: true,
       frame: false,
       transparent: true,
-      icon:__dirname + '/app/image/logo.png'
+      icon: __dirname + '/app/image/logo.png'
     });
     winMain.loadURL(url.format({
       pathname: path.join(__dirname, "/app/index.html"),
@@ -137,7 +147,7 @@ let moduleFunction = () => {
     //关闭登录页面
     winLogin.close();
 
-    winMain.webContents.openDevTools()
+    // winMain.webContents.openDevTools()
   })
   //跳转到登录
   ipcMain.on('redirectLogin', (e, arg) => {
@@ -212,7 +222,58 @@ let moduleFunction = () => {
 }
 
 
+ipcMain.on('update', (e, arg) => {
+  updateHandle();
+})
 
+// 检测更新，在你想要检查更新的时候执行，renderer事件触发后的操作自行编写
+function updateHandle() {
+  let message = {
+    error: '检查更新出错',
+    checking: '检查更新中',
+    updateAva: '正在下载新版本',
+    updateNotAva: '现在已是最新版本',
+  };
+
+  //如下应用程序的路径请自行替换成自己应用程序的路径
+  let updateFeedUrl = 'http://'+Config.Http_config.ip+':'+Config.Http_config.port+'/download/win/';
+  if (process.platform == 'darwin') {
+    updateFeedUrl = 'http://'+Config.Http_config.ip+':'+Config.Http_config.port+'/download/mac/';
+  }
+
+  autoUpdater.setFeedURL(updateFeedUrl);
+  autoUpdater.on('error', function (error) {
+    sendUpdateMessage(message.error)
+  });
+  autoUpdater.on('checking-for-update', function () {
+    sendUpdateMessage(message.checking)
+  });
+  autoUpdater.on('update-available', function (info) {
+    sendUpdateMessage(message.updateAva)
+  });
+  autoUpdater.on('update-not-available', function (info) {
+    sendUpdateMessage(message.updateNotAva)
+  });
+
+  // 更新下载进度事件
+  autoUpdater.on('download-progress', function (progressObj) {
+    winLogin.webContents.send('downloadProgress', progressObj)
+  })
+  autoUpdater.on('update-downloaded', function (event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) {
+    sendUpdateMessage('isUpdateNow');
+    ipcMain.on('updateNow', (e, arg) => {
+      autoUpdater.quitAndInstall();
+    })
+  });
+
+  //some code here to handle event
+  autoUpdater.checkForUpdates();
+}
+
+// 通过main进程发送事件给renderer进程，提示更新信息
+function sendUpdateMessage(text) {
+  winLogin.webContents.send('message', text)
+}
 
 
 

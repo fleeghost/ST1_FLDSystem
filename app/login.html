@@ -88,7 +88,7 @@
             background: rgba(255, 255, 255, .1);
             border: 0;
             border-radius: 16px;
-            color:#fff;
+            color: #fff;
         }
 
         .el-form-item--mini.el-form-item,
@@ -140,13 +140,39 @@
             background: #89111d;
             border-color: #89111d;
         }
-        .el-form-item__label{
-            height:32px;
+
+        .el-form-item__label {
+            height: 32px;
         }
-        .code{
+
+        .code {
             border-radius: 16PX;
             overflow: hidden;
             height: 32px;
+        }
+
+        .update {
+            width: 100%;
+            height: 396px;
+            background: transparent;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .update-title {
+            font-weight: 700;
+            font-size: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .update-info {
+            padding: 10px 0;
+            height: calc(100% - 40px - 38px);
+            color: #8b8b8b;
+            white-space: pre-line;
+            line-height: 30px;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -159,167 +185,244 @@
                     <div class="login-head">
                         <div class="logo">
                             <img src="image/logo.png">
+                            <span class="login-title" style="margin-left: 20px;" v-show="ifUpdate">
+                                <span>福路德信息化平台</span>
+                            </span>
                         </div>
                         <div class="system-operation">
                             <i class="el-icon-minus" onclick="vm.min()"></i>
                             <i class="el-icon-close" onclick="vm.close()"></i>
                         </div>
                     </div>
-                    <div class="login-title">
-                        <span>福路德信息化平台</span>
+                    <div v-show="!ifUpdate">
+                        <div class="login-title">
+                            <span>福路德信息化平台</span>
+                        </div>
+                        <div class="login-form">
+                            <el-form label-position="top" :model="form" size="small" @keyup.enter.native="login">
+                                <el-form-item label="账号">
+                                    <el-input v-model="form.name"></el-input>
+                                </el-form-item>
+                                <el-form-item label="密码">
+                                    <el-input v-model="form.pwd" type="password"></el-input>
+                                </el-form-item>
+                                <el-row>
+                                    <el-col :span="16">
+                                        <el-form-item label="验证码">
+                                            <el-input v-model="form.code"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="8" :push="2">
+                                        <el-form-item label=" ">
+                                            <!-- <el-input></el-input> -->
+                                            <a href="javascript:void" title="点击切换验证码" onclick="vm.changeDcode()"><img
+                                                    class="code" /></a>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+
+                                <el-form-item>
+                                    <el-checkbox v-model="form.checkedPwd">记住密码</el-checkbox>
+                                    <span class="forget">忘记密码?</span>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="danger" round class="login-btn" @click="login" v-html="btnText">
+                                    </el-button>
+                                </el-form-item>
+                            </el-form>
+                            <div class="line">宁波汇智云创技术支持</div>
+                        </div>
                     </div>
-                    <div class="login-form">
-                        <el-form label-position="top" :model="form" size="small" @keyup.enter.native="login">
-                            <el-form-item label="账号">
-                                <el-input v-model="form.name"></el-input>
-                            </el-form-item>
-                            <el-form-item label="密码">
-                                <el-input v-model="form.pwd" type="password" ></el-input>
-                            </el-form-item>
-                            <el-row>
-                                <el-col :span="16">
-                                    <el-form-item label="验证码">
-                                        <el-input v-model="form.code"></el-input>
-                                    </el-form-item>
+
+                    <div class="update" v-show="ifUpdate">
+                        <div class="update-title">发现新版本({{updateInfo.F_Ver}})</div>
+                        <div class="update-info">
+                            <div>{{updateInfo.FRemarks}}</div>
+                        </div>
+                        <div class="update-button">
+                            <el-row :gutter="20" v-show="!isUpdateNow">
+                                <el-col :span="12" style="text-align:center;">
+                                    <el-button block type="danger" style="width: 150px;" @click="updateAPP">更新
+                                    </el-button>
                                 </el-col>
-                                <el-col :span="8" :push="2">
-                                    <el-form-item label=" ">
-                                        <!-- <el-input></el-input> -->
-                                        <a href="javascript:void" title="点击切换验证码" onclick="vm.changeDcode()"><img class="code" /></a>
-                                    </el-form-item>
+                                <el-col :span="12" style="text-align:center;">
+                                    <el-button block type="primary" style="width: 150px;" @click="cancelUpdate">取消
+                                    </el-button>
                                 </el-col>
                             </el-row>
-
-                            <el-form-item>
-                                <el-checkbox v-model="form.checkedPwd">记住密码</el-checkbox>
-                                <span class="forget">忘记密码?</span>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="danger" round class="login-btn" @click="login" v-html="btnText"></el-button>
-                            </el-form-item>
-                        </el-form>
-                        <div class="line">宁波汇智云创技术支持</div>
+                            <el-progress size="mini" :percentage="percentage" v-show="isUpdateNow"></el-progress>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </el-collapse-transition>
-
 
     </div>
 </body>
 <script>
-    const {ipcRenderer} = require('electron')
-    const {SystemModules,SelfModules} = require(ipcRenderer.sendSync('getRootPath') +'/assembly/RequireHelper')
-    const {post} = SelfModules('httpHelper')
-    const {md5,aesEncode,aesDecode} = require(ipcRenderer.sendSync('getRootPath') +'/assembly/CryptoHelper')
-    const Config = require(ipcRenderer.sendSync('getRootPath')+'/config/config.json')
+    const { ipcRenderer } = require('electron')
+    const { SystemModules, SelfModules } = require(ipcRenderer.sendSync('getRootPath') + '/assembly/RequireHelper')
+    const { post } = SelfModules('httpHelper')
+    const { md5, aesEncode, aesDecode } = require(ipcRenderer.sendSync('getRootPath') + '/assembly/CryptoHelper')
+    const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json')
+    const package = require(ipcRenderer.sendSync('getRootPath') + '/package.json');
+
+    ipcRenderer.on("message", (event, text) => {
+        console.log(text)
+        if (text == 'isUpdateNow') {
+            ipcRenderer.send('updateNow')
+        }
+    });
+
+    ipcRenderer.on("downloadProgress", (event, progressObj) => {
+        console.log(progressObj);
+        vm.isUpdateNow = true;
+        vm.percentage = parseInt(progressObj.percent);
+    });
+
 
     const vm = new Vue({
         el: '#app',
         data: {
-            showAnimate:true,
+            showAnimate: true,
             form: {
                 name: '',
-                pwd:'',
+                pwd: '',
                 region: '',
                 type: '',
-                code:'',
-                clientCode:'',
-                checkedPwd:false
+                code: '',
+                clientCode: '',
+                checkedPwd: false
             },
-            cryptoKey:'fld_login',
-            btnText:'登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录',
-            btnEnabled:true
+            cryptoKey: 'fld_login',
+            btnText: '登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录',
+            btnEnabled: true,
+            ifUpdate: false,
+            updateInfo: [],
+            isUpdateNow:false,
+            percentage:0
         },
         created: function () {
             let that = this;
-            setTimeout(function(){
+            that.checkUpdate();
+            setTimeout(function () {
                 that.showAnimate = true;
                 that.changeDcode();
                 var userLoginPwd = localStorage.getItem("userLoginPwd");
-                if(userLoginPwd!=undefined && userLoginPwd!=''){
+                if (userLoginPwd != undefined && userLoginPwd != '') {
                     vm.form.checkedPwd = true;
-                    vm.form.pwd = aesDecode(userLoginPwd,vm.cryptoKey);
+                    vm.form.pwd = aesDecode(userLoginPwd, vm.cryptoKey);
                 }
                 vm.form.name = localStorage.getItem("userLoginName") || '';
-            },500)
+            }, 500)
         },
         methods: {
-            min(){
+            checkUpdate() {
+                let that = this;
+                post({
+                    path: '/Frame/SqlData'
+                }, {
+                        cmdname: 'PC_FileList'
+                    }, (result) => {
+                        result = JSON.parse(result);
+                        if (result.status == 200) {
+                            let data = result.data;
+                            if (data.ds[data.ds.length - 1].F_Ver != package.version) {
+                                that.updateInfo = data.ds[data.ds.length - 1];
+                                that.ifUpdate = true;
+                                //需要更新,主进程检测更新
+
+                            }
+                        }
+                    }, (err) => {
+
+                    });
+            },
+            updateAPP() {
+                let that = this;
+                ipcRenderer.send('update');
+            },
+            cancelUpdate() {
+                let that = this;
+                that.ifUpdate = false;
+
+            },
+            min() {
                 ipcRenderer.send('minWindow');
             },
-            close(){
+            close() {
                 ipcRenderer.sendSync('quitApp');
             },
-            changeDcode(){
-                vm.form.clientCode = new Date().getTime().toString()+Math.floor((Math.random()*100)+1).toString();
-                $(".code").attr("src","http://"+ Config.Http_config.ip+":"+Config.Http_config.port +"/Frame/ST1_FLD/Handler.aspx?cmd=sendDcode&clientCode="+vm.form.clientCode);
+            changeDcode() {
+                vm.form.clientCode = new Date().getTime().toString() + Math.floor((Math.random() * 100) + 1).toString();
+                $(".code").attr("src", "http://" + Config.Http_config.ip + ":" + Config.Http_config.port + "/Frame/ST1_FLD/Handler.aspx?cmd=sendDcode&clientCode=" + vm.form.clientCode);
             },
             login() {
-                if(!vm.btnEnabled){
+                let that = this;
+                if (!vm.btnEnabled) {
                     return false;
                 }
-                let that = this;
-                if(vm.form.name==''){
+                if (vm.form.name == '') {
                     layer.msg('请先输入账号');
                 }
-                else if(vm.form.pwd==''){
+                else if (vm.form.pwd == '') {
                     layer.msg('请先输入密码');
                 }
-                else{
-                    vm.btnText="登录中...";
+                else {
+                    vm.btnText = "登录中...";
                     vm.btnEnabled = false;
                     post({
-                        path:'/Frame/ST1_FLD/Handler.aspx'
-                    },{
-                        cmd:'login',
-                        P_Name:vm.form.name,
-                        P_Password:md5(vm.form.pwd),
-                        yzm:vm.form.code,
-                        clientCode:vm.form.clientCode
-                    },(result)=>{
-                        vm.btnText = '登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录';
-                        vm.btnEnabled = true;
-                        result = JSON.parse(result);
-                        if(result.status =="200"){
-                            if(result.data.ds.length>0){
-                                if(result.data.ds[0].status=="200"){
-                                    //判断是否记住密码
-                                    if(vm.form.checkedPwd){
-                                        var encodePwd = aesEncode(vm.form.pwd,vm.cryptoKey);
-                                        localStorage.setItem("userLoginPwd",encodePwd);
-                                        localStorage.setItem("userLoginName",vm.form.name);
+                        path: '/Frame/ST1_FLD/Handler.aspx'
+                    }, {
+                            cmd: 'login',
+                            P_Name: vm.form.name,
+                            P_Password: md5(vm.form.pwd),
+                            yzm: vm.form.code,
+                            clientCode: vm.form.clientCode
+                        }, (result) => {
+                            vm.btnText = '登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录';
+                            vm.btnEnabled = true;
+                            result = JSON.parse(result);
+                            if (result.status == "200") {
+                                if (result.data.ds.length > 0) {
+                                    if (result.data.ds[0].status == "200") {
+                                        //判断是否记住密码
+                                        if (vm.form.checkedPwd) {
+                                            var encodePwd = aesEncode(vm.form.pwd, vm.cryptoKey);
+                                            localStorage.setItem("userLoginPwd", encodePwd);
+                                            localStorage.setItem("userLoginName", vm.form.name);
+                                        }
+                                        else {
+                                            localStorage.setItem("userLoginPwd", '');
+                                        }
+                                        var user = {
+                                            UserID: result.data.ds[0].UserID,
+                                            UserCode: result.data.ds[0].UserCode,
+                                            UserName: result.data.ds[0].UserName
+                                        }
+                                        ipcRenderer.send("setCurrentUser", {
+                                            path: ipcRenderer.sendSync('getRootPath') + "/storage/login.json",
+                                            userInfo: user
+                                        });
+                                        that.showAnimate = false;
+                                        //跳转到主页
+                                        ipcRenderer.send('redirectMain');
                                     }
-                                    else{
-                                        localStorage.setItem("userLoginPwd",'');
+                                    else {
+                                        layer.msg(result.data.ds[0].msg);
                                     }
-                                    var user = {
-                                        UserID:result.data.ds[0].UserID,
-                                        UserCode:result.data.ds[0].UserCode,
-                                        UserName:result.data.ds[0].UserName
-                                    }
-                                   ipcRenderer.send("setCurrentUser",{
-                                       path:ipcRenderer.sendSync('getRootPath')+"/storage/login.json",
-                                       userInfo:user
-                                   });
-                                   that.showAnimate = false;
-                                    //跳转到主页
-                                    ipcRenderer.send('redirectMain');
-                                }
-                                else{
-                                    layer.msg(result.data.ds[0].msg);
                                 }
                             }
-                        } 
-                        else{
-                            layer.msg(result.msg); 
-                        }
-                    },(err)=>{
-                        vm.btnText = '登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录';
-                        vm.btnEnabled = true;
-                    });
+                            else {
+                                layer.msg(result.msg);
+                            }
+                        }, (err) => {
+                            vm.btnText = '登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录';
+                            vm.btnEnabled = true;
+                        });
                 }
-                
+
             }
         }
     })

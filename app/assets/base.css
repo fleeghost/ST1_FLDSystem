@@ -31,8 +31,14 @@ html,body{
     height: 100%;
 }
 
+
+
 [v-cloak] {
     display: none;
+}
+
+.el-button{
+    font-family: 'Microsoft YaHei';
 }
 
 /* el-tabs样式 */

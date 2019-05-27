@@ -12,14 +12,11 @@
     <link rel="stylesheet" type="text/css" href="assets/plugins/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="assets/iconfont/iconfont.css" />
     <script type="text/javascript" src="assets/jquery/jquery-1.9.1.js"></script>
-    <script type="text/javascript" src="assets/jquery.signalR-2.4.1.min.js"></script>
-    <script type="text/javascript" src="http://47.110.58.236:9981/signalr/hubs"></script>
-    <script type="text/javascript" src="assets/signalr-mediate.js"></script>
     <script type="text/javascript" src="assets/layer/layer.js"></script>
     <script type="text/javascript" src="assets/vue.js"></script>
     <script type="text/javascript" src="assets/element-ui/index.js"></script>
     <script type="text/javascript" src="assets/vue-element-bigdata-table.min.js"></script>
-    <script type="text/javascript" src="assets/base.js"></script>
+    <!-- <script type="text/javascript" src="assets/base.js"></script> -->
     <style>
         .iconfont {
             font-size: 20px;
@@ -141,20 +138,21 @@
 
         .el-container .tree-search .el-button--text {
             color: #606266;
+            margin: 0;
         }
 
         .el-container .tree-search .search-text {
             display: inline-block;
             height: 28px;
             line-height: 28px;
-            margin-left: 10px;
+            margin-left: 0;
         }
 
         .el-container .tree-search .search-text input {
             border: 1px solid #c7c7c7;
             margin: 0;
             padding: 0 10px 0;
-            width: 117px;
+            width: 100px;
             height: 22px;
             border-radius: 11px;
             background: #c7c7c7;
@@ -233,7 +231,7 @@
         }
 
         .el-menu-vertical-demo:not(.el-menu--collapse) {
-            width: 240px;
+            width: 203px;
             min-height: 400px;
         }
 
@@ -347,7 +345,7 @@
 
         .el-container .el-main .el-tabs__item {
             height: 24px;
-            line-height: 24px;
+            line-height: 22px;
         }
 
         .el-container .el-header .el-badge {
@@ -451,6 +449,67 @@
             vertical-align: text-top;
             margin-right: 10px;
         }
+
+        .page-lock {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999999;
+            background: rgba(0, 0, 0, .8)
+        }
+
+        .page-lock .lock {
+            position: absolute;
+            left: 50%;
+            top: 30%;
+            transform: translate(-50%, -50%);
+        }
+
+        .page-lock .img {
+            text-align: center;
+        }
+
+        .page-lock .img img {
+            width: 160px;
+        }
+
+        .page-lock .close {
+            position: absolute;
+            right: -32px;
+            bottom: 0;
+            width: 28px;
+            height: 28px;
+            line-height: 24px;
+            text-align: center;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .page-lock .close img {
+            width: 20px;
+            vertical-align: middle;
+        }
+
+        .el-menu--collapse {
+            width: 25px;
+        }
+
+        .icon-arrow-{
+            display: inline-block;
+            font-size: 12px;
+            transition: all .5s linear;
+        }
+
+        .arrow-to-right{
+            transform: rotateY(0);
+        }
+
+        .arrow-to-left{
+            transform: rotateY(180deg);
+        }
     </style>
 </head>
 
@@ -513,10 +572,14 @@
                             <el-dropdown placement="bottom" trigger="hover" @command="handleCommand">
                                 <div trigger="hover">
                                     <img src="image/header.png" />
-                                    <span>金俊杰</span>
+                                    <span>{{userName}}</span>
                                     <i class="el-icon-arrow-down"></i>
                                 </div>
                                 <el-dropdown-menu slot="dropdown" style="width: 140px;">
+                                    <el-dropdown-item class="dropdown_button" command="个人信息"><img
+                                            src="image/personal.png" />个人信息</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" command="锁屏"><img
+                                            src="image/lock2.png" />锁屏</el-dropdown-item>
                                     <el-dropdown-item class="dropdown_button loginOut" command="注销"><img
                                             src="image/loginOut.png" />注销</el-dropdown-item>
                                 </el-dropdown-menu>
@@ -542,7 +605,7 @@
                             <i class="iconfont icon-suoxiao" style="font-size:14px;"></i>
                         </div>
                         <div class="item" @click="close">
-                            <i class="iconfont icon-close" style="font-size:20px;"></i>
+                            <i class="iconfont icon-close" style="font-size:13px;"></i>
                         </div>
                     </div>
                 </div>
@@ -557,9 +620,11 @@
                     <!-- <div class="calendar"></div> -->
                 </div>
                 <div class="row-3">
-                    <div style="float:left;">
+                    <div style="float:left;line-height: 28px;">
                         <div class="tree-search">
-                            <el-button type="text" icon="el-icon-menu" @click="toggleTree"></el-button>
+                            <el-button type="text" @click="toggleTree" style="padding:0;">
+                                <i class="iconfont icon-arrow-" :class="!isCollapse?'arrow-to-left':'arrow-to-right'"></i>
+                            </el-button>
                             <el-button type="text" icon="el-icon-d-caret" v-show="showIcon" @click="toggleOpen">伸缩
                             </el-button>
                             <div class="search-text" v-show="showIcon">
@@ -626,15 +691,40 @@
                 </el-container>
             </el-container>
         </el-container>
+
+        <transition name="el-fade-in" v-cloak>
+            <div class="page-lock" v-if="pageLock">
+                <div class="lock">
+                    <div class="img">
+                        <img src="image/lock1.png" />
+                    </div>
+                    <div style="margin-top:30px;">
+                        <el-input type="password" placeholder="请输入解锁密码" v-model="lockPassword"
+                            @keyup.enter.native="unlock">
+                            <template slot="append">
+                                <el-button type="primary" @click="unlock">解锁</el-button>
+                            </template>
+                        </el-input>
+                    </div>
+                    <div class="close" @click="close">
+                        <a title="退出软件"><img src="image/loginOut-lock.png" /></a>
+
+                    </div>
+                </div>
+            </div>
+        </transition>
+
+
+
     </div>
 
 
 </body>
 <script>
 
-    // require('update-electron-app')()
-
     const { ipcRenderer } = require('electron')
+
+    const session = require('electron').remote.session
 
     const ping = require('ping');
     const { SystemModules, SelfModules } = require(ipcRenderer.sendSync('getRootPath') + '/assembly/RequireHelper')
@@ -642,9 +732,11 @@
     const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json');
     const package = require(ipcRenderer.sendSync('getRootPath') + '/package.json');
 
+    
+
+
+
     let winSizeType = 1;
-
-
 
     Vue.prototype.$ELEMENT = { size: 'mini' }
 
@@ -703,7 +795,10 @@
             currentTypeId: 0,
             config: Config,
             pingStatus: '',
-            ifDebugger: false
+            ifDebugger: false,
+            pageLock: false,
+            lockPassword: '',
+            userName: localStorage.getItem("userLoginName")
         },
         created: function () {
             let that = this;
@@ -734,7 +829,6 @@
                 }, (ret) => {
                     let data = JSON.parse(ret);
                     if (data.status == 200) {
-                        let that = this;
                         let totalList = data.data.ds
                         for (let i in totalList) {
                             if (totalList[i].NavigateUrl) {
@@ -768,7 +862,7 @@
                 let that = this;
                 if (that.ifDebugger) {
                     $(e.$el).find('webview')[0].getWebContents().openDevTools();
-                    $(e.$el).find('webview')[0].reloadIgnoringCache();
+                    // $(e.$el).find('webview')[0].reloadIgnoringCache();
                 }
             },
             dealTabs(index) {
@@ -908,7 +1002,7 @@
             },
             close() {
                 layer.confirm('确定退出' + package.description + '?', {
-                    title:'提示',
+                    title: '提示',
                     btn: ['确认', '取消'] //按钮
                 }, () => {
                     ipcRenderer.sendSync('quitApp');
@@ -935,57 +1029,106 @@
                         ipcRenderer.send('openTool');
                     }
                     that.ifDebugger = !that.ifDebugger;
-                } else if (command == '软件更新') {
-
+                } else if (command == '锁屏') {
+                    that.pageLock = true;
                 }
 
+            },
+            unlock() {
+                let that = this;
+                if (!that.lockPassword) {
+                    layer.msg('请输入解锁密码!')
+                    return false;
+                }
+                if (that.lockPassword == '123456') {
+                    that.lockPassword = '';
+                    that.pageLock = false;
+                    lockTime = new Date().getTime();
+                } else {
+                    that.lockPassword = '';
+                    layer.msg('解锁密码错误,请重新输入!')
+                }
             }
         }
     })
 
     let signtime = new Date().getTime();
-
+    let lockTime = new Date().getTime();
+    let guid = '';
     $(function () {
-        $.signalrApi({
-            serverUrl: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port,
-            clientHub: "PageHub",
-            clientEvents: [
-                {
-                    name: "onGlobalConnect",
-                    method: function (data) {
-                        $.signalrApi.server.applyInstruct(data, 'sss')
+
+        $.getScript("assets/jquery.signalR-2.4.1.min.js", function () {
+            $.getScript("http://" + Config.Http_config.ip + ':' + Config.Http_config.port + "/signalr/hubs", function () {
+                $.getScript("assets/signalr-mediate.js", function () {
+
+                    $.signalrApi({
+                        serverUrl: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port,
+                        clientHub: "PageHub",
+                        clientEvents: [
+                            {
+                                name: "onGlobalConnect",
+                                method: function (data) {
+                                    guid = data;
+                                    const cookie = { url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port, name: localStorage.getItem("userLoginName"), value: guid }
+                                    session.defaultSession.cookies.set(cookie, (error) => {
+                                        if (error) console.error(error);
+                                    });
+                                }
+                            },
+
+                            {
+                                name: "onClientLive",
+                                method: function (data) {
+                                    signtime = new Date().getTime();
+                                }
+                            },
+
+                            {
+                                name: "onApplyInstruct",
+                                method: function (data) {
+                                    var ret = JSON.parse(data);
+                                    if (ret.eventType == 'click') {
+                                        lockTime = new Date().getTime();
+                                    }
+                                    console.log(lockTime)
+                                }
+                            }
+                        ]
+                    });
+                    //socket连接
+                    function signalrConnect() {
+                        $.signalrApi.start(function () {
+                            $.signalrApi.server.globalConnect();
+                        });
                     }
-                },
+                    signalrConnect();
 
-                {
-                    name: "onClientLive",
-                    method: function (data) {
-                        signtime = new Date().getTime();
-                    }
-                },
+                    setInterval(function () {
+                        $.signalrApi.server.clientLive();
+                        if (new Date().getTime() - signtime > 100000) {
+                            signalrConnect();
+                        }
 
-                {
-                    name: "onApplyInstruct",
-                    method: function (data) {
+                        if (new Date().getTime() - lockTime > 10 * 60 * 1000) {
+                            vm.pageLock = true;
+                        }
 
-                    }
-                }
-            ]
-        });
-        //socket连接
-        $.signalrApi.start(function () {
-            $.signalrApi.server.globalConnect();
-        });
+                    }, 10000);
 
-        setInterval(function () {
-            $.signalrApi.server.clientLive();
-            if (new Date().getTime() - signtime > 100000) {
-                //socket连接
-                $.signalrApi.start(function () {
-                    $.signalrApi.server.globalConnect();
+                    $('body').click(function () {
+                        let signalrData = {
+                            eventType: 'click',
+                            data: {}
+                        }
+                        $.signalrApi.server.applyInstruct(guid, JSON.stringify(signalrData))
+                    })
                 });
-            }
-        }, 10000);
+            });
+
+        })
+
+
+
     })
 </script>
 
