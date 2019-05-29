@@ -387,6 +387,11 @@
                             if (result.status == "200") {
                                 if (result.data.ds.length > 0) {
                                     if (result.data.ds[0].status == "200") {
+
+                                        localStorage.setItem("UserID", result.data.ds[0].UserID);
+                                        localStorage.setItem("UserCode", result.data.ds[0].UserCode);
+                                        localStorage.setItem("UserName", result.data.ds[0].UserName);
+
                                         //判断是否记住密码
                                         if (vm.form.checkedPwd) {
                                             var encodePwd = aesEncode(vm.form.pwd, vm.cryptoKey);

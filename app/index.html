@@ -16,7 +16,7 @@
     <script type="text/javascript" src="assets/vue.js"></script>
     <script type="text/javascript" src="assets/element-ui/index.js"></script>
     <script type="text/javascript" src="assets/vue-element-bigdata-table.min.js"></script>
-    <!-- <script type="text/javascript" src="assets/base.js"></script> -->
+    <script type="text/javascript" src="assets/appError.js"></script>
     <style>
         .iconfont {
             font-size: 20px;
@@ -497,17 +497,17 @@
             width: 25px;
         }
 
-        .icon-arrow-{
+        .icon-arrow- {
             display: inline-block;
             font-size: 12px;
             transition: all .5s linear;
         }
 
-        .arrow-to-right{
+        .arrow-to-right {
             transform: rotateY(0);
         }
 
-        .arrow-to-left{
+        .arrow-to-left {
             transform: rotateY(180deg);
         }
     </style>
@@ -623,7 +623,8 @@
                     <div style="float:left;line-height: 28px;">
                         <div class="tree-search">
                             <el-button type="text" @click="toggleTree" style="padding:0;">
-                                <i class="iconfont icon-arrow-" :class="!isCollapse?'arrow-to-left':'arrow-to-right'"></i>
+                                <i class="iconfont icon-arrow-"
+                                    :class="!isCollapse?'arrow-to-left':'arrow-to-right'"></i>
                             </el-button>
                             <el-button type="text" icon="el-icon-d-caret" v-show="showIcon" @click="toggleOpen">伸缩
                             </el-button>
@@ -732,11 +733,9 @@
     const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json');
     const package = require(ipcRenderer.sendSync('getRootPath') + '/package.json');
 
-    
-
-
-
     let winSizeType = 1;
+
+
 
     Vue.prototype.$ELEMENT = { size: 'mini' }
 
@@ -1069,10 +1068,30 @@
                                 name: "onGlobalConnect",
                                 method: function (data) {
                                     guid = data;
-                                    const cookie = { url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port, name: localStorage.getItem("userLoginName"), value: guid }
-                                    session.defaultSession.cookies.set(cookie, (error) => {
-                                        if (error) console.error(error);
-                                    });
+                                    const cookie = [{
+                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+                                        name: 'admin',
+                                        value: guid
+                                    }, {
+                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+                                        name: 'UserID',
+                                        value: localStorage.getItem("UserID").toString()
+                                    }, {
+                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+                                        name: 'UserCode',
+                                        value: localStorage.getItem("UserCode")
+                                    }, {
+                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+                                        name: 'UserName',
+                                        value: localStorage.getItem("UserName")
+                                    }];
+                                    debugger;
+                                    for (var i in cookie) {
+                                        session.defaultSession.cookies.set(cookie[i], (error) => {
+                                            if (error) console.error(error);
+                                        });
+                                    }
+
                                 }
                             },
 
@@ -1087,10 +1106,12 @@
                                 name: "onApplyInstruct",
                                 method: function (data) {
                                     var ret = JSON.parse(data);
+                                    console.log(ret)
                                     if (ret.eventType == 'click') {
                                         lockTime = new Date().getTime();
+                                    } else if (ret.eventType == 'error') {
+                                        writeFile(ret.data);
                                     }
-                                    console.log(lockTime)
                                 }
                             }
                         ]
