@@ -70,13 +70,28 @@ html,body{
     padding-right: 8px;
 }
 
-/* 按钮样式 */
-.el-button--primary{
-    background-color: #f2f2f2;
-    border-color: #dad6d6!important;
-    color: #606266;
-    border-radius: 0;
+
+/* el-dialog样式 */
+.el-dialog__header {
+    padding: 10px 10px 5px;
 }
+.el-dialog__body{
+    padding: 0 10px;
+}
+.el-dialog__headerbtn {
+    top: 13px;
+    right: 10px;
+}
+
+
+.el-table th div{
+    line-height: 28px;
+}
+.el-input__prefix{
+    left: 12px;
+}
+
+
 
 /* layer样式 */
 .layui-layer-title{
@@ -104,5 +119,86 @@ html,body{
 .layui-layer-btn .layui-layer-btn0{
     border-color: #b91627!important;
     background-color: #b91627!important;
+}
+
+
+
+
+/* el-datepicker样式 */
+.el-date-picker{
+    width: 170px;
+}
+.el-date-picker__header{
+    margin: 2px;
+}
+.el-date-picker .el-picker-panel__content {
+    width: 160px;
+    margin: 5px;
+    
+}
+.el-date-table th{
+    padding: 0px;
+}
+.el-date-table td{
+    width: 20px;
+    height: 20px;
+    padding:0;
+}
+.el-date-table td div{
+    height: 20px;
+    padding:0;
+}
+.el-date-table td span {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+}
+.el-date-picker__header-label{
+    font-size: 13px;
+}
+.el-picker-panel{
+    line-height: 16px;
+}
+.el-picker-panel__icon-btn{
+    padding: 1px 2px;
+    margin-top: 5px;
+}
+.el-date-picker__header--bordered{
+    padding-bottom: 5px;  
+}
+.el-month-table td .cell, .el-year-table td .cell{
+    width: 36px;
+    height: 20px;
+    line-height: 20px;
+}
+.el-year-table td{
+    padding: 7px 3px;
+}
+.el-month-table td {
+    padding: 7px 3px;
+}
+.el-date-picker__time-header{
+    padding: 5px 0;
+}
+.el-date-picker__editor-wrap .el-input__inner{
+    padding: 0;
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+}
+.el-time-panel{
+    width: 160px;
+}
+.el-time-panel__footer{
+    height: 24px;
+    line-height: 20px;
+    padding: 2px;
+}
+.el-time-panel__btn{
+    line-height: 20px;
+}
+.el-picker-panel__link-btn{
+    padding: 2px 8px;
 }
 

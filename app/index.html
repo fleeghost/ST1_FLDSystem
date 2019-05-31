@@ -441,7 +441,6 @@
 
         .loginOut:hover {
             color: #b91727 !important;
-            background: #e6ced1 !important;
         }
 
         .dropdown_button img {
@@ -510,15 +509,19 @@
         .arrow-to-left {
             transform: rotateY(180deg);
         }
+
+        .err-log {
+            white-space: pre;
+        }
+
+        .err-note {
+            color: #b91727;
+        }
     </style>
 </head>
 
 <body>
     <div id="app">
-
-        <el-popover ref="popover1" placement="top-start" title="标题" width="200" trigger="hover"
-            content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
-        </el-popover>
 
         <el-container v-cloak>
             <el-header>
@@ -529,7 +532,7 @@
                         <span>福路德信息化平台</span>
                     </div>
                     <div class="system-operation">
-                        <el-popover title="最新消息" placement="bottom" width="250" trigger="hover">
+                        <el-popover title="最新消息" placement="bottom" width="250" trigger="click">
                             <div style="overflow-y:auto;max-height:300px;">
                                 <div class="bell">
                                     <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
@@ -569,8 +572,8 @@
 
 
                         <div class="item img">
-                            <el-dropdown placement="bottom" trigger="hover" @command="handleCommand">
-                                <div trigger="hover">
+                            <el-dropdown placement="bottom" trigger="click" @command="handleCommand">
+                                <div trigger="click">
                                     <img src="image/header.png" />
                                     <span>{{userName}}</span>
                                     <i class="el-icon-arrow-down"></i>
@@ -586,8 +589,8 @@
                             </el-dropdown>
                         </div>
                         <div class="item">
-                            <el-dropdown placement="bottom" trigger="hover" @command="handleCommand">
-                                <div trigger="hover">
+                            <el-dropdown placement="bottom" trigger="click" @command="handleCommand">
+                                <div trigger="click">
                                     <i class="iconfont icon-menu"></i>
                                 </div>
                                 <el-dropdown-menu slot="dropdown" style="width: 140px;">
@@ -595,6 +598,10 @@
                                             src="image/update.png" />软件更新</el-dropdown-item>
                                     <el-dropdown-item class="dropdown_button" command="调试模式"><img
                                             src="image/debugger.png" />{{ifDebugger?'关闭调试':'开启调试'}}</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" command="报错日志"><img
+                                            src="image/log.png" />报错日志</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" command="更新记录"><img
+                                            src="image/updateRecord.png" />更新记录</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -635,10 +642,10 @@
                         </div>
                     </div>
                     <el-button-group class="fun-button">
-                        <el-button type="primary" @click="dealTabs(1)">刷新页签</el-button>
-                        <el-button type="primary" @click="dealTabs(2)">关闭当前页签</el-button>
-                        <el-button type="primary" @click="dealTabs(3)">关闭所有页签</el-button>
-                        <el-button type="primary" @click="dealTabs(4)">关闭其他页签</el-button>
+                        <el-button @click="dealTabs(1)">刷新页签</el-button>
+                        <el-button @click="dealTabs(2)">关闭当前页签</el-button>
+                        <el-button @click="dealTabs(3)">关闭所有页签</el-button>
+                        <el-button @click="dealTabs(4)">关闭其他页签</el-button>
                     </el-button-group>
 
                 </div>
@@ -683,7 +690,7 @@
                         <div style="line-height: 26px;">宁波市汇智云创信息科技有限公司技术支持</div>
                         <div class="footer-right">
                             <span class="ip_port">当前登录
-                                <span class="detail">【{{config.Http_config.ip + ':' + config.Http_config.port}}】</span>
+                                <span class="detail">【{{localIP}}】</span>
                             </span>
                             <span>当前网络</span>
                             <span class="signal" :class="pingStatus"></span>
@@ -716,6 +723,41 @@
         </transition>
 
 
+        <el-dialog title="错误日志" width="80%" :visible.sync="showErrLog">
+            <el-table :data="errData" max-height="500">
+                <el-table-column>
+                    <template slot="header" slot-scope="scope">
+
+                        <el-form :inline="true" :model="logSearch" class="demo-form-inline">
+                            <el-form-item label="审批人">
+                                <el-date-picker type="datetime" placeholder="选择日期"
+                                    v-model="logSearch.logDate1">
+                            </el-form-item>
+                            <el-form-item label="活动区域">
+                                <el-date-picker type="datetime" placeholder="选择日期"
+                                    v-model="logSearch.logDate2">
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="changeErrLogDate">查询</el-button>
+                            </el-form-item>
+                        </el-form>
+
+                        
+                    </template>
+                    <template slot-scope="scope">
+                        <div class="err-log">{{scope.row.error}}</div>
+                        <div class="err-note">
+                            <div><b>{{scope.row.time}}</b></div>
+                            <div><b>{{decodeURI(scope.row.url)}}</b></div>
+                        </div>
+
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-dialog>
+
+
+
 
     </div>
 
@@ -734,6 +776,19 @@
     const package = require(ipcRenderer.sendSync('getRootPath') + '/package.json');
 
     let winSizeType = 1;
+
+    function getIPAdress() {
+        var interfaces = require('os').networkInterfaces();
+        for (var devName in interfaces) {
+            var iface = interfaces[devName];
+            for (var i = 0; i < iface.length; i++) {
+                var alias = iface[i];
+                if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                    return alias.address;
+                }
+            }
+        }
+    }
 
 
 
@@ -793,11 +848,19 @@
             searchKey: '',
             currentTypeId: 0,
             config: Config,
+            localIP: getIPAdress(),
             pingStatus: '',
             ifDebugger: false,
             pageLock: false,
             lockPassword: '',
-            userName: localStorage.getItem("userLoginName")
+            userName: localStorage.getItem("userLoginName"),
+            showErrLog: false,
+            errData: [],
+            logSearch:{
+                logDate1: getFormatDate(),
+                logDate2: getFormatDate()
+            }
+            
         },
         created: function () {
             let that = this;
@@ -1017,6 +1080,25 @@
                     that.isCollapse = !that.showIcon;
                 }, 100)
             },
+            changeErrLogDate() {
+                let that = this;
+                that.errData = [];
+                readFile(that.logDate + '.txt', (content) => {
+                    if (content) {
+                        let newArray = [];
+                        let contentArray = content.split('----hzyc----');
+                        for (let i in contentArray) {
+                            if (i != contentArray.length - 1) {
+                                newArray.push(JSON.parse(contentArray[i]));
+                            }
+                        }
+                        that.errData = newArray;
+                    } else {
+                        that.errData = [];
+                    }
+
+                });
+            },
             handleCommand(command) {
                 let that = this;
                 if (command == '注销') {
@@ -1030,6 +1112,9 @@
                     that.ifDebugger = !that.ifDebugger;
                 } else if (command == '锁屏') {
                     that.pageLock = true;
+                } else if (command == '报错日志') {
+                    that.changeErrLogDate();
+                    that.showErrLog = true;
                 }
 
             },
@@ -1085,7 +1170,6 @@
                                         name: 'UserName',
                                         value: localStorage.getItem("UserName")
                                     }];
-                                    debugger;
                                     for (var i in cookie) {
                                         session.defaultSession.cookies.set(cookie[i], (error) => {
                                             if (error) console.error(error);

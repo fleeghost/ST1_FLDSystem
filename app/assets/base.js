@@ -70,12 +70,16 @@ $(function () {
 var txt = '';
 //捕获js报错
 window.onerror = function (message, source, lineno, colno, err) {
-    txt += "Error: " + err.stack + '\r\n';
-    txt += "Time: " + getFormatDate() + '\r\n';
-    txt += "-----------------------------------------------------------" + '\r\n';
+    let errorInfo = {
+        error:err.stack,
+        time:getFormatDate(),
+        url:window.location.href
+    }
+    txt += JSON.stringify(errorInfo);
+    txt += "----hzyc----";
     var signalrData = {
         eventType: 'error',
-        data: txt
+        data: txt,
     }
     try {
         $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
@@ -88,9 +92,13 @@ window.onerror = function (message, source, lineno, colno, err) {
 
 //捕获vue报错
 Vue.config.errorHandler = function (err, vm, info) {
-    txt += "Error: " + err.stack + '\r\n';
-    txt += "Time: " + getFormatDate() + '\r\n';
-    txt += "-----------------------------------------------------------" + '\r\n';
+    let errorInfo = {
+        error:err.stack,
+        time:getFormatDate(),
+        url:window.location.href
+    }
+    txt += JSON.stringify(errorInfo);
+    txt += "----hzyc----";
     var signalrData = {
         eventType: 'error',
         data: txt
