@@ -1,6 +1,6 @@
 {
     "Db_Connection":{
-        "host":"47.110.58.236",
+        "host":"120.77.144.187",
         "dialect":"mssql",
         "port":1433,
         "pool":{
@@ -13,7 +13,7 @@
         "dbPassword":"hzyc!@#"
     },
     "Http_config":{
-        "ip":"47.110.58.236",
+        "ip":"120.77.144.187",
         "port":"9981"
     }
 }

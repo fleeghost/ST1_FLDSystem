@@ -2,22 +2,30 @@ const fs = require('fs');
 
 window.onerror = function (message, source, lineno, colno, err) {
     let txt = "";
-    txt += "Error: " + err.stack + '\r\n';
-    txt += "Time: " + getFormatDate() + '\r\n';
-    txt += "-----------------------------------------------------------" + '\r\n';
+    let errorInfo = {
+        error:err.stack,
+        time:getFormatDate(),
+        url:window.location.href
+    }
+    txt += JSON.stringify(errorInfo);
+    txt += "----hzyc----";
     writeFile(txt);
 }
 
 Vue.config.errorHandler = function (err, vm, info) {
     let txt = "";
-    txt += "Error: " + err.stack + '\r\n';
-    txt += "Time: " + getFormatDate() + '\r\n';
-    txt += "-----------------------------------------------------------" + '\r\n';
+    let errorInfo = {
+        error:err.stack,
+        time:getFormatDate(),
+        url:window.location.href
+    }
+    txt += JSON.stringify(errorInfo);
+    txt += "----hzyc----";
     writeFile(txt);
 };
 
 function writeFile(txt) {
-    txt = txt.replace(/   /g,'\r\n');
+    // txt = txt.replace(/     /g, '\r\n');
     fs.mkdir('./errorLog', function (error) {
         if (error) {
             console.log('目录已存在');
@@ -30,6 +38,25 @@ function writeFile(txt) {
             console.log('写入成功');
         })
     })
+}
+
+
+function readFile(path,callback) {
+    path = './errorLog/' + path;
+    fs.exists(path, function (exists) {
+        if (exists) {
+            fs.readFile(path, {encoding:'utf-8'}, function (err, data) {
+                if (err) {
+                    throw err;
+                }
+                if(callback){
+                    callback(data);
+                }
+            });
+        } else {
+            callback('');
+        }
+    });
 }
 
 function getFormatDate(date) {
