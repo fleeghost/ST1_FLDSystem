@@ -244,3 +244,154 @@ Error: Error: Syntax error, unrecognized expression: unsupported pseudo: number
  at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190529110545:71:17)
 Time: 2019-05-29 11:05:49
 -----------------------------------------------------------
+Error: Error: Syntax error, unrecognized expression: unsupported pseudo: number
+
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)
+
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)
+
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)
+
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)
+
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)
+
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)
+
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)
+
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)
+
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)
+
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190529112914:71:17)
+Time: 2019-05-29 11:28:46
+-----------------------------------------------------------
+Error: Error: Syntax error, unrecognized expression: unsupported pseudo: number
+
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)
+
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)
+
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)
+
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)
+
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)
+
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)
+
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)
+
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)
+
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)
+
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190529112931:71:17)
+Time: 2019-05-29 11:29:02
+-----------------------------------------------------------
+Error: Error: Syntax error, unrecognized expression: unsupported pseudo: number
+
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)
+
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)
+
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)
+
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)
+
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)
+
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)
+
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)
+
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)
+
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)
+
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190529133522:71:17)
+Time: 2019-05-29 13:34:53
+-----------------------------------------------------------
+Error: Error: Syntax error, unrecognized expression: unsupported pseudo: number
+
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)
+
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)
+
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)
+
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)
+
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)
+
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)
+
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)
+
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)
+
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)
+
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190529135034:71:17)
+Time: 2019-05-29 13:50:06
+-----------------------------------------------------------
+Error: Error: Syntax error, unrecognized expression: unsupported pseudo: number
+
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)
+
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)
+
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)
+
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)
+
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)
+
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)
+
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)
+
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)
+
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)
+
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190529135306:71:17)
+Time: 2019-05-29 13:52:37
+-----------------------------------------------------------
+Error: TypeError: Cannot read property 'length' of undefined
+
+ at Object.success (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190529135445:1252:38)
+
+ at fire (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:1037:30)
+
+ at Object.fireWith [as resolveWith] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:1148:7)
+
+ at done (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:8074:14)
+
+ at XMLHttpRequest.callback (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:8598:8)
+Time: 2019-05-29 13:54:16
+-----------------------------------------------------------
+Error: Error: Syntax error, unrecognized expression: unsupported pseudo: number
+
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)
+
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)
+
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)
+
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)
+
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)
+
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)
+
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)
+
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)
+
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)
+
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190529135640:71:17)
+Time: 2019-05-29 13:56:12
+-----------------------------------------------------------

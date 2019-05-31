@@ -1,0 +1,121 @@
+{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190531101446:73:17)","time":"2019-05-31 10:14:18","url":"http://47.110.58.236:9981/FormList/Table?moduleName=%E9%94%80%E5%94%AE%E9%80%80%E8%B4%A7%E4%B8%BB%E8%A1%A8"}----hzyc----{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190531101454:73:17)","time":"2019-05-31 10:14:24","url":"http://47.110.58.236:9981/FormList/Table?t=10:14:24%20GMT+0800%20(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4)"}----hzyc----{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190531101454:73:17)","time":"2019-05-31 10:14:25","url":"http://47.110.58.236:9981/FormList/Table?t=10:14:24%20GMT+0800%20(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4)"}----hzyc----{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at http://47.110.58.236:9981/assets/selfjs/formdetail_config.js?t=20190531101452:821:13","time":"2019-05-31 10:14:24","url":"http://47.110.58.236:9981/FormDetail/Detail?objName=%E9%94%80%E5%94%AE%E9%80%80%E8%B4%A7&keyName=StockBOTID&keyValue=3"}----hzyc----{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190531101446:73:17)","time":"2019-05-31 10:14:32","url":"http://47.110.58.236:9981/FormList/Table?moduleName=%E9%94%80%E5%94%AE%E9%80%80%E8%B4%A7%E4%B8%BB%E8%A1%A8"}----hzyc----{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190531101506:73:17)","time":"2019-05-31 10:14:37","url":"http://47.110.58.236:9981/FormList/Table?t=10:14:36%20GMT+0800%20(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4)"}----hzyc----{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190531101506:73:17)","time":"2019-05-31 10:14:37","url":"http://47.110.58.236:9981/FormList/Table?t=10:14:36%20GMT+0800%20(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4)"}----hzyc----{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at http://47.110.58.236:9981/assets/selfjs/formdetail_config.js?t=20190531101504:821:13","time":"2019-05-31 10:14:36","url":"http://47.110.58.236:9981/FormDetail/Detail?objName=%E9%94%80%E5%94%AE%E9%80%80%E8%B4%A7&keyName=StockBOTID&keyValue=3"}----hzyc----{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190531101446:73:17)","time":"2019-05-31 10:14:45","url":"http://47.110.58.236:9981/FormList/Table?moduleName=%E9%94%80%E5%94%AE%E9%80%80%E8%B4%A7%E4%B8%BB%E8%A1%A8"}----hzyc----{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at http://47.110.58.236:9981/assets/selfjs/formdetail_config.js?t=20190531101517:821:13","time":"2019-05-31 10:14:49","url":"http://47.110.58.236:9981/FormDetail/Detail?objName=%E9%94%80%E5%94%AE%E9%80%80%E8%B4%A7&keyName=StockBOTID&keyValue=3"}----hzyc----{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190531101519:73:17)","time":"2019-05-31 10:14:50","url":"http://47.110.58.236:9981/FormList/Table?t=10:14:49%20GMT+0800%20(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4)"}----hzyc----{"error":"Error: Syntax error, unrecognized expression: unsupported pseudo: number\n
+ at Function.Sizzle.error (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4421:8)\n
+ at PSEUDO (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:4776:13)\n
+ at matcherFromTokens (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5294:44)\n
+ at Sizzle.compile (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5435:13)\n
+ at select (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5513:2)\n
+ at Function.Sizzle [as find] (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:3998:9)\n
+ at init.find (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:5576:11)\n
+ at new init (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:196:38)\n
+ at jQuery (http://47.110.58.236:9981/assets/plugins/jquery/jquery-1.9.1.js:62:10)\n
+ at Vue.handler (http://47.110.58.236:9981/assets/selfjs/formlist_config.js?t=20190531101519:73:17)","time":"2019-05-31 10:14:51","url":"http://47.110.58.236:9981/FormList/Table?t=10:14:49%20GMT+0800%20(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4)"}----hzyc----
