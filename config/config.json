@@ -1,19 +1,19 @@
 {
     "Db_Connection":{
-        "host":"120.77.144.187",
+        "host":"106.15.33.39",
         "dialect":"mssql",
-        "port":1433,
+        "port":62121,
         "pool":{
             "max": 5, 
             "min": 0, 
             "idle": 10000
         },
         "dbName":"ST1_FLD",
-        "dbAccount":"hzyc",
-        "dbPassword":"hzyc!@#"
+        "dbAccount":"sa",
+        "dbPassword":"@mediasoft1234!"
     },
     "Http_config":{
-        "ip":"120.77.144.187",
+        "ip":"106.15.33.39",
         "port":"9981"
     }
 }

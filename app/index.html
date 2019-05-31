@@ -729,20 +729,18 @@
                     <template slot="header" slot-scope="scope">
 
                         <el-form :inline="true" :model="logSearch" class="demo-form-inline">
-                            <el-form-item label="审批人">
-                                <el-date-picker type="datetime" placeholder="选择日期"
-                                    v-model="logSearch.logDate1">
+                            <el-form-item label="开始时间">
+                                <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期" v-model="logSearch.logDate1">
                             </el-form-item>
-                            <el-form-item label="活动区域">
-                                <el-date-picker type="datetime" placeholder="选择日期"
-                                    v-model="logSearch.logDate2">
+                            <el-form-item label="结束时间">
+                                <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期" v-model="logSearch.logDate2">
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" @click="changeErrLogDate">查询</el-button>
                             </el-form-item>
                         </el-form>
 
-                        
+
                     </template>
                     <template slot-scope="scope">
                         <div class="err-log">{{scope.row.error}}</div>
@@ -856,11 +854,11 @@
             userName: localStorage.getItem("userLoginName"),
             showErrLog: false,
             errData: [],
-            logSearch:{
+            logSearch: {
                 logDate1: getFormatDate(),
                 logDate2: getFormatDate()
             }
-            
+
         },
         created: function () {
             let that = this;
@@ -1083,21 +1081,37 @@
             changeErrLogDate() {
                 let that = this;
                 that.errData = [];
-                readFile(that.logDate + '.txt', (content) => {
-                    if (content) {
-                        let newArray = [];
-                        let contentArray = content.split('----hzyc----');
-                        for (let i in contentArray) {
-                            if (i != contentArray.length - 1) {
-                                newArray.push(JSON.parse(contentArray[i]));
+                // logSearch:{
+                //     logDate1: getFormatDate(),
+                //     logDate2: getFormatDate()
+                // }
+                let date1 = that.logSearch.logDate1;
+                let date2 = that.logSearch.logDate2;
+                if (date1.split(' ')[0] == date2.split(' ')[0]) {
+                    readFile(date1.split(' ')[0] + '.txt', (content) => {
+                        if (content) {
+                            let newArray = [];
+                            let contentArray = content.split('----hzyc----');
+                            for (let i in contentArray) {
+                                if (i != contentArray.length - 1) {
+                                    let jsonContent = JSON.parse(contentArray[i]);
+                                    if(new Date(date1) <= new Date(jsonContent.time) && new Date(date2) >= new Date(jsonContent.time)){
+                                        newArray.push(jsonContent);
+                                    }
+                                    
+                                }
                             }
+                            that.errData = newArray;
+                        } else {
+                            that.errData = [];
                         }
-                        that.errData = newArray;
-                    } else {
-                        that.errData = [];
-                    }
 
-                });
+                    });
+                } else {
+                    
+                }
+
+
             },
             handleCommand(command) {
                 let that = this;
