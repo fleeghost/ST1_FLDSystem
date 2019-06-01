@@ -28,14 +28,14 @@ function writeFile(txt) {
     // txt = txt.replace(/     /g, '\r\n');
     fs.mkdir('./errorLog', function (error) {
         if (error) {
-            console.log('目录已存在');
+            // console.log('目录已存在');
         }
         fs.appendFile('./errorLog/' + getFormatDate().split(' ')[0] + '.txt', txt, function (error) {
             if (error) {
                 console.log(error);
                 return false;
             }
-            console.log('写入成功');
+            console.warn('error文件写入')
         })
     })
 }
