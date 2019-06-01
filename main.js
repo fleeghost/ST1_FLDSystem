@@ -221,8 +221,10 @@ let moduleFunction = () => {
 
 }
 
+let updateType = 1;
 
-ipcMain.on('update', (e, arg) => {
+ipcMain.on('update', (e,arg) => {
+  updateType = arg;
   updateHandle();
 })
 
@@ -257,7 +259,12 @@ function updateHandle() {
 
   // 更新下载进度事件
   autoUpdater.on('download-progress', function (progressObj) {
-    winLogin.webContents.send('downloadProgress', progressObj)
+    if(updateType == 1){
+      winLogin.webContents.send('downloadProgress', progressObj)
+    }else{
+      winMain.webContents.send('downloadProgress', progressObj)
+    }
+    
   })
   autoUpdater.on('update-downloaded', function (event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) {
     sendUpdateMessage('isUpdateNow');
@@ -272,7 +279,12 @@ function updateHandle() {
 
 // 通过main进程发送事件给renderer进程，提示更新信息
 function sendUpdateMessage(text) {
-  winLogin.webContents.send('message', text)
+  if(updateType == 1){
+    winLogin.webContents.send('message', text)
+  }else{
+    winMain.webContents.send('message', text)
+  }
+  
 }
 
 

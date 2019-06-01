@@ -120,7 +120,6 @@
             border-right-color: #404346;
             border-left-color: #404346;
             color: #fff;
-            margin-top: 0;
         }
 
         .el-container .el-header .el-tabs__content {
@@ -517,6 +516,29 @@
         .err-note {
             color: #b91727;
         }
+
+        .update {
+            width: 100%;
+            height: 300px;
+            background: transparent;
+            padding: 20px;
+        }
+
+        .update-title {
+            font-weight: 700;
+            font-size: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .update-info {
+            padding: 10px 0;
+            height: calc(100% - 40px - 38px);
+            color: #8b8b8b;
+            white-space: pre-line;
+            line-height: 30px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 
@@ -600,8 +622,6 @@
                                             src="image/debugger.png" />{{ifDebugger?'关闭调试':'开启调试'}}</el-dropdown-item>
                                     <el-dropdown-item class="dropdown_button" command="报错日志"><img
                                             src="image/log.png" />报错日志</el-dropdown-item>
-                                    <el-dropdown-item class="dropdown_button" command="更新记录"><img
-                                            src="image/updateRecord.png" />更新记录</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -621,7 +641,7 @@
                         @tab-click="categoryToggle">
                         <el-tab-pane v-for="(row,index) in categoryList" :name="row.Id + '_' + row.Name">
                             <span slot="label"><i class="iconfont" :class="row.ImageUrl"
-                                    style="margin-right:10px;font-size:14px;"></i>{{row.Name}} </span>
+                                    style="margin-right:10px;font-size:17px;"></i>{{row.Name}}</span>
                         </el-tab-pane>
                     </el-tabs>
                     <!-- <div class="calendar"></div> -->
@@ -729,13 +749,15 @@
                     <template slot="header" slot-scope="scope">
 
                         <el-form :inline="true" :model="logSearch" class="demo-form-inline">
-                            <el-form-item label="开始时间">
-                                <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期" v-model="logSearch.logDate1">
+                            <el-form-item label="开始时间" style="margin: 0;">
+                                <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期"
+                                    v-model="logSearch.logDate1">
                             </el-form-item>
-                            <el-form-item label="结束时间">
-                                <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期" v-model="logSearch.logDate2">
+                            <el-form-item label="结束时间" style="margin: 0;">
+                                <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期"
+                                    v-model="logSearch.logDate2">
                             </el-form-item>
-                            <el-form-item>
+                            <el-form-item style="margin: 0;">
                                 <el-button type="primary" @click="changeErrLogDate">查询</el-button>
                             </el-form-item>
                         </el-form>
@@ -752,6 +774,29 @@
                     </template>
                 </el-table-column>
             </el-table>
+        </el-dialog>
+
+
+        <el-dialog title="软件更新" width="526px" :visible.sync="ifUpdate">
+            <div class="update">
+                <div class="update-title">发现新版本({{updateInfo.F_Ver}})</div>
+                <div class="update-info">
+                    <div>{{updateInfo.FRemarks}}</div>
+                </div>
+                <div class="update-button">
+                    <el-row :gutter="20" v-show="!isUpdateNow">
+                        <el-col :span="12" style="text-align:center;">
+                            <el-button block type="primary" style="width: 150px;" @click="updateAPP">更新
+                            </el-button>
+                        </el-col>
+                        <el-col :span="12" style="text-align:center;">
+                            <el-button block style="width: 150px;" @click="cancelUpdate">取消
+                            </el-button>
+                        </el-col>
+                    </el-row>
+                    <el-progress size="mini" :percentage="percentage" v-show="isUpdateNow"></el-progress>
+                </div>
+            </div>
         </el-dialog>
 
 
@@ -787,6 +832,19 @@
             }
         }
     }
+
+    ipcRenderer.on("message", (event, text) => {
+        console.log(text)
+        if (text == 'isUpdateNow') {
+            ipcRenderer.send('updateNow')
+        }
+    });
+
+    ipcRenderer.on("downloadProgress", (event, progressObj) => {
+        console.log(progressObj);
+        vm.isUpdateNow = true;
+        vm.percentage = parseInt(progressObj.percent);
+    });
 
 
 
@@ -855,9 +913,13 @@
             showErrLog: false,
             errData: [],
             logSearch: {
-                logDate1: getFormatDate(),
-                logDate2: getFormatDate()
-            }
+                logDate1: getFormatDate().split(' ')[0] + ' 00:00:00',
+                logDate2: getFormatDate().split(' ')[0] + ' 23:23:59'
+            },
+            ifUpdate: false,
+            updateInfo: [],
+            isUpdateNow: false,
+            percentage: 0
 
         },
         created: function () {
@@ -1080,11 +1142,6 @@
             },
             changeErrLogDate() {
                 let that = this;
-                that.errData = [];
-                // logSearch:{
-                //     logDate1: getFormatDate(),
-                //     logDate2: getFormatDate()
-                // }
                 let date1 = that.logSearch.logDate1;
                 let date2 = that.logSearch.logDate2;
                 if (date1.split(' ')[0] == date2.split(' ')[0]) {
@@ -1095,10 +1152,10 @@
                             for (let i in contentArray) {
                                 if (i != contentArray.length - 1) {
                                     let jsonContent = JSON.parse(contentArray[i]);
-                                    if(new Date(date1) <= new Date(jsonContent.time) && new Date(date2) >= new Date(jsonContent.time)){
+                                    if (new Date(date1) <= new Date(jsonContent.time) && new Date(date2) >= new Date(jsonContent.time)) {
                                         newArray.push(jsonContent);
                                     }
-                                    
+
                                 }
                             }
                             that.errData = newArray;
@@ -1108,9 +1165,68 @@
 
                     });
                 } else {
-                    
+                    let newArray = [];
+                    let max = (new Date(date2.split(' ')[0]).getTime() - new Date(date1.split(' ')[0]).getTime()) / (1000 * 60 * 60 * 24)
+                    let repeatDate = (x) => {
+                        if (x > max) {
+                            that.errData = newArray;
+                        } else {
+                            var fileName = getFormatDate(new Date(new Date(date1.split(' ')[0]).getTime() + (1000 * 60 * 60 * 24 * x))).split(' ')[0]
+                            readFile(fileName + '.txt', (content) => {
+
+                                if (content) {
+                                    let contentArray = content.split('----hzyc----');
+                                    for (let i in contentArray) {
+                                        if (i != contentArray.length - 1) {
+                                            let jsonContent = JSON.parse(contentArray[i]);
+                                            if (new Date(date1) <= new Date(jsonContent.time) && new Date(date2) >= new Date(jsonContent.time)) {
+                                                newArray.push(jsonContent);
+                                            }
+
+                                        }
+                                    }
+
+                                }
+                                x++;
+                                repeatDate(x)
+
+                            });
+                        }
+
+                    }
+                    repeatDate(0)
                 }
 
+
+            },
+            checkUpdate() {
+                let that = this;
+                post({
+                    path: '/Frame/SqlData'
+                }, {
+                        cmdname: 'PC_FileList'
+                    }, (result) => {
+                        result = JSON.parse(result);
+                        if (result.status == 200) {
+                            let data = result.data;
+                            if (data.ds[data.ds.length - 1].F_Ver != package.version) {
+                                that.updateInfo = data.ds[data.ds.length - 1];
+                                that.ifUpdate = true;
+                                //需要更新,主进程检测更新
+
+                            }
+                        }
+                    }, (err) => {
+
+                    });
+            },
+            updateAPP() {
+                let that = this;
+                ipcRenderer.send('update', 2);
+            },
+            cancelUpdate() {
+                let that = this;
+                that.ifUpdate = false;
 
             },
             handleCommand(command) {
@@ -1129,6 +1245,8 @@
                 } else if (command == '报错日志') {
                     that.changeErrLogDate();
                     that.showErrLog = true;
+                } else if (command == '软件更新') {
+                    that.checkUpdate();
                 }
 
             },
@@ -1150,101 +1268,104 @@
         }
     })
 
-    let signtime = new Date().getTime();
+    // let signtime = new Date().getTime();
     let lockTime = new Date().getTime();
     let guid = '';
     $(function () {
 
-        $.getScript("assets/jquery.signalR-2.4.1.min.js", function () {
-            $.getScript("http://" + Config.Http_config.ip + ':' + Config.Http_config.port + "/signalr/hubs", function () {
-                $.getScript("assets/signalr-mediate.js", function () {
+        // $.getScript("assets/jquery.signalR-2.4.1.min.js", function () {
+        //     $.getScript("http://" + Config.Http_config.ip + ':' + Config.Http_config.port + "/signalr/hubs", function () {
+        //         $.getScript("assets/signalr-mediate.js", function () {
 
-                    $.signalrApi({
-                        serverUrl: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port,
-                        clientHub: "PageHub",
-                        clientEvents: [
-                            {
-                                name: "onGlobalConnect",
-                                method: function (data) {
-                                    guid = data;
-                                    const cookie = [{
-                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
-                                        name: 'admin',
-                                        value: guid
-                                    }, {
-                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
-                                        name: 'UserID',
-                                        value: localStorage.getItem("UserID").toString()
-                                    }, {
-                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
-                                        name: 'UserCode',
-                                        value: localStorage.getItem("UserCode")
-                                    }, {
-                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
-                                        name: 'UserName',
-                                        value: localStorage.getItem("UserName")
-                                    }];
-                                    for (var i in cookie) {
-                                        session.defaultSession.cookies.set(cookie[i], (error) => {
-                                            if (error) console.error(error);
-                                        });
-                                    }
+        //             $.signalrApi({
+        //                 serverUrl: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port,
+        //                 clientHub: "PageHub",
+        //                 clientEvents: [
+        //                     {
+        //                         name: "onGlobalConnect",
+        //                         method: function (data) {
+        //                             guid = data;
+        //                             const cookie = [{
+        //                                 url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+        //                                 name: 'admin',
+        //                                 value: guid
+        //                             }, {
+        //                                 url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+        //                                 name: 'UserID',
+        //                                 value: localStorage.getItem("UserID").toString()
+        //                             }, {
+        //                                 url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+        //                                 name: 'UserCode',
+        //                                 value: localStorage.getItem("UserCode")
+        //                             }, {
+        //                                 url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+        //                                 name: 'UserName',
+        //                                 value: localStorage.getItem("UserName")
+        //                             }];
+        //                             for (var i in cookie) {
+        //                                 session.defaultSession.cookies.set(cookie[i], (error) => {
+        //                                     if (error) console.error(error);
+        //                                 });
+        //                             }
 
-                                }
-                            },
+        //                         }
+        //                     },
 
-                            {
-                                name: "onClientLive",
-                                method: function (data) {
-                                    signtime = new Date().getTime();
-                                }
-                            },
+        //                     {
+        //                         name: "onClientLive",
+        //                         method: function (data) {
+        //                             // signtime = new Date().getTime();
+        //                         }
+        //                     },
 
-                            {
-                                name: "onApplyInstruct",
-                                method: function (data) {
-                                    var ret = JSON.parse(data);
-                                    console.log(ret)
-                                    if (ret.eventType == 'click') {
-                                        lockTime = new Date().getTime();
-                                    } else if (ret.eventType == 'error') {
-                                        writeFile(ret.data);
-                                    }
-                                }
-                            }
-                        ]
-                    });
-                    //socket连接
-                    function signalrConnect() {
-                        $.signalrApi.start(function () {
-                            $.signalrApi.server.globalConnect();
-                        });
-                    }
-                    signalrConnect();
+        //                     {
+        //                         name: "onApplyInstruct",
+        //                         method: function (data) {
+        //                             var ret = JSON.parse(data);
+        //                             if (ret.eventType == 'click') {
+        //                                 lockTime = new Date().getTime();
+        //                             } else if (ret.eventType == 'error') {
+        //                                 writeFile(ret.data);
+        //                             }
+        //                         }
+        //                     }
+        //                 ]
+        //             });
+        //             //socket连接
+        //             function signalrConnect() {
+        //                 $.signalrApi.start(function () {
+        //                     $.signalrApi.server.globalConnect();
+        //                 });
+        //             }
+        //             signalrConnect();
 
-                    setInterval(function () {
-                        $.signalrApi.server.clientLive();
-                        if (new Date().getTime() - signtime > 100000) {
-                            signalrConnect();
-                        }
+        //             setInterval(function () {
 
-                        if (new Date().getTime() - lockTime > 10 * 60 * 1000) {
-                            vm.pageLock = true;
-                        }
+        //                 try {
+        //                     $.signalrApi.server.clientLive();
+        //                 } catch (e) {
+        //                     $.signalrApi.start(function () {
 
-                    }, 10000);
+        //                     });
+        //                 }
 
-                    $('body').click(function () {
-                        let signalrData = {
-                            eventType: 'click',
-                            data: {}
-                        }
-                        $.signalrApi.server.applyInstruct(guid, JSON.stringify(signalrData))
-                    })
-                });
-            });
+        //                 if (new Date().getTime() - lockTime > 30 * 60 * 1000) {
+        //                     vm.pageLock = true;
+        //                 }
 
-        })
+        //             }, 2000);
+
+        //             $('body').click(function () {
+        //                 let signalrData = {
+        //                     eventType: 'click',
+        //                     data: {}
+        //                 }
+        //                 $.signalrApi.server.applyInstruct(guid, JSON.stringify(signalrData))
+        //             })
+        //         });
+        //     });
+
+        // })
 
 
 

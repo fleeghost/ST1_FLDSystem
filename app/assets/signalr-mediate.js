@@ -43,7 +43,9 @@
                 if (typeof (callBack) === "function") {
                     callBack();
                 }
-            });
+            }).fail(function(e){
+                // alert(JSON.stringify(e));
+            });;
         }
         /*******外部事件结束******/
     }

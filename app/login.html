@@ -341,7 +341,7 @@
             },
             updateAPP() {
                 let that = this;
-                ipcRenderer.send('update');
+                ipcRenderer.send('update',1);
             },
             cancelUpdate() {
                 let that = this;
