@@ -1273,99 +1273,99 @@
     let guid = '';
     $(function () {
 
-        // $.getScript("assets/jquery.signalR-2.4.1.min.js", function () {
-        //     $.getScript("http://" + Config.Http_config.ip + ':' + Config.Http_config.port + "/signalr/hubs", function () {
-        //         $.getScript("assets/signalr-mediate.js", function () {
+        $.getScript("assets/jquery.signalR-2.4.1.min.js", function () {
+            $.getScript("http://" + Config.Http_config.ip + ':' + Config.Http_config.port + "/signalr/hubs", function () {
+                $.getScript("assets/signalr-mediate.js", function () {
 
-        //             $.signalrApi({
-        //                 serverUrl: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port,
-        //                 clientHub: "PageHub",
-        //                 clientEvents: [
-        //                     {
-        //                         name: "onGlobalConnect",
-        //                         method: function (data) {
-        //                             guid = data;
-        //                             const cookie = [{
-        //                                 url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
-        //                                 name: 'admin',
-        //                                 value: guid
-        //                             }, {
-        //                                 url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
-        //                                 name: 'UserID',
-        //                                 value: localStorage.getItem("UserID").toString()
-        //                             }, {
-        //                                 url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
-        //                                 name: 'UserCode',
-        //                                 value: localStorage.getItem("UserCode")
-        //                             }, {
-        //                                 url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
-        //                                 name: 'UserName',
-        //                                 value: localStorage.getItem("UserName")
-        //                             }];
-        //                             for (var i in cookie) {
-        //                                 session.defaultSession.cookies.set(cookie[i], (error) => {
-        //                                     if (error) console.error(error);
-        //                                 });
-        //                             }
+                    $.signalrApi({
+                        serverUrl: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port,
+                        clientHub: "PageHub",
+                        clientEvents: [
+                            {
+                                name: "onGlobalConnect",
+                                method: function (data) {
+                                    guid = data;
+                                    const cookie = [{
+                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+                                        name: 'admin',
+                                        value: guid
+                                    }, {
+                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+                                        name: 'UserID',
+                                        value: localStorage.getItem("UserID").toString()
+                                    }, {
+                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+                                        name: 'UserCode',
+                                        value: localStorage.getItem("UserCode")
+                                    }, {
+                                        url: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port,
+                                        name: 'UserName',
+                                        value: localStorage.getItem("UserName")
+                                    }];
+                                    for (var i in cookie) {
+                                        session.defaultSession.cookies.set(cookie[i], (error) => {
+                                            if (error) console.error(error);
+                                        });
+                                    }
 
-        //                         }
-        //                     },
+                                }
+                            },
 
-        //                     {
-        //                         name: "onClientLive",
-        //                         method: function (data) {
-        //                             // signtime = new Date().getTime();
-        //                         }
-        //                     },
+                            {
+                                name: "onClientLive",
+                                method: function (data) {
+                                    // signtime = new Date().getTime();
+                                }
+                            },
 
-        //                     {
-        //                         name: "onApplyInstruct",
-        //                         method: function (data) {
-        //                             var ret = JSON.parse(data);
-        //                             if (ret.eventType == 'click') {
-        //                                 lockTime = new Date().getTime();
-        //                             } else if (ret.eventType == 'error') {
-        //                                 writeFile(ret.data);
-        //                             }
-        //                         }
-        //                     }
-        //                 ]
-        //             });
-        //             //socket连接
-        //             function signalrConnect() {
-        //                 $.signalrApi.start(function () {
-        //                     $.signalrApi.server.globalConnect();
-        //                 });
-        //             }
-        //             signalrConnect();
+                            {
+                                name: "onApplyInstruct",
+                                method: function (data) {
+                                    var ret = JSON.parse(data);
+                                    if (ret.eventType == 'click') {
+                                        lockTime = new Date().getTime();
+                                    } else if (ret.eventType == 'error') {
+                                        writeFile(ret.data);
+                                    }
+                                }
+                            }
+                        ]
+                    });
+                    //socket连接
+                    function signalrConnect() {
+                        $.signalrApi.start(function () {
+                            $.signalrApi.server.globalConnect();
+                        });
+                    }
+                    signalrConnect();
 
-        //             setInterval(function () {
+                    setInterval(function () {
 
-        //                 try {
-        //                     $.signalrApi.server.clientLive();
-        //                 } catch (e) {
-        //                     $.signalrApi.start(function () {
+                        try {
+                            $.signalrApi.server.clientLive();
+                        } catch (e) {
+                            $.signalrApi.start(function () {
 
-        //                     });
-        //                 }
+                            });
+                        }
 
-        //                 if (new Date().getTime() - lockTime > 30 * 60 * 1000) {
-        //                     vm.pageLock = true;
-        //                 }
+                        if (new Date().getTime() - lockTime > 30 * 60 * 1000) {
+                            vm.pageLock = true;
+                        }
 
-        //             }, 2000);
+                    }, 2000);
 
-        //             $('body').click(function () {
-        //                 let signalrData = {
-        //                     eventType: 'click',
-        //                     data: {}
-        //                 }
-        //                 $.signalrApi.server.applyInstruct(guid, JSON.stringify(signalrData))
-        //             })
-        //         });
-        //     });
+                    // $('body').click(function () {
+                    //     let signalrData = {
+                    //         eventType: 'click',
+                    //         data: {}
+                    //     }
+                    //     $.signalrApi.server.applyInstruct(guid, JSON.stringify(signalrData))
+                    // })
+                });
+            });
 
-        // })
+        })
 
 
 
