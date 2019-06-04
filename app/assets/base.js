@@ -1,130 +1,143 @@
-
-var hostData = window.location;
+﻿const { ipcRenderer } = require('electron');
+// var hostData = window.location;
 // var signtime = new Date().getTime();
-$(function () {
-    $.getScript("/assets/js/jquery.signalR-2.4.1.min.js", function () {
-        $.getScript("http://" + hostData.host + "/signalr/hubs", function () {
-            $.getScript("/assets/js/signalr-mediate.js", function () {
+// $(function () {
+//     if (top.window === window) {
+//         setTimeout(function () {
+//             $.getScript("/assets/js/jquery.signalR-2.4.1.min.js", function () {
+//                 $.getScript("http://" + hostData.host + "/signalr/hubs", function () {
+//                     $.getScript("/assets/js/signalr-mediate.js", function () {
 
-                $.signalrApi({
-                    serverUrl: "http://" + hostData.host,
-                    clientHub: "PageHub",
-                    clientEvents: [
-                        {
-                            name: "onGlobalConnect",
-                            method: function (data) {
-                                //点击窗口重新计时
-                                // $('body').click(function () {
-                                //     var signalrData = {
-                                //         eventType: 'click',
-                                //         data: {}
-                                //     }
-                                //     try{
-                                //         $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
-                                //     }catch(e){
-                                //         $.signalrApi.start(function () {
-                                //             $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
-                                //         });
-                                //     }
-                                    
-                                // })
+//                         $.signalrApi({
+//                             serverUrl: "http://" + hostData.host,
+//                             clientHub: "PageHub",
+//                             clientEvents: [
+//                                 {
+//                                     name: "onGlobalConnect",
+//                                     method: function (data) {
+//                                         //点击窗口重新计时
+//                                         // $('body').click(function () {
+//                                         //     var signalrData = {
+//                                         //         eventType: 'click',
+//                                         //         data: {}
+//                                         //     }
+//                                         //     try{
+//                                         //         $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
+//                                         //     }catch(e){
+//                                         //         $.signalrApi.start(function () {
+//                                         //             $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
+//                                         //         });
+//                                         //     }
 
-                                if (txt) {
-                                    var signalrData = {
-                                        eventType: 'error',
-                                        data: txt
-                                    }
-                                    try{
-                                        $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
-                                    }catch(e){
-                                        $.signalrApi.start(function () {
-                                            $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
-                                        });
-                                    }
-                                    txt = '';
-                                }
+//                                         // })
 
-
-                            }
-                        },
-                        {
-                            name: "onClientLive",
-                            method: function (data) {
-                                // signtime = new Date().getTime();
-                            }
-                        }
-                    ]
-                });
-                //socket连接
-                function signalrConnect() {
-                    $.signalrApi.start(function () {
-                        $.signalrApi.server.globalConnect();
-                    });
-                }
-                signalrConnect();
-
-                setInterval(function () {
-                    try{
-                        $.signalrApi.server.clientLive();
-                    }catch(e){
-                        $.signalrApi.start(function () {
-                            
-                        });
-                    }
-                }, 2000);
+//                                         // if (txt) {
+//                                         //     var signalrData = {
+//                                         //         eventType: 'error',
+//                                         //         data: txt
+//                                         //     }
+//                                         //     try{
+//                                         //         $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
+//                                         //     }catch(e){
+//                                         //         $.signalrApi.start(function () {
+//                                         //             $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
+//                                         //         });
+//                                         //     }
+//                                         //     txt = '';
+//                                         // }
 
 
-            });
-        });
-    });
+//                                     }
+//                                 },
+//                                 {
+//                                     name: "onClientLive",
+//                                     method: function (data) {
+//                                         // signtime = new Date().getTime();
+//                                     }
+//                                 }
+//                             ]
+//                         });
+//                         //socket连接
+//                         function signalrConnect() {
+//                             $.signalrApi.start(function () {
+//                                 // $.signalrApi.server.globalConnect();
+//                             });
+//                         }
+//                         signalrConnect();
+
+//                         // setInterval(function () {
+//                         //     try{
+//                         //         $.signalrApi.server.clientLive();
+//                         //     }catch(e){
+//                         //         $.signalrApi.start(function () {
+
+//                         //         });
+//                         //     }
+//                         // }, 2000);
 
 
+//                     });
+//                 });
+//             });
+//         }, 1000)
+//     }
+// })
 
+// var txt = '';
+
+$(function(){
+    $('body').click(function(){
+        ipcRenderer.send('webviewClick')
+    })
 })
 
-var txt = '';
 //捕获js报错
 window.onerror = function (message, source, lineno, colno, err) {
+    var txt = '';
     let errorInfo = {
-        error:err.stack,
-        time:getFormatDate(),
-        url:window.location.href
+        error: err.stack,
+        time: getFormatDate(),
+        url: window.location.href
     }
     txt += JSON.stringify(errorInfo);
     txt += "----hzyc----";
-    var signalrData = {
-        eventType: 'error',
-        data: txt,
-    }
-    try {
-        $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
-        txt = '';
-    } catch (e) {
+    // var signalrData = {
+    //     eventType: 'error',
+    //     data: txt,
+    // }
+    // try {
+    //     $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
+    //     txt = '';
+    // } catch (e) {
 
-    }
+    // }
+
+    ipcRenderer.send('webviewError',txt)
 
 }
 
 //捕获vue报错
 Vue.config.errorHandler = function (err, vm, info) {
-    console.error(err)
+    var txt = '';
     let errorInfo = {
-        error:err.stack,
-        time:getFormatDate(),
-        url:window.location.href
+        error: err.stack,
+        time: getFormatDate(),
+        url: window.location.href
     }
     txt += JSON.stringify(errorInfo);
     txt += "----hzyc----";
-    var signalrData = {
-        eventType: 'error',
-        data: txt
-    }
-    try {
-        $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
-        txt = '';
-    } catch (e) {
+    // var signalrData = {
+    //     eventType: 'error',
+    //     data: txt
+    // }
+    // try {
+    //     $.signalrApi.server.applyInstruct($.cookie().admin, JSON.stringify(signalrData))
+    //     txt = '';
+    // } catch (e) {
 
-    }
+    // }
+    debugger;
+    ipcRenderer.send('webviewError',txt)
 };
 
 function getFormatDate(date) {

@@ -218,6 +218,18 @@ let moduleFunction = () => {
     }
   })
 
+  //接收错误信息
+  ipcMain.on('webviewError', (e, arg) => {
+    if (winMain != null) {
+      winMain.webContents.send('errorWrite', arg);
+    }
+  })
+
+  ipcMain.on('webviewClick', (e, arg) => {
+    if (winMain != null) {
+      winMain.webContents.send('appClick');
+    }
+  })
 
 }
 
