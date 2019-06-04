@@ -55,7 +55,6 @@ function createWindow() {
 
 
 const gotTheLock = app.requestSingleInstanceLock();
-
 if (gotTheLock) {
   app.on('second-instance', (event, commandLine, workingDirectory) => {
     if (winLogin) {
