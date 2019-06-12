@@ -9,11 +9,6 @@ const { writeFile, readFile } = SelfModules('fileHelper');
 const Config = require('./config/config.json');
 
 
-
-
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
 let winLogin, winMain
 
 //系统内存变量
@@ -22,14 +17,11 @@ let currentUser
 
 function createWindow() {
 
-  // console.log(session.defaultSession.cookies)
-
 
   //请求前事件
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
     try {
       let originUrl = RewriteUrl(details.url);
-      // console.log(originUrl + '-------');
       callback({ cancel: false, originUrl });
     }
     catch (e) {
@@ -37,8 +29,6 @@ function createWindow() {
     }
   })
 
-  // Create the browser window.
-  // const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
   winLogin = new BrowserWindow({
     width: 526,
     height: 470,
@@ -51,50 +41,44 @@ function createWindow() {
     icon: __dirname + '/app/image/logo.png'
   })
 
-  // and load the index.html of the app.
-  // win.loadURL(url.format({
-  //   pathname: '/app/login.html',
-  //   protocol: 'file:',
-  //   slashes: true
-  // }))
-
   winLogin.loadURL(url.format({
-    //pathname: "/app/login.html",
     pathname: path.join(__dirname, "/app/login.html"),
     protocol: 'file:',
     slashes: true
   }))
 
-  // Open the DevTools.
-  // winLogin.webContents.openDevTools()
-
-  // Emitted when the window is closed.
   winLogin.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
     winLogin = null
   })
   moduleFunction()
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
 
-// Quit when all windows are closed.
+const gotTheLock = app.requestSingleInstanceLock();
+if (gotTheLock) {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    if (winLogin) {
+      if (winLogin.isMinimized()) winLogin.restore()
+      winLogin.focus()
+    } else if (winMain) {
+      if (winMain.isMinimized()) winMain.restore()
+      winMain.focus()
+    }
+  })
+  app.on('ready', createWindow)
+} else {
+  app.quit();
+}
+
+
+
 app.on('window-all-closed', () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
 
 app.on('activate', () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
   if (win === null) {
     createWindow()
   }
@@ -139,9 +123,6 @@ let moduleFunction = () => {
     }));
     winMain.maximize();
     winMain.on('closed', () => {
-      // Dereference the window object, usually you would store windows
-      // in an array if your app supports multi windows, this is the time
-      // when you should delete the corresponding element.
       winMain = null
     })
     //关闭登录页面
@@ -184,18 +165,6 @@ let moduleFunction = () => {
       winMain.minimize();
     }
   });
-  //软件最大化
-  ipcMain.on('maxWindow', (e, arg) => {
-    if (winMain != null) {
-      winMain.maximize();
-    }
-  });
-  //取消软件最大化
-  ipcMain.on('unMaxWindow', (e, arg) => {
-    if (winMain != null) {
-      winMain.unmaximize();
-    }
-  })
 
   ipcMain.on('toggleWindow_min', (e, arg) => {
     if (winMain != null) {
@@ -233,9 +202,15 @@ let moduleFunction = () => {
 
 }
 
+
+
+
+
+
+
 let updateType = 1;
 
-ipcMain.on('update', (e,arg) => {
+ipcMain.on('update', (e, arg) => {
   updateType = arg;
   updateHandle();
 })
@@ -250,9 +225,9 @@ function updateHandle() {
   };
 
   //如下应用程序的路径请自行替换成自己应用程序的路径
-  let updateFeedUrl = 'http://'+Config.Http_config.ip+':'+Config.Http_config.port+'/download/win/';
+  let updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/win/';
   if (process.platform == 'darwin') {
-    updateFeedUrl = 'http://'+Config.Http_config.ip+':'+Config.Http_config.port+'/download/mac/';
+    updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/mac/';
   }
 
   autoUpdater.setFeedURL(updateFeedUrl);
@@ -271,12 +246,12 @@ function updateHandle() {
 
   // 更新下载进度事件
   autoUpdater.on('download-progress', function (progressObj) {
-    if(updateType == 1){
+    if (updateType == 1) {
       winLogin.webContents.send('downloadProgress', progressObj)
-    }else{
+    } else {
       winMain.webContents.send('downloadProgress', progressObj)
     }
-    
+
   })
   autoUpdater.on('update-downloaded', function (event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) {
     sendUpdateMessage('isUpdateNow');
@@ -291,12 +266,12 @@ function updateHandle() {
 
 // 通过main进程发送事件给renderer进程，提示更新信息
 function sendUpdateMessage(text) {
-  if(updateType == 1){
+  if (updateType == 1) {
     winLogin.webContents.send('message', text)
-  }else{
+  } else {
     winMain.webContents.send('message', text)
   }
-  
+
 }
 
 
