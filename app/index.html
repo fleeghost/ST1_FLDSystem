@@ -990,7 +990,8 @@
             post({
                 path: '/Frame/SqlData'
             }, {
-                    cmdname: 'getMainMenu'
+                    cmdname: 'getMainMenuByUser',
+                    userId:localStorage.getItem("UserID")
                 }, (ret) => {
                     let data = JSON.parse(ret);
                     if (data.status == 200) {
