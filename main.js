@@ -1,5 +1,6 @@
 const { SystemModules, SelfModules } = require('./assembly/RequireHelper')
 const electron = SystemModules('electron');
+const colors = require('colors');
 const { autoUpdater } = require('electron-updater');
 const { app, BrowserWindow, session, ipcMain, ipcRenderer } = electron
 const path = SystemModules('path');
@@ -9,10 +10,27 @@ const { writeFile, readFile } = SelfModules('fileHelper');
 const Config = require('./config/config.json');
 
 
+
+colors.setTheme({
+  silly: 'rainbow',
+  input: 'grey',
+  verbose: 'cyan',
+  prompt: 'red',
+  info: 'green',
+  data: 'blue',
+  help: 'cyan',
+  warn: 'yellow',
+  debug: 'magenta',
+  error: 'red'
+})
+
+console.info(colors.info(__dirname));
+
+
 let winLogin, winMain
 
 //系统内存变量
-let currentUser
+let currentUser;
 
 
 function createWindow() {
@@ -38,7 +56,7 @@ function createWindow() {
     resizable: false,
     frame: false,
     transparent: true,
-    icon: __dirname + '/app/image/logo.png'
+    icon: __dirname + '/app/image/logo_ico.png'
   })
 
   winLogin.loadURL(url.format({
@@ -114,7 +132,7 @@ let moduleFunction = () => {
       resizable: true,
       frame: false,
       transparent: true,
-      icon: __dirname + '/app/image/logo.png'
+      icon: __dirname + '/app/image/logo_ico.png'
     });
     winMain.loadURL(url.format({
       pathname: path.join(__dirname, "/app/index.html"),

@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="assets/element-ui/theme-chalk/index.css" />
     <link rel="stylesheet" type="text/css" href="assets/ionicons/css/ionicons.css" />
     <link rel="stylesheet" type="text/css" href="assets/base.css" />
-    <link rel="stylesheet" type="text/css" href="assets/plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/element-ui/theme-chalk/icon.css" />
     <link rel="stylesheet" type="text/css" href="assets/iconfont/iconfont.css" />
     <script type="text/javascript" src="assets/jquery/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="assets/layer/layer.js"></script>
@@ -151,7 +151,7 @@
             border: 1px solid #c7c7c7;
             margin: 0;
             padding: 0 10px 0;
-            width: 100px;
+            width: 97px;
             height: 22px;
             border-radius: 11px;
             background: #c7c7c7;
@@ -492,7 +492,7 @@
         }
 
         .el-menu--collapse {
-            width: 25px;
+            width: 28px;
         }
 
         .icon-arrow- {
@@ -601,38 +601,33 @@
                                     <i class="el-icon-arrow-down"></i>
                                 </div>
                                 <el-dropdown-menu slot="dropdown" style="width: 140px;">
-                                    <el-dropdown-item class="dropdown_button" command="个人信息"><img
-                                            src="image/personal.png" />个人信息</el-dropdown-item>
-                                    <el-dropdown-item class="dropdown_button" command="锁屏"><img
-                                            src="image/lock2.png" />锁屏</el-dropdown-item>
-                                    <el-dropdown-item class="dropdown_button loginOut" command="注销"><img
-                                            src="image/loginOut.png" />注销</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" icon="el-icon-user" command="个人信息">个人信息</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" icon="el-icon-unlock" command="锁屏">锁屏</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button loginOut" icon="el-icon-warning-outline" command="注销">注销</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
                         <div class="item">
                             <el-dropdown placement="bottom" trigger="click" @command="handleCommand">
                                 <div trigger="click">
-                                    <i class="iconfont icon-menu"></i>
+                                    <i class="el-icon-more" style="font-size:14px;"></i>
                                 </div>
                                 <el-dropdown-menu slot="dropdown" style="width: 140px;">
-                                    <el-dropdown-item class="dropdown_button" command="软件更新"><img
-                                            src="image/update.png" />软件更新</el-dropdown-item>
-                                    <el-dropdown-item class="dropdown_button" command="调试模式"><img
-                                            src="image/debugger.png" />{{ifDebugger?'关闭调试':'开启调试'}}</el-dropdown-item>
-                                    <el-dropdown-item class="dropdown_button" command="报错日志"><img
-                                            src="image/log.png" />报错日志</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" icon="el-icon-refresh" command="软件更新">软件更新</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" icon="el-icon-setting" command="调试模式">{{ifDebugger?'关闭调试':'开启调试'}}</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" icon="el-icon-document" command="报错日志">报错日志</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" icon="el-icon-unlock" command="锁屏设置">锁屏设置</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
                         <div class="item" @click="min">
-                            <i class="iconfont icon-suoxiao1"></i>
+                            <i class="el-icon-minus" style="font-size:14px;"></i>
                         </div>
                         <div class="item" @click="toggleWinSize">
-                            <i class="iconfont icon-suoxiao" style="font-size:14px;"></i>
+                            <i class="el-icon-copy-document" style="font-size:14px;"></i>
                         </div>
                         <div class="item" @click="close">
-                            <i class="iconfont icon-close" style="font-size:13px;"></i>
+                            <i class="el-icon-close" style="font-size:14px;"></i>
                         </div>
                     </div>
                 </div>
@@ -649,7 +644,7 @@
                 <div class="row-3">
                     <div style="float:left;line-height: 28px;">
                         <div class="tree-search">
-                            <el-button type="text" @click="toggleTree" style="padding:0;">
+                            <el-button type="text" @click="toggleTree" style="padding:0;width: 27px;">
                                 <i class="iconfont icon-arrow-"
                                     :class="!isCollapse?'arrow-to-left':'arrow-to-right'"></i>
                             </el-button>
@@ -798,10 +793,6 @@
                 </div>
             </div>
         </el-dialog>
-
-
-
-
     </div>
 
 
@@ -876,8 +867,8 @@
         lockTime = new Date().getTime();
     });
 
-    $(function(){
-        $('body').click(function(){
+    $(function () {
+        $('body').click(function () {
             lockTime = new Date().getTime();
         })
     })
@@ -986,43 +977,55 @@
             }
             setInterval(getPing, 2000)
             getPing();
-
-            post({
-                path: '/Frame/SqlData'
-            }, {
-                    cmdname: 'getMainMenu'
-                }, (ret) => {
-                    let data = JSON.parse(ret);
-                    if (data.status == 200) {
-                        let totalList = data.data.ds
-                        for (let i in totalList) {
-                            if (totalList[i].NavigateUrl) {
-                                totalList[i].NavigateUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + totalList[i].NavigateUrl;
+            localStorage.removeItem('totalList')
+            if (localStorage.getItem('totalList')) {
+                var listString = localStorage.getItem('totalList');
+                that.totalList = JSON.parse(listString);
+                that.setDefualtList();
+            } else {
+                post({
+                    path: '/Frame/SqlData'
+                }, {
+                        cmdname: 'getMainMenu'
+                    }, (ret) => {
+                        let data = JSON.parse(ret);
+                        if (data.status == 200) {
+                            let totalList = data.data.ds
+                            for (let i in totalList) {
+                                if (totalList[i].NavigateUrl) {
+                                    totalList[i].NavigateUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + totalList[i].NavigateUrl;
+                                }
                             }
+                            localStorage.setItem('totalList', JSON.stringify(totalList))
+                            that.totalList = totalList;
+                            that.setDefualtList();
+
+                        } else {
+                            layer.msg('接口数据异常!请稍后再试');
                         }
-                        that.totalList = totalList;
-                        for (let i in that.totalList) {
-                            if (that.totalList[i].ParentID == 1) {
-                                that.categoryList.push(that.totalList[i]);
-                            }
-                        }
-                        that.originTotalList = JSON.parse(JSON.stringify(that.totalList));
-                        if (that.categoryList.length > 0) {
-                            that.categoryActive = that.categoryList[0].Id + '_' + that.categoryList[0].Name;
-                            that.currentTypeId = that.categoryList[0].Id;
-                            that.setSubClass(that.categoryList[0].Id);
-                        }
+                    }, (err) => {
+
+                    })
+            }
 
 
-                    } else {
-                        layer.msg('接口数据异常!请稍后再试');
-                    }
-                }, (err) => {
-
-                })
 
         },
         methods: {
+            setDefualtList() {
+                let that = this;
+                for (let i in that.totalList) {
+                    if (that.totalList[i].ParentID == 1) {
+                        that.categoryList.push(that.totalList[i]);
+                    }
+                }
+                that.originTotalList = JSON.parse(JSON.stringify(that.totalList));
+                if (that.categoryList.length > 0) {
+                    that.categoryActive = that.categoryList[0].Id + '_' + that.categoryList[0].Name;
+                    that.currentTypeId = that.categoryList[0].Id;
+                    that.setSubClass(that.categoryList[0].Id);
+                }
+            },
             openDevTools(e) {
                 let that = this;
                 if (that.ifDebugger) {
