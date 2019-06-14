@@ -809,9 +809,7 @@
 <script>
 
     const { ipcRenderer } = require('electron')
-
     const session = require('electron').remote.session
-
     const ping = require('ping');
     const { SystemModules, SelfModules } = require(ipcRenderer.sendSync('getRootPath') + '/assembly/RequireHelper')
     const { post } = SelfModules('httpHelper')
@@ -1013,8 +1011,9 @@
                             that.currentTypeId = that.categoryList[0].Id;
                             that.setSubClass(that.categoryList[0].Id);
                         }
-
-
+                        //业务流禁用权限功能表
+                        var unWorkRoleList = data.data.ds1;
+                        ipcRenderer.send('setUnWrokRoleList',unWorkRoleList);
                     } else {
                         layer.msg('接口数据异常!请稍后再试');
                     }

@@ -12,7 +12,10 @@ const Config = require('./config/config.json');
 let winLogin, winMain
 
 //系统内存变量
+//登录用户信息
 let currentUser
+//禁用的业务流权限
+let unWorkRole=[]
 
 
 function createWindow() {
@@ -200,6 +203,14 @@ let moduleFunction = () => {
     }
   })
 
+  //更新业务权限功能模块
+  ipcMain.on('setUnWrokRoleList',(e,arg)=>{
+      unWorkRole = arg;
+  })
+  //获取业务禁用权限功能模块
+  ipcMain.on('getUnWorkRoleList',(e,arg)=>{
+    e.returnValue = unWorkRole;
+  })
 }
 
 
