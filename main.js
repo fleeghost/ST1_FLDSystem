@@ -227,7 +227,9 @@ let moduleFunction = () => {
   })
   //获取业务禁用权限功能模块
   ipcMain.on('getUnWorkRoleList',(e,arg)=>{
-    e.returnValue = unWorkRole;
+    let mainModuleName = arg.mainModuleName;
+    let childModuleName = arg.childModuleName;
+    e.returnValue = unWorkRole.filter(item=>item.ModuleName==mainModuleName && item.ChildModuleNo==childModuleName);
   })
 
 }
