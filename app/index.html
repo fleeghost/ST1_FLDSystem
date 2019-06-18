@@ -6,17 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>福路德信息化平台</title>
+    <link rel="stylesheet" href="assets/layui/css/layui.css" media="all">
     <link rel="stylesheet" type="text/css" href="assets/element-ui/theme-chalk/index.css" />
     <link rel="stylesheet" type="text/css" href="assets/ionicons/css/ionicons.css" />
     <link rel="stylesheet" type="text/css" href="assets/base.css" />
     <link rel="stylesheet" type="text/css" href="assets/plugins/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="assets/iconfont/iconfont.css" />
+
     <script type="text/javascript" src="assets/jquery/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="assets/layer/layer.js"></script>
+    <script src="assets/layui/layui.js"></script>
     <script type="text/javascript" src="assets/vue.js"></script>
     <script type="text/javascript" src="assets/element-ui/index.js"></script>
     <script type="text/javascript" src="assets/vue-element-bigdata-table.min.js"></script>
     <script type="text/javascript" src="assets/appError.js"></script>
+
+
+
     <style>
         .iconfont {
             font-size: 20px;
@@ -539,6 +545,14 @@
             line-height: 30px;
             overflow-y: auto;
         }
+        #layui-layer100001 .layui-layer-title{
+            background-color:initial !important;
+        }
+        #layui-layer100001 .layui-layer-close1{
+            color:#000 !important;
+        }
+        
+
     </style>
 </head>
 
@@ -554,44 +568,11 @@
                         <span>福路德信息化平台</span>
                     </div>
                     <div class="system-operation">
-                        <el-popover title="最新消息" placement="bottom" width="250" trigger="click">
-                            <div style="overflow-y:auto;max-height:300px;">
-                                <div class="bell">
-                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
-                                    <div class="bell-date">2019-01-01</div>
-                                </div>
-                                <div class="bell">
-                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
-                                    <div class="bell-date">2019-01-01</div>
-                                </div>
-                                <div class="bell">
-                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
-                                    <div class="bell-date">2019-01-01</div>
-                                </div>
-                                <div class="bell">
-                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
-                                    <div class="bell-date">2019-01-01</div>
-                                </div>
-                                <div class="bell">
-                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
-                                    <div class="bell-date">2019-01-01</div>
-                                </div>
-                                <div class="bell">
-                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
-                                    <div class="bell-date">2019-01-01</div>
-                                </div>
-                                <div class="bell">
-                                    <div class="bell-content">测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</div>
-                                    <div class="bell-date">2019-01-01</div>
-                                </div>
-                            </div>
-                            <div slot="reference" class="item">
-                                <el-badge value="8" :max="99">
-                                    <i class="el-icon-bell" style="font-size: 22px;"></i>
-                                </el-badge>
-                            </div>
-                        </el-popover>
-
+                        <div class="item" @click="showIM">
+                            <el-badge value="8" :max="99">
+                                <i class="el-icon-s-comment" style="font-size: 22px;"></i>
+                            </el-badge>
+                        </div>
 
                         <div class="item img">
                             <el-dropdown placement="bottom" trigger="click" @command="handleCommand">
@@ -813,6 +794,7 @@
     const ping = require('ping');
     const { SystemModules, SelfModules } = require(ipcRenderer.sendSync('getRootPath') + '/assembly/RequireHelper')
     const { post } = SelfModules('httpHelper')
+    const layimConfig = SelfModules('IMHelper')
     const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json');
     const package = require(ipcRenderer.sendSync('getRootPath') + '/package.json');
 
@@ -874,8 +856,8 @@
         lockTime = new Date().getTime();
     });
 
-    $(function(){
-        $('body').click(function(){
+    $(function () {
+        $('body').click(function () {
             lockTime = new Date().getTime();
         })
     })
@@ -989,7 +971,7 @@
                 path: '/Frame/SqlData'
             }, {
                     cmdname: 'getMainMenuByUser',
-                    userId:localStorage.getItem("UserID")
+                    userId: localStorage.getItem("UserID")
                 }, (ret) => {
                     let data = JSON.parse(ret);
                     if (data.status == 200) {
@@ -1013,14 +995,18 @@
                         }
                         //业务流禁用权限功能表
                         var unWorkRoleList = data.data.ds1;
-                        ipcRenderer.send('setUnWrokRoleList',unWorkRoleList);
+                        ipcRenderer.send('setUnWrokRoleList', unWorkRoleList);
                     } else {
                         layer.msg('接口数据异常!请稍后再试');
                     }
                 }, (err) => {
 
                 })
-
+                setTimeout(function(){
+                    //初始化layim
+                    layimConfig.config();
+                },100);
+                
         },
         methods: {
             openDevTools(e) {
@@ -1307,6 +1293,9 @@
                     that.lockPassword = '';
                     layer.msg('解锁密码错误,请重新输入!')
                 }
+            },
+            showIM() {
+                layimConfig.showLayim();
             }
         }
     })
@@ -1316,76 +1305,7 @@
     // let guid = '';
     // $(function () {
 
-    //     $.getScript("assets/jquery.signalR-2.4.1.min.js", function () {
-    //         $.getScript("http://" + Config.Http_config.ip + ':' + Config.Http_config.port + "/signalr/hubs", function () {
-    //             $.getScript("assets/signalr-mediate.js", function () {
-    //                 $.signalrApi({
-    //                     serverUrl: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port,
-    //                     clientHub: "PageHub",
-    //                     clientEvents: [
-    //                         {
-    //                             name: "onGlobalConnect",
-    //                             method: function (data) {
-    //                                 guid = data;
-
-    //                             }
-    //                         },
-
-    //                         {
-    //                             name: "onClientLive",
-    //                             method: function (data) {
-    //                                 // signtime = new Date().getTime();
-    //                             }
-    //                         },
-
-    //                         {
-    //                             name: "onApplyInstruct",
-    //                             method: function (data) {
-    //                                 var ret = JSON.parse(data);
-    //                                 if (ret.eventType == 'click') {
-    //                                     lockTime = new Date().getTime();
-    //                                 } else if (ret.eventType == 'error') {
-    //                                     writeFile(ret.data);
-    //                                 }
-    //                             }
-    //                         }
-    //                     ]
-    //                 });
-    //                 //socket连接
-    //                 function signalrConnect() {
-    //                     $.signalrApi.start(function () {
-    //                         $.signalrApi.server.globalConnect();
-    //                     });
-    //                 }
-    //                 signalrConnect();
-
-    //                 setInterval(function () {
-
-    //                     try {
-    //                         $.signalrApi.server.clientLive();
-    //                     } catch (e) {
-    //                         $.signalrApi.start(function () {
-
-    //                         });
-    //                     }
-
-    //                     if (new Date().getTime() - lockTime > 30 * 60 * 1000) {
-    //                         vm.pageLock = true;
-    //                     }
-
-    //                 }, 2000);
-
-    //                 // $('body').click(function () {
-    //                 //     let signalrData = {
-    //                 //         eventType: 'click',
-    //                 //         data: {}
-    //                 //     }
-    //                 //     $.signalrApi.server.applyInstruct(guid, JSON.stringify(signalrData))
-    //                 // })
-    //             });
-    //         });
-
-    //     })
+    
     // })
 </script>
 

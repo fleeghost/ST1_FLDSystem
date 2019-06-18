@@ -13,6 +13,7 @@
             case 'DbHelper':return require(basePath+'DbHelper.js');
             case 'httpHelper':return require(basePath+'HttpHelper.js');
             case 'fileHelper':return require(basePath+'FileHelper.js');
+            case 'IMHelper':return require(basePath+'IMHelper.js');
         }
     }
     module.exports.SelfService=(moduleName,serviceName)=>{
