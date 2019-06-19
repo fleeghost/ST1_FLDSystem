@@ -156,9 +156,10 @@
                         //监听发送消息
                         layim.on('sendMessage', function(res){
                             let fromContextID = mine.contextIDs;
-                            let userID = res.to.id;
+                            let fromUserID = mine.id;
+                            let toUserID = res.to.id;
                             let msg = res.mine.content;
-                            $.signalrApi.server.chatMsg(fromContextID,userID,msg);
+                            $.signalrApi.server.chatMsg(fromContextID,fromUserID,toUserID,msg);
                         });
                         layim.on('sign', function(value){
                             post({
