@@ -175,7 +175,7 @@ let moduleFunction = () => {
   })
   //关闭软件
   ipcMain.on('quitApp', (e, arg) => {
-    app.quit();
+    app.exit(0)
   })
   //软件最小化
   ipcMain.on('minWindow', (e, arg) => {
