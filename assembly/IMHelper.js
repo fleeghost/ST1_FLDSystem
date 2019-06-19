@@ -42,8 +42,8 @@
                             },
                             {
                                 name: "onChatMsg",
-                                method: function (userId,msg) {
-                                    $.clientCallBacks["onChatMsg"](userId,msg);
+                                method: function (userId,msg,timestap) {
+                                    $.clientCallBacks["onChatMsg"](userId,msg,timestap);
                                 }
                             }
                         ]
