@@ -149,7 +149,7 @@ let moduleFunction = () => {
     //关闭登录页面
     winLogin.close();
 
-     winMain.webContents.openDevTools()
+     //winMain.webContents.openDevTools()
   })
   //跳转到登录
   ipcMain.on('redirectLogin', (e, arg) => {

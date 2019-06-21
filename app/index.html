@@ -8,7 +8,7 @@
     <title>福路德信息化平台</title>
     <link rel="stylesheet" href="assets/layui/css/layui.css" media="all">
     <link rel="stylesheet" type="text/css" href="assets/element-ui/theme-chalk/index.css" />
-    <link rel="stylesheet" type="text/css" href="assets/ionicons/css/ionicons.css" />
+    
     <link rel="stylesheet" type="text/css" href="assets/base.css" />
     <link rel="stylesheet" type="text/css" href="assets/plugins/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="assets/iconfont/iconfont.css" />
@@ -551,6 +551,10 @@
         #layui-layer100001 .layui-layer-close1{
             color:#000 !important;
         }
+
+        .layui-layer-max:before{
+            content: "\e6d8";
+        }
         
 
     </style>
@@ -860,15 +864,16 @@
         $('body').click(function () {
             lockTime = new Date().getTime();
         })
+
+        setTimeout(function(){
+            //初始化layim
+            layimConfig.config();
+        },100);
     })
 
-    // setInterval(() => {
-    //     if (new Date().getTime() - lockTime > 30 * 60 * 1000) {
-    //         vm.pageLock = true;
-    //     }
-    // },1000)
-
-
+    function getPostObj(){
+        return post;
+    }
 
 
     Vue.prototype.$ELEMENT = { size: 'mini' }
@@ -1002,11 +1007,6 @@
                 }, (err) => {
 
                 })
-                setTimeout(function(){
-                    //初始化layim
-                    layimConfig.config();
-                },100);
-                
         },
         methods: {
             openDevTools(e) {
