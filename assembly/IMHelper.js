@@ -11,18 +11,6 @@
             return headImg;
         }
     }
-    //更新用户ContextID
-    let updateContextID = (contextID)=>{
-        post({
-            path: '/Frame/SqlData'
-        }, {
-                cmdname: 'updateUserContextID',
-                userID: localStorage.getItem("UserID"),
-                ContextID:contextID
-            }, (ret) => {
-            });
-        
-    }
 
     $.clientCallBacks={};
     //通讯Signalr
@@ -45,13 +33,26 @@
                                 method: function (userId,msg,timestap) {
                                     $.clientCallBacks["onChatMsg"](userId,msg,timestap);
                                 }
+                            },
+                            {
+                                name: "onUserOnlineNotify",
+                                method: function (userInfo) {
+                                    $.clientCallBacks["onUserOnlineNotify"](userInfo);
+                                }
+                            },
+                            {
+                                name: "onUserOfflineNotify",
+                                method: function (userId) {
+                                    $.clientCallBacks["onUserOfflineNotify"](userId);
+                                }
                             }
                         ]
                     });
                     //socket连接
                     function signalrConnect() {
                         $.signalrApi.start(function () {
-                            $.signalrApi.server.clientConnect();
+                            var userId = localStorage.getItem("UserID");
+                            $.signalrApi.server.clientConnect(userId);
                         });
                     }
                     signalrConnect();
@@ -66,9 +67,9 @@
                             });
                         }
 
-                        if (new Date().getTime() - lockTime > 30 * 60 * 1000) {
-                            vm.pageLock = true;
-                        }
+                        // if (new Date().getTime() - lockTime > 30 * 60 * 1000) {
+                        //     vm.pageLock = true;
+                        // }
 
                     }, 2000);
                 });
@@ -91,7 +92,7 @@
                         mine = {
                             username: userInfo.ds[0].UserName,
                             id: userInfo.ds[0].UserID.toString(),
-                            status: "online",
+                            "status": "online",
                             sign: userInfo.ds[0].Sign,
                             avatar: changeHeadImg(userInfo.ds[0].HeadImg)
                         };
@@ -104,7 +105,7 @@
                             friend.push({
                                 username: userInfo.ds1[i].UserName,
                                 id: userInfo.ds1[i].UserID.toString(),
-                                status: userInfo.ds1[i].ContextIDs ? "online" : 'offline',
+                                "status": userInfo.ds1[i].ContextIDs ? "online" : 'offline',
                                 sign: userInfo.ds1[i].Sign,
                                 avatar: changeHeadImg(userInfo.ds1[i].HeadImg),
                                 contextIDs: userInfo.ds1[i].ContextIDs
@@ -114,7 +115,6 @@
                         //signalR连接
                         $.clientCallBacks["onClientConnect"]=(contextID)=>{
                             mine["contextIDs"] = contextID;
-                            updateContextID(contextID);
                         }
                         $.clientCallBacks["onChatMsg"]=(userId,msg,timestamp)=>{
                             let fs = friend.filter(item=>item.id==userId);
@@ -133,6 +133,27 @@
                                 });
                             }
                         }
+                        $.clientCallBacks["onUserOnlineNotify"]=(info)=>{
+                            let userInfo = JSON.parse(info);
+                            if(friend.filter(item=>item.id.toString()==userInfo.UserID.toString()).length>0){
+                                layim.setFriendStatus(userInfo.UserID.toString(), 'online');
+                            }
+                            else{
+                                //如果用户不存在，则把该用户加入好友圈
+                                layim.addList({
+                                    type: 'friend' 
+                                    ,avatar: changeHeadImg(userInfo.HeadImg)
+                                    ,username: userInfo.UserName
+                                    ,groupid: 1 //所在的分组id
+                                    ,id: userInfo.UserID.toString()
+                                    ,sign: userInfo.Sign
+                                  });
+                                layim.setFriendStatus(userInfo.UserID.toString(), 'online');
+                            }
+                        }
+                        $.clientCallBacks["onUserOfflineNotify"]=(userId)=>{
+                            layim.setFriendStatus(userId.toString(), 'offline');
+                        }
                         signalRHelper();
                         //基础配置
                         layim.config({
@@ -143,12 +164,12 @@
                             }
                             //上传图片接口（返回的数据格式见下文），若不开启图片上传，剔除该项即可
                             , uploadImage: {
-                                url: '' //接口地址
+                                url: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port+'/Frame/ST1_FLD/Handler.aspx?cmd=chatUploadImg' //接口地址
                                 , type: 'post' //默认post
                             }
                             //上传文件接口（返回的数据格式见下文），若不开启文件上传，剔除该项即可
                             , uploadFile: {
-                                url: '' //接口地址
+                                url: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port+'/Frame/ST1_FLD/Handler.aspx?cmd=chatUploadFile' //接口地址
                                 , type: 'post' //默认post
                             }
                             , chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html' //聊天记录页面地址，若不开启，剔除该项即可
