@@ -8,7 +8,7 @@
     <title>福路德信息化平台</title>
     <link rel="stylesheet" href="assets/layui/css/layui.css" media="all">
     <link rel="stylesheet" type="text/css" href="assets/element-ui/theme-chalk/index.css" />
-    <!-- <link rel="stylesheet" type="text/css" href="assets/ionicons/css/ionicons.css" /> -->
+    
     <link rel="stylesheet" type="text/css" href="assets/base.css" />
     <link rel="stylesheet" type="text/css" href="assets/plugins/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="assets/iconfont/iconfont.css" />
@@ -552,20 +552,8 @@
             color:#000 !important;
         }
 
-        .layui-layim{
-            z-index:2000!important;
-        }
-
-        .layui-layim .layui-layer-ico{
-            background:none;
-        }
-
-        .layui-layim-chat .layui-layer-max:before{
-            content:''
-        }
-
-        .layui-layim-chat .layui-layer-title{
-            background-color: #F8F8F8 !important;
+        .layui-layer-max:before{
+            content: "\e6d8";
         }
         
 
@@ -1164,13 +1152,13 @@
                 }
             },
             close() {
-                let quitApp = layer.confirm('确定退出' + package.description + '?', {
+                let exitLayer = layer.confirm('确定退出' + package.description + '?', {
                     title: '提示',
                     btn: ['确认', '取消'] //按钮
                 }, () => {
                     ipcRenderer.sendSync('quitApp');
                 }, () => {
-                    layer.close(quitApp)
+                    layer.close(exitLayer);
                 });
 
             },

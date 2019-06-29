@@ -63,7 +63,8 @@
                             $.signalrApi.server.clientLive();
                         } catch (e) {
                             $.signalrApi.start(function () {
-
+                                var userId = localStorage.getItem("UserID");
+                                $.signalrApi.server.clientConnect(userId);
                             });
                         }
 
@@ -99,8 +100,10 @@
                         var friendInfo = [{
                             "groupname": "福路德用户",
                             id: 1
-                        }]
+                        }];
+                        var groups = [];
                         friend = [];
+                        //用户列表
                         for (var i = 0; i < userInfo.ds1.length; i++) {
                             friend.push({
                                 username: userInfo.ds1[i].UserName,
@@ -111,6 +114,16 @@
                                 contextIDs: userInfo.ds1[i].ContextIDs
                             })
                         }
+                        //群列表
+                        for(var i=0;i<userInfo.ds2.length;i++){
+                            groups.push({
+                                "groupname": userInfo.ds2[i].GroupName,
+                                "id": userInfo.ds2[i].GroupID,
+                                "avatar": "image/group.png" //群组头像
+                            })
+                        }
+
+
                         friendInfo[0].list = friend;
                         //signalR连接
                         $.clientCallBacks["onClientConnect"]=(contextID)=>{
@@ -160,7 +173,11 @@
                             init: {
                                 mine: mine
                                 , friend: friendInfo
-                                , group: []
+                                , group: groups
+                            }
+                            ,members: {
+                                url: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port+'/Frame/ST1_FLD/Handler.aspx?cmd=getMembers' //接口地址
+                                ,type: 'post' //默认get，一般可不填
                             }
                             //上传图片接口（返回的数据格式见下文），若不开启图片上传，剔除该项即可
                             , uploadImage: {
@@ -180,7 +197,13 @@
                             let fromUserID = mine.id;
                             let toUserID = res.to.id;
                             let msg = res.mine.content;
-                            $.signalrApi.server.chatMsg(fromContextID,fromUserID,toUserID,msg);
+                            let sendType = res.to.type;
+                            if(sendType=='friend'){
+                                $.signalrApi.server.chatMsg(fromContextID,fromUserID,toUserID,msg);
+                            }
+                            else{
+                                $.signalrApi.server.groupMsg(fromContextID,fromUserID,toUserID,msg);
+                            }
                         });
                         layim.on('sign', function(value){
                             post({
