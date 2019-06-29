@@ -1152,13 +1152,13 @@
                 }
             },
             close() {
-                layer.confirm('确定退出' + package.description + '?', {
+                let exitLayer = layer.confirm('确定退出' + package.description + '?', {
                     title: '提示',
                     btn: ['确认', '取消'] //按钮
                 }, () => {
                     ipcRenderer.sendSync('quitApp');
                 }, () => {
-                    layer.closeAll()
+                    layer.close(exitLayer);
                 });
 
             },

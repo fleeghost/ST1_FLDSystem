@@ -33,7 +33,9 @@ let winLogin, winMain
 //登录用户信息
 let currentUser;
 //禁用的业务流权限
-let unWorkRole=[]
+let unWorkRole=[];
+//是否清除远程localstorge
+let isClearGlobalLocalStorge = false;
 
 
 function createWindow() {
@@ -231,7 +233,16 @@ let moduleFunction = () => {
     let childModuleName = arg.childModuleName;
     e.returnValue = unWorkRole.filter(item=>item.ModuleName==mainModuleName && item.ChildModuleNo==childModuleName);
   })
-
+  //清除远程localstorge值
+  ipcMain.on('clearGlobalLocalstorge',(e,arg)=>{
+        if(isClearGlobalLocalStorge){
+          e.returnValue = false;
+        }
+        else{
+          isClearGlobalLocalStorge = true;
+          e.returnValue = true;
+        }
+  })
 }
 
 
