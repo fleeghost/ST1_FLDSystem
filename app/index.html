@@ -607,6 +607,26 @@
             height: 40px;
             opacity: 0;
         }
+
+        .load-progress {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10086;
+            width: 350px;
+            margin-top: -23px;
+            white-space: pre;
+            text-align: center;
+            line-height:10px;
+        }
+
+        .progress-line {
+            background: linear-gradient(to right, rgba(185, 23, 39, 0), rgba(185, 23, 39, .3) 50%, rgb(185, 23, 39));
+            width: 0;
+            height: 10px;
+            border-radius: 100px;
+        }
     </style>
 </head>
 
@@ -732,6 +752,10 @@
                                     </div>
                                 </el-tab-pane>
                             </el-tabs>
+                            <div class="load-progress" v-if="showloadPercentage">
+                                <div class="progress-line" :style="{width:loadPercentage+ '%'}"></div>
+                                <div><span>{{loadPercentage}}%</span></div>
+                            </div>
                         </div>
                     </el-main>
                     <el-footer>
@@ -989,7 +1013,9 @@
             ifUpdatePwd: false,
             oldPassWord: '',
             newPassWord1: '',
-            newPassWord2: ''
+            newPassWord2: '',
+            loadPercentage: 0,
+            showloadPercentage: false
         },
         created: function () {
             let that = this;
@@ -1142,7 +1168,6 @@
                         username: that.userInfo.UserName
                     }, (ret) => {
                         let data = JSON.parse(ret);
-                        debugger;
                         if (data.status == 200) {
                             layer.msg('保存成功');
                         } else {
@@ -1235,8 +1260,74 @@
                     if (that.rightTabsList.length >= 10) {
                         layer.msg('当前窗口打开过多,请关闭部分窗口后重试!');
                     } else {
-                        that.rightTabsList.push(row);
+
+                        let ifok = false;
+
+                        that.loadPercentage = 0;
+                        that.showloadPercentage = true;
+
+                        let timeout = 1;
+                        let getLoadProgress = () => {
+                            if (!ifok) {
+                                if (that.loadPercentage < 50) {
+                                    timeout = 10;
+                                }
+                                if (that.loadPercentage < 70 && that.loadPercentage >= 50) {
+                                    timeout = 100;
+                                }
+                                if (that.loadPercentage < 80 && that.loadPercentage >= 70) {
+                                    timeout = 500;
+                                }
+                                if (that.loadPercentage < 90 && that.loadPercentage >= 80) {
+                                    timeout = 2000;
+                                }
+                                if (that.loadPercentage < 95 && that.loadPercentage >= 90) {
+                                    timeout = 5000;
+                                }
+                                if (that.loadPercentage < 98 && that.loadPercentage >= 95) {
+                                    timeout = 20000;
+                                }
+                                if (that.loadPercentage < 100 && that.loadPercentage >= 98) {
+                                    timeout = 99999999999999999;
+                                }
+                            }
+
+                            if (that.loadPercentage >= 100) {
+                                that.showloadPercentage = false;
+                                let webview = $('#pane-' + that.rightTabsActive).find('webview');
+                                setTimeout(()=>{
+                                    
+                                    webview.show();
+                                },200)
+                                
+                                return false;
+                            }
+                            that.loadPercentage += 1
+                            setTimeout(() => {
+                                getLoadProgress();
+                            }, timeout)
+
+                        }
+                        getLoadProgress();
+
                         that.rightTabsActive = row.Id + '_' + row.Name;
+                        that.rightTabsList.push(row);
+
+                        that.$nextTick(() => {
+                            let webview = $('#pane-' + that.rightTabsActive).find('webview');
+                            webview.hide();
+                            webview[0].addEventListener('dom-ready', () => {
+                                timeout = 1;
+                                ifok = true;
+
+                            })
+                        })
+
+
+
+
+
+
                     }
 
                 }
@@ -1269,7 +1360,7 @@
                         }
                     });
                 }
-
+                this.showloadPercentage = false;
                 this.rightTabsActive = activeName;
                 this.rightTabsList = tabs.filter(tab => (tab.Id + '_' + tab.Name) !== targetName);
             },
@@ -1436,6 +1527,9 @@
                     that.checkUpdate();
                 } else if (command == '个人信息') {
                     that.showUserInfo = true;
+                    that.oldPassWord = '';
+                    that.newPassWord1 = '';
+                    that.newPassWord2 = '';
                 }
 
             },
