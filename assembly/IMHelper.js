@@ -35,6 +35,12 @@
                                 }
                             },
                             {
+                                name: "onGroupMsg",
+                                method: function (userId,groupId,msg,timestap) {
+                                    $.clientCallBacks["onGroupMsg"](userId,groupId,msg,timestap);
+                                }
+                            },
+                            {
                                 name: "onUserOnlineNotify",
                                 method: function (userInfo) {
                                     $.clientCallBacks["onUserOnlineNotify"](userInfo);
@@ -146,6 +152,26 @@
                                 });
                             }
                         }
+                        $.clientCallBacks["onGroupMsg"]=(userId,groupId,msg,timestamp)=>{
+                            debugger;
+                            let fs = friend.filter(item=>item.id==userId);
+                            if(fs.length>0){
+                                //接收消息
+                                layim.getMessage({
+                                    username: fs[0].username
+                                    ,avatar: fs[0].avatar
+                                    ,id: groupId
+                                    ,type: "group" //聊天窗口来源类型，从发送消息传递的to里面获取
+                                    ,content: msg
+                                    ,cid: 0 //消息id，可不传。除非你要对消息进行一些操作（如撤回）
+                                    ,mine: false //是否我发送的消息，如果为true，则会显示在右方
+                                    ,fromid: fs[0].id //消息的发送者id（比如群组中的某个消息发送者），可用于自动解决浏览器多窗口时的一些问题
+                                    ,timestamp: timestamp*1000 //服务端时间戳毫秒数。注意：如果你返回的是标准的 unix 时间戳，记得要 *1000
+                                });
+                            }
+                        }
+
+
                         $.clientCallBacks["onUserOnlineNotify"]=(info)=>{
                             let userInfo = JSON.parse(info);
                             if(friend.filter(item=>item.id.toString()==userInfo.UserID.toString()).length>0){
