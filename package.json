@@ -33,10 +33,10 @@
       }
     ],
     "nsis": {
-      "oneClick": false,
+      "oneClick": true,
       "perMachine": false,
       "allowElevation": true,
-      "allowToChangeInstallationDirectory": true,
+      "allowToChangeInstallationDirectory": false,
       "installerIcon": "./logo.ico",
       "uninstallerIcon": "./logo.ico",
       "installerHeaderIcon": "./logo.ico",

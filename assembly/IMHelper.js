@@ -15,9 +15,9 @@
     $.clientCallBacks={};
     //通讯Signalr
     let signalRHelper = () => {
-        $.getScript("assets/jquery.signalR-2.4.1.min.js", function () {
+        $.getScript("assets/jquery/jquery.signalR-2.4.1.min.js", function () {
             $.getScript("http://" + Config.Http_config.ip + ':' + Config.Http_config.port + "/signalr/hubs", function () {
-                $.getScript("assets/signalr-mediate.js", function () {
+                $.getScript("assets/jquery/signalr-mediate.js", function () {
                     $.signalrApi({
                         serverUrl: "http://" + Config.Http_config.ip + ':' + Config.Http_config.port,
                         clientHub: "IMHub",

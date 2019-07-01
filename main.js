@@ -249,7 +249,7 @@ let moduleFunction = () => {
 
 
 
-
+//软件更新检测程序
 
 let updateType = 1;
 
