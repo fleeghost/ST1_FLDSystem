@@ -1101,6 +1101,7 @@
                         oldPwd: that.oldPassWord,
                         newPwd: that.newPassWord1
                     }, (ret) => {
+                        debugger;
                         let data = JSON.parse(ret);
                         if (data.status == 200) {
                             if (data.data.ds[0].status == 200) {

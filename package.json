@@ -1,6 +1,6 @@
 {
   "name": "st1_fldsystem",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "福路德信息化平台",
   "main": "main.js",
   "scripts": {
