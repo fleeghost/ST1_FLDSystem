@@ -3,10 +3,15 @@ Vue.component('menu-template-sub', {
     template: '<div>' +
         '<div v-for="(row,index) in menu_data">' +
         '<el-submenu v-if="row.node.length" :index="\'self\' + row.Id">' +
-        '<span slot="title">{{row.Name}}</span>' +
+        // '<span slot="title">{{row.Name}}</span>' +
+        '<template slot="title"><i class="iconfont icon-menu" style="margin-right:10px;font-size:16px;"></i><span slot="title">{{row.Name}}</span></template>' +
         '<menu-template-sub :menu_data="row.node" @sub-item-click="menuItemClick"></menu-template-sub>' +
         '</el-submenu>' +
-        '<el-menu-item v-else :index="\'self\' + row.Id" @click="menuItemClick(row)">{{row.Name}}</el-menu-item>' +
+        '<el-menu-item v-else :index="\'self\' + row.Id" @click="menuItemClick(row)">'+
+        // '{{row.Name}}'+
+        '<i class="iconfont icon-menu" style="margin-right:10px;font-size:16px;"></i>' +
+        '<span slot="title">{{row.Name}}</span>' +
+        '</el-menu-item>' +
         '</div>' +
         '</div>',
     methods: {
