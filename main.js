@@ -243,6 +243,16 @@ let moduleFunction = () => {
           e.returnValue = true;
         }
   })
+  //添加main上的tab页签
+  ipcMain.on('addMainTab',(e,arg)=>{
+    winMain.webContents.send({
+      Id:arg.Id,
+      Name:arg.Name
+    });
+  })
+
+
+
 }
 
 
