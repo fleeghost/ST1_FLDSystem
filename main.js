@@ -245,9 +245,10 @@ let moduleFunction = () => {
   })
   //添加main上的tab页签
   ipcMain.on('addMainTab',(e,arg)=>{
-    winMain.webContents.send({
+    winMain.webContents.send('addMainTab',{
       Id:arg.Id,
-      Name:arg.Name
+      Name:arg.Name,
+      NavigateUrl:arg.NavigateUrl
     });
   })
 

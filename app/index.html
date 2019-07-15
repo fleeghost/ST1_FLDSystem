@@ -189,7 +189,7 @@
         }
 
         .bg-opacity {
-            background: rgba(122, 109, 109, 0.27);
+            background: rgba(255, 255, 255, .03);
         }
 
         .el-menu--vertical {
@@ -627,9 +627,6 @@
             height: 10px;
             border-radius: 100px;
         }
-        .el-menu-item i,.el-submenu__title i{
-            color: #c6c6c6;
-        }
     </style>
 </head>
 
@@ -958,6 +955,15 @@
     ipcRenderer.on("appClick", (event, text) => {
         console.warn('webview点击屏幕')
         lockTime = new Date().getTime();
+    });
+
+    //新增页签功能
+    ipcRenderer.on("addMainTab",(event,text)=>{
+        vm.treeSelect({
+            Id:text.Id,
+            Name:text.Name,
+            NavigateUrl:'http://' + Config.Http_config.ip + ':' + Config.Http_config.port +text.NavigateUrl
+        });
     });
 
     $(function () {
@@ -1326,12 +1332,6 @@
 
                             })
                         })
-
-
-
-
-
-
                     }
 
                 }
