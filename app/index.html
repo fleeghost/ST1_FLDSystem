@@ -1303,12 +1303,12 @@
                             }
 
                             if (that.loadPercentage >= 100) {
-                                that.showloadPercentage = false;
+                                
                                 let webview = $('#pane-' + that.rightTabsActive).find('webview');
                                 setTimeout(()=>{
-                                    
+                                    that.showloadPercentage = false;
                                     webview.show();
-                                },200)
+                                },800)
                                 
                                 return false;
                             }
