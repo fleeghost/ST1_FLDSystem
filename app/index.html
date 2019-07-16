@@ -1307,7 +1307,7 @@
                                 let webview = $('#pane-' + that.rightTabsActive).find('webview');
                                 setTimeout(()=>{
                                     that.showloadPercentage = false;
-                                    webview.show();
+                                    webview.css({'opacity':1});
                                 },800)
                                 
                                 return false;
@@ -1325,7 +1325,7 @@
 
                         that.$nextTick(() => {
                             let webview = $('#pane-' + that.rightTabsActive).find('webview');
-                            webview.hide();
+                            webview.css({'opacity':0});
                             webview[0].addEventListener('dom-ready', () => {
                                 timeout = 1;
                                 ifok = true;
