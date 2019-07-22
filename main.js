@@ -251,7 +251,10 @@ let moduleFunction = () => {
       NavigateUrl:arg.NavigateUrl
     });
   })
-
+  //消息提醒
+  ipcMain.on('messageBox',(e,arg)=>{
+    winMain.webContents.send('messageBox',arg);
+  })
 
 
 }
