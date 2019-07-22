@@ -965,6 +965,12 @@
             NavigateUrl:'http://' + Config.Http_config.ip + ':' + Config.Http_config.port +text.NavigateUrl
         });
     });
+    //系统底层级消息提示
+    ipcRenderer.on("messageBox",(event,text)=>{
+        layer.msg(text);
+    });
+
+
 
     $(function () {
         $('body').click(function () {
