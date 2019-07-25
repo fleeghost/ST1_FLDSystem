@@ -257,6 +257,12 @@ let moduleFunction = () => {
   })
 
 
+  ipcMain.on('twinkle',(e,arg)=>{
+    winMain.once('focus', () => winMain.flashFrame(false))
+    winMain.flashFrame(true)
+  })
+
+
 }
 
 
