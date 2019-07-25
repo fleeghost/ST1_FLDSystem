@@ -651,7 +651,7 @@
                         <div class="item img">
                             <el-dropdown placement="bottom" trigger="click" @command="handleCommand">
                                 <div trigger="click">
-                                    <img src="image/header.png" />
+                                    <img :src="setHeaderImg(userInfo.HeadImg)" />
                                     <span>{{userName}}</span>
                                     <i class="el-icon-arrow-down"></i>
                                 </div>
@@ -1114,7 +1114,7 @@
             //头像图片显示
             setHeaderImg(imgUrl) {
                 if (imgUrl) {
-                    return 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + imgUrl;
+                    return imgUrl;
                 } else {
                     return 'image/header.png'
                 }
@@ -1593,7 +1593,7 @@
                 file.remove();
                 debugger;
                 if (datas.status == 200) {
-                    vm.userInfo.HeadImg = datas.data.origin;
+                    vm.userInfo.HeadImg = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port+datas.data.origin;
                 } else {
                     layer.msg('文件未上传!');
                 }

@@ -65,32 +65,63 @@
       debugger;
       let post = parent.getPostObj();
 
-      post({
-        path: '/Frame/SqlData'
-      }, {
-          cmdname: 'GetUserChatHistory',
-          fromUserID: parseInt(localStorage.getItem("UserID")),
-          toUserID:searchData["id"]
-        }, (ret) => {
-          let data = JSON.parse(ret).data;
-          let history = [];
-          for(var i=0;i<data.ds.length;i++){
-            history.push({
-              username:data.ds[i].UserName,
-              id:data.ds[i].FromUserID,
-              avatar:changeHeadImg(data.ds[i].HeadImg),
-              timestamp:data.ds[i].CreateTimeStamp*1000,
-              content:data.ds[i].Content
-            })
-          }
-          var html = laytpl(LAY_tpl.value).render({
-            data: history
-          });
-          $('#LAY_view').html(html);
+      if(searchData['type']=="friend"){
+        post({
+          path: '/Frame/SqlData'
+        }, {
+            cmdname: 'GetUserChatHistory',
+            fromUserID: parseInt(localStorage.getItem("UserID")),
+            toUserID:searchData["id"]
+          }, (ret) => {
+            let data = JSON.parse(ret).data;
+            let history = [];
+            for(var i=0;i<data.ds.length;i++){
+              history.push({
+                username:data.ds[i].UserName,
+                id:data.ds[i].FromUserID,
+                avatar:changeHeadImg(data.ds[i].HeadImg),
+                timestamp:data.ds[i].CreateTimeStamp*1000,
+                content:data.ds[i].Content
+              })
+            }
+            var html = laytpl(LAY_tpl.value).render({
+              data: history
+            });
+            $('#LAY_view').html(html);
 
-        }, (err) => {
+          }, (err) => {
 
-        })
+          })
+      }
+      else{
+        post({
+          path: '/Frame/SqlData'
+        }, {
+            cmdname: 'GetGroupChatHistory',
+            GroupID:searchData["id"]
+          }, (ret) => {
+            let data = JSON.parse(ret).data;
+            let history = [];
+            for(var i=0;i<data.ds.length;i++){
+              history.push({
+                username:data.ds[i].UserName,
+                id:data.ds[i].FromUserID,
+                avatar:changeHeadImg(data.ds[i].HeadImg),
+                timestamp:data.ds[i].CreateTimeStamp*1000,
+                content:data.ds[i].Content
+              })
+            }
+            var html = laytpl(LAY_tpl.value).render({
+              data: history
+            });
+            $('#LAY_view').html(html);
+
+          }, (err) => {
+
+          })
+      }
+
+      
     });
   </script>
 </body>
