@@ -83,7 +83,11 @@
             background: rgba(255, 255, 255, .2);
         }
 
-        .el-container .el-header .row-1 .system-operation .item>* {
+        .el-container .el-header .row-1 .system-operation .item>i {
+            padding: 0 8px;
+        }
+
+        .el-container .el-header .row-1 .system-operation .item .el-dropdown-selfdefine{
             padding: 0 8px;
         }
 
@@ -249,6 +253,7 @@
         .el-container .el-main {
             padding: 0;
             position: relative;
+            background:#fff;
         }
 
         .el-container .el-main .tabs {
@@ -627,6 +632,28 @@
             height: 10px;
             border-radius: 100px;
         }
+
+        .about>div {
+            position: relative;
+        }
+        .about .label{
+            height: 30px;
+            line-height: 30px;
+            width: 80px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .about .value{
+            padding-left: 80px;
+            line-height: 30px;
+        }
+        .about .desc{
+            padding: 10px 0;
+            line-height: 30px;
+            border-top: 1px solid #e3e3e3;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -677,6 +704,8 @@
                                             src="image/debugger.png" />{{ifDebugger?'关闭调试':'开启调试'}}</el-dropdown-item>
                                     <el-dropdown-item class="dropdown_button" command="报错日志"><img
                                             src="image/log.png" />报错日志</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" command="关于软件"><img
+                                            src="image/aboutapp.png" />关于软件</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -894,6 +923,39 @@
         </el-dialog>
 
 
+        <el-dialog title="关于软件" width="450px" :visible.sync="showAboutAPP">
+            <div class="about">
+                <div style="line-height: 50px;">
+                    <img src="image/logo_small.png" />
+                    <b>{{package.description}}</b>
+                </div>
+                <div>
+                    <div class="label">当前版本：</div>
+                    <div class="value"><b>{{package.version}}</b></div>
+                </div>
+                <div>
+                    <div class="label">提交时间：</div>
+                    <div class="value"><b>{{package.buildDate}}</b></div>
+                </div>
+                <div>
+                    <div class="label">软件类型：</div>
+                    <div class="value">
+                        <b>试用版(剩余29天)</b>
+                        <el-link type="primary" style="margin-top: -3px;">前往激活</el-link>
+                    </div>
+                    
+                </div>
+                <div>
+                    <div class="label">机器编码：</div>
+                    <div class="value">{{machineId}}</div>
+                </div>
+                <div class="desc">
+                    这是福路德信息平台的说明文字
+                </div>
+            </div>
+        </el-dialog>
+
+
     </div>
 
     <audio id="msg_mp3" hidden src="assets/utils/Baidu-TTS.mp3"></audio>
@@ -905,8 +967,9 @@
     const { SystemModules, SelfModules } = require(ipcRenderer.sendSync('getRootPath') + '/assembly/RequireHelper')
     const { post } = SelfModules('httpHelper')
     const layimConfig = SelfModules('IMHelper')
-    const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json');
-    const package = require(ipcRenderer.sendSync('getRootPath') + '/package.json');
+    const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json')
+    const package = require(ipcRenderer.sendSync('getRootPath') + '/package.json')
+    const {machineIdSync} = require('node-machine-id')
 
     let winSizeType = 1;
     let lockTime = new Date().getTime();
@@ -1007,7 +1070,9 @@
             searchKey: '',
             currentTypeId: 0,
             config: Config,
+            package:package,
             localIP: getIPAdress(),
+            machineId:machineIdSync(),
             pingStatus: '',
             ifDebugger: false,
             pageLock: false,
@@ -1030,7 +1095,8 @@
             newPassWord1: '',
             newPassWord2: '',
             loadPercentage: 0,
-            showloadPercentage: false
+            showloadPercentage: false,
+            showAboutAPP:false
         },
         created: function () {
             let that = this;
@@ -1541,6 +1607,8 @@
                     that.oldPassWord = '';
                     that.newPassWord1 = '';
                     that.newPassWord2 = '';
+                } else if (command == '关于软件'){
+                    that.showAboutAPP = true;
                 }
 
             },

@@ -151,7 +151,6 @@
                                     ,timestamp: timestamp*1000 //服务端时间戳毫秒数。注意：如果你返回的是标准的 unix 时间戳，记得要 *1000
                                 });
                                 document.getElementById('msg_mp3').play();
-                                debugger;
                                 ipcRenderer.send('twinkle')
                             }
                         }
