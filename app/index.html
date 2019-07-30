@@ -1151,6 +1151,10 @@
                         //业务流禁用权限功能表
                         var unWorkRoleList = data.data.ds1;
                         ipcRenderer.send('setUnWrokRoleList', unWorkRoleList);
+                        //表单功能权限列表
+                        var billRoleList = data.data.ds2;
+                        ipcRenderer.send('setBillRoleList',billRoleList);
+
                     } else {
                         layer.msg('接口数据异常!请稍后再试');
                     }

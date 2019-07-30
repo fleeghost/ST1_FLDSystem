@@ -34,6 +34,8 @@ let winLogin, winMain
 let currentUser;
 //禁用的业务流权限
 let unWorkRole=[];
+//表单权限列表
+let billRole=[];
 //是否清除远程localstorge
 let isClearGlobalLocalStorge = false;
 
@@ -232,6 +234,29 @@ let moduleFunction = () => {
     let mainModuleName = arg.mainModuleName;
     let childModuleName = arg.childModuleName;
     e.returnValue = unWorkRole.filter(item=>item.ModuleName==mainModuleName && item.ChildModuleNo==childModuleName);
+  })
+  //更新表单功能权限
+  ipcMain.on('setBillRoleList',(e,arg)=>{
+       billRole = arg;
+  })
+  //获取表单权限列表
+  ipcMain.on('getBillRoleList',(e,arg)=>{
+    let filterSQL = "";
+    let moduleName = arg.moduleName;
+    let billList = billRole.filter(item=>item.FListName==moduleName);
+    if(billList.length>0){
+        if(billList[0]["T_Value"]!='-1'){
+          filterSQL+='(';
+          if(billList[0]["SC_ColA"]){
+            filterSQL+=billList[0]["SC_ColA"]+"='"+ billList[0]["T_Value"] +"'";
+          }
+          if(billList[0]["SC_ColB"]){
+            filterSQL+= " or "+ billList[0]["SC_ColA"]+"='"+ billList[0]["T_Value"] +"'";
+          }
+          filterSQL+=')';
+        }
+    }
+    e.returnValue = filterSQL;
   })
   //清除远程localstorge值
   ipcMain.on('clearGlobalLocalstorge',(e,arg)=>{
