@@ -24,7 +24,7 @@ colors.setTheme({
   error: 'red'
 })
 
-console.info(colors.info(__dirname));
+
 
 
 let winLogin, winMain
@@ -291,7 +291,7 @@ let moduleFunction = () => {
 }
 
 
-
+console.info(colors.info(process.platform));
 
 
 //软件更新检测程序
@@ -313,8 +313,13 @@ function updateHandle() {
   };
 
   //如下应用程序的路径请自行替换成自己应用程序的路径
-  let updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/win/';
-  if (process.platform == 'darwin') {
+  let updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/win/64/';
+
+  if(process.platform == 'win64'){
+    updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/win/64/';
+  }else if(process.platform == 'win32'){
+    updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/win/32/';
+  }else if(process.platform == 'darwin'){
     updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/mac/';
   }
 
