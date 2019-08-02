@@ -14,6 +14,7 @@
             case 'httpHelper':return require(basePath+'HttpHelper.js');
             case 'fileHelper':return require(basePath+'FileHelper.js');
             case 'IMHelper':return require(basePath+'IMHelper.js');
+            case 'downLoadFileHelper':return require(basePath+'DownLoadFileHelper');
         }
     }
     module.exports.SelfService=(moduleName,serviceName)=>{

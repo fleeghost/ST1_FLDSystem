@@ -8,7 +8,7 @@ const url = SystemModules('url');
 const { RewriteUrl } = SelfModules('urlRewriter')
 const { writeFile, readFile } = SelfModules('fileHelper');
 const Config = require('./config/config.json');
-
+const { dialog } = require('electron')
 
 
 colors.setTheme({
@@ -286,7 +286,6 @@ let moduleFunction = () => {
     winMain.once('focus', () => winMain.flashFrame(false))
     winMain.flashFrame(true)
   })
-
 
 }
 

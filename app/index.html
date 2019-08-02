@@ -654,6 +654,10 @@
             border-top: 1px solid #e3e3e3;
             margin-top: 10px;
         }
+        .downloadPlugin{
+            height:350px;
+            font-size:12px;
+        }
     </style>
 </head>
 
@@ -700,6 +704,8 @@
                                 <el-dropdown-menu slot="dropdown" style="width: 140px;">
                                     <el-dropdown-item class="dropdown_button" command="软件更新"><img
                                             src="image/update.png" />软件更新</el-dropdown-item>
+                                    <el-dropdown-item class="dropdown_button" command="插件下载"><img
+                                        src="image/plugin.png" />插件下载</el-dropdown-item>
                                     <el-dropdown-item class="dropdown_button" command="调试模式"><img
                                             src="image/debugger.png" />{{ifDebugger?'关闭调试':'开启调试'}}</el-dropdown-item>
                                     <el-dropdown-item class="dropdown_button" command="报错日志"><img
@@ -950,9 +956,31 @@
                     <div class="value">{{machineId}}</div>
                 </div>
                 <div class="desc">
-                    这是福路德信息平台的说明文字
+                    &nbsp;&nbsp;&nbsp;&nbsp;福路德信息化平台采用自主研发的汇创H6开发系统搭建完成，汇创H6是一套可灵活配置表单、报表、接口、和页面的开发系统，包含了丰富的表单控件和各类插件，采用了Nodejs+Electron技术支撑整个
+                    软件平台，<br>
+                    有任何需求或问题请联系：13586836674（金先生）
                 </div>
             </div>
+        </el-dialog>
+
+
+        <el-dialog title="插件下载" width="450px" :visible.sync="showPluginDownload">
+            <div class="downloadPlugin">
+                    <el-row :gutter="6" style="padding:10px;background:#e4e3e3">
+                            <el-col :span="8">文件名称</el-col>
+                            <el-col :span="3">大小</el-col>
+                            <el-col :span="10">&nbsp;</el-col>
+                            <el-col :span="3">下载</el-col>
+                        </el-row>
+                    <el-row :gutter="6" style="padding-top:10px;">
+                        <el-col :span="8">报表打印控件.exe</el-col>
+                        <el-col :span="3">2.12M</el-col>
+                        <el-col :span="10"><span style="float:left;height: 1px;width:1px;display:block;">&nbsp;</span><el-progress v-show="downloadList[0].show" :percentage="downloadList[0].percentage" :text-inside="true" :show-text="false" style="margin-top:5px;width:80%" ></el-progress></el-col>
+                        <el-col :span="3"><i class="el-icon-download"  @click="downloadFile('/assets/plugins/print/CLodop_Setup_for_Win32NT.exe','.exe',0)"></i></el-col>
+                    </el-row>
+            </div>
+            
+            
         </el-dialog>
 
 
@@ -970,6 +998,7 @@
     const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json')
     const package = require(ipcRenderer.sendSync('getRootPath') + '/package.json')
     const {machineIdSync} = require('node-machine-id')
+    const { downFile } = SelfModules('downLoadFileHelper')
 
     let winSizeType = 1;
     let lockTime = new Date().getTime();
@@ -1096,7 +1125,12 @@
             newPassWord2: '',
             loadPercentage: 0,
             showloadPercentage: false,
-            showAboutAPP:false
+            showAboutAPP:false,
+            showPluginDownload:false,
+            downloadList:[{
+                show:false,
+                percentage:0
+            }]
         },
         created: function () {
             let that = this;
@@ -1287,6 +1321,30 @@
                 } else if (index == 4) {
                     this.rightTabsList = that.rightTabsList.filter(tab => (tab.Id + '_' + tab.Name) === that.rightTabsActive);
                 }
+            },
+            downloadFile(url,ext,index){
+                let that = this;
+                const { dialog } = require('electron').remote;
+                let saveFilePath = dialog.showSaveDialog({});
+                if(saveFilePath){
+                    saveFilePath = saveFilePath+ext;
+                    that.downloadList[index].show = true;
+                    downFile({
+                        remoteFile: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port+url,
+                        localFile: saveFilePath,
+                        onProgress: function (received,total){
+                            var percentage = (received * 100) / total;
+                            that.downloadList[index].percentage = percentage;
+                            if(percentage>=100){
+                                layer.msg('下载完成');
+                                that.downloadList[index].show = false;
+                                that.downloadList[index].percentage = 0;
+                            }
+                        }
+                    })
+                }
+                
+                
             },
             //重置左侧树列表
             setSubClass(id) {
@@ -1614,6 +1672,8 @@
                     that.newPassWord2 = '';
                 } else if (command == '关于软件'){
                     that.showAboutAPP = true;
+                }else if(command=='插件下载'){
+                    that.showPluginDownload = true;
                 }
 
             },
