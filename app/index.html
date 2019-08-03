@@ -87,7 +87,7 @@
             padding: 0 8px;
         }
 
-        .el-container .el-header .row-1 .system-operation .item .el-dropdown-selfdefine{
+        .el-container .el-header .row-1 .system-operation .item .el-dropdown-selfdefine {
             padding: 0 8px;
         }
 
@@ -253,7 +253,7 @@
         .el-container .el-main {
             padding: 0;
             position: relative;
-            background:#fff;
+            background: #fff;
         }
 
         .el-container .el-main .tabs {
@@ -623,7 +623,7 @@
             margin-top: -23px;
             white-space: pre;
             text-align: center;
-            line-height:10px;
+            line-height: 10px;
         }
 
         .progress-line {
@@ -636,7 +636,8 @@
         .about>div {
             position: relative;
         }
-        .about .label{
+
+        .about .label {
             height: 30px;
             line-height: 30px;
             width: 80px;
@@ -644,19 +645,22 @@
             left: 0;
             top: 0;
         }
-        .about .value{
+
+        .about .value {
             padding-left: 80px;
             line-height: 30px;
         }
-        .about .desc{
+
+        .about .desc {
             padding: 10px 0;
             line-height: 30px;
             border-top: 1px solid #e3e3e3;
             margin-top: 10px;
         }
-        .downloadPlugin{
-            height:350px;
-            font-size:12px;
+
+        .downloadPlugin {
+            height: 350px;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -705,7 +709,7 @@
                                     <el-dropdown-item class="dropdown_button" command="软件更新"><img
                                             src="image/update.png" />软件更新</el-dropdown-item>
                                     <el-dropdown-item class="dropdown_button" command="插件下载"><img
-                                        src="image/plugin.png" />插件下载</el-dropdown-item>
+                                            src="image/plugin.png" />插件下载</el-dropdown-item>
                                     <el-dropdown-item class="dropdown_button" command="调试模式"><img
                                             src="image/debugger.png" />{{ifDebugger?'关闭调试':'开启调试'}}</el-dropdown-item>
                                     <el-dropdown-item class="dropdown_button" command="报错日志"><img
@@ -779,8 +783,9 @@
                                             style="width:100%;height:100%" nodeintegration></webview>
                                     </div>
                                 </el-tab-pane>
-                                <el-tab-pane closable v-for="(row,index) in rightTabsList" :key="row.Id" :label="row.Name"
-                                    :name="row.Id + '_' + row.Name">
+                                <el-tab-pane closable v-for="(row,index) in rightTabsList"
+                                    :key="row.Id + '_' + row.Name + '_' + row.keyCode" :label="row.Name"
+                                    :name="row.Id + '_' + row.Name + '_' + row.keyCode">
                                     <div class="frame">
                                         <webview :src="row.NavigateUrl" style="width:100%;height:100%" nodeintegration>
                                         </webview>
@@ -937,20 +942,19 @@
                 </div>
                 <div>
                     <div class="label">当前版本：</div>
-                    <div class="value"><b>{{package.version}}</b></div>
+                    <div class="value"><b>{{package.version}}---{{operatingSystem}}</b></div>
                 </div>
                 <div>
                     <div class="label">提交时间：</div>
                     <div class="value"><b>{{package.buildDate}}</b></div>
                 </div>
-                <div>
+                <!-- <div>
                     <div class="label">软件类型：</div>
                     <div class="value">
                         <b>试用版(剩余29天)</b>
                         <el-link type="primary" style="margin-top: -3px;">前往激活</el-link>
                     </div>
-                    
-                </div>
+                </div> -->
                 <div>
                     <div class="label">机器编码：</div>
                     <div class="value">{{machineId}}</div>
@@ -966,21 +970,26 @@
 
         <el-dialog title="插件下载" width="450px" :visible.sync="showPluginDownload">
             <div class="downloadPlugin">
-                    <el-row :gutter="6" style="padding:10px;background:#e4e3e3">
-                            <el-col :span="8">文件名称</el-col>
-                            <el-col :span="3">大小</el-col>
-                            <el-col :span="10">&nbsp;</el-col>
-                            <el-col :span="3">下载</el-col>
-                        </el-row>
-                    <el-row :gutter="6" style="padding-top:10px;">
-                        <el-col :span="8">报表打印控件.exe</el-col>
-                        <el-col :span="3">2.12M</el-col>
-                        <el-col :span="10"><span style="float:left;height: 1px;width:1px;display:block;">&nbsp;</span><el-progress v-show="downloadList[0].show" :percentage="downloadList[0].percentage" :text-inside="true" :show-text="false" style="margin-top:5px;width:80%" ></el-progress></el-col>
-                        <el-col :span="3"><i class="el-icon-download"  @click="downloadFile('/assets/plugins/print/CLodop_Setup_for_Win32NT.exe','.exe',0)"></i></el-col>
-                    </el-row>
+                <el-row :gutter="6" style="padding:10px;background:#e4e3e3">
+                    <el-col :span="8">文件名称</el-col>
+                    <el-col :span="3">大小</el-col>
+                    <el-col :span="10">&nbsp;</el-col>
+                    <el-col :span="3">下载</el-col>
+                </el-row>
+                <el-row :gutter="6" style="padding-top:10px;">
+                    <el-col :span="8">报表打印控件.exe</el-col>
+                    <el-col :span="3">2.12M</el-col>
+                    <el-col :span="10"><span style="float:left;height: 1px;width:1px;display:block;">&nbsp;</span>
+                        <el-progress v-show="downloadList[0].show" :percentage="downloadList[0].percentage"
+                            :text-inside="true" :show-text="false" style="margin-top:5px;width:80%"></el-progress>
+                    </el-col>
+                    <el-col :span="3"><i class="el-icon-download"
+                            @click="downloadFile('/assets/plugins/print/CLodop_Setup_for_Win32NT.exe','.exe',0)"></i>
+                    </el-col>
+                </el-row>
             </div>
-            
-            
+
+
         </el-dialog>
 
 
@@ -997,7 +1006,7 @@
     const layimConfig = SelfModules('IMHelper')
     const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json')
     const package = require(ipcRenderer.sendSync('getRootPath') + '/package.json')
-    const {machineIdSync} = require('node-machine-id')
+    const { machineIdSync } = require('node-machine-id')
     const { downFile } = SelfModules('downLoadFileHelper')
 
     let winSizeType = 1;
@@ -1050,15 +1059,15 @@
     });
 
     //新增页签功能
-    ipcRenderer.on("addMainTab",(event,text)=>{
+    ipcRenderer.on("addMainTab", (event, text) => {
         vm.treeSelect({
-            Id:text.Id,
-            Name:text.Name,
-            NavigateUrl:'http://' + Config.Http_config.ip + ':' + Config.Http_config.port +text.NavigateUrl
+            Id: text.Id,
+            Name: text.Name,
+            NavigateUrl: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + text.NavigateUrl
         });
     });
     //系统底层级消息提示
-    ipcRenderer.on("messageBox",(event,text)=>{
+    ipcRenderer.on("messageBox", (event, text) => {
         layer.msg(text);
     });
 
@@ -1099,9 +1108,10 @@
             searchKey: '',
             currentTypeId: 0,
             config: Config,
-            package:package,
+            package: package,
+            operatingSystem: process.arch,
             localIP: getIPAdress(),
-            machineId:machineIdSync(),
+            machineId: machineIdSync(),
             pingStatus: '',
             ifDebugger: false,
             pageLock: false,
@@ -1125,11 +1135,11 @@
             newPassWord2: '',
             loadPercentage: 0,
             showloadPercentage: false,
-            showAboutAPP:false,
-            showPluginDownload:false,
-            downloadList:[{
-                show:false,
-                percentage:0
+            showAboutAPP: false,
+            showPluginDownload: false,
+            downloadList: [{
+                show: false,
+                percentage: 0
             }]
         },
         created: function () {
@@ -1187,7 +1197,7 @@
                         ipcRenderer.send('setUnWrokRoleList', unWorkRoleList);
                         //表单功能权限列表
                         var billRoleList = data.data.ds2;
-                        ipcRenderer.send('setBillRoleList',billRoleList);
+                        ipcRenderer.send('setBillRoleList', billRoleList);
 
                     } else {
                         layer.msg('接口数据异常!请稍后再试');
@@ -1319,23 +1329,23 @@
                     that.rightTabsActive = '首页';
                     that.rightTabsList = [];
                 } else if (index == 4) {
-                    this.rightTabsList = that.rightTabsList.filter(tab => (tab.Id + '_' + tab.Name) === that.rightTabsActive);
+                    this.rightTabsList = that.rightTabsList.filter(tab => (tab.Id + '_' + tab.Name + '_' + tab.keyCode) === that.rightTabsActive);
                 }
             },
-            downloadFile(url,ext,index){
+            downloadFile(url, ext, index) {
                 let that = this;
                 const { dialog } = require('electron').remote;
                 let saveFilePath = dialog.showSaveDialog({});
-                if(saveFilePath){
-                    saveFilePath = saveFilePath+ext;
+                if (saveFilePath) {
+                    saveFilePath = saveFilePath + ext;
                     that.downloadList[index].show = true;
                     downFile({
-                        remoteFile: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port+url,
+                        remoteFile: 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + url,
                         localFile: saveFilePath,
-                        onProgress: function (received,total){
+                        onProgress: function (received, total) {
                             var percentage = (received * 100) / total;
                             that.downloadList[index].percentage = percentage;
-                            if(percentage>=100){
+                            if (percentage >= 100) {
                                 layer.msg('下载完成');
                                 that.downloadList[index].show = false;
                                 that.downloadList[index].percentage = 0;
@@ -1343,8 +1353,8 @@
                         }
                     })
                 }
-                
-                
+
+
             },
             //重置左侧树列表
             setSubClass(id) {
@@ -1393,81 +1403,73 @@
             //点击左侧树
             treeSelect(row) {
                 let that = this;
-                let x = 0;
-                for (let i in that.rightTabsList) {
-                    if (that.rightTabsList[i].Id == row.Id) {
-                        x = 1;
-                        that.rightTabsActive = row.Id + '_' + row.Name;
-                    }
-                }
-                if (x == 0) {
-                    if (that.rightTabsList.length >= 10) {
-                        layer.msg('当前窗口打开过多,请关闭部分窗口后重试!');
-                    } else {
+                let row_new = JSON.parse(JSON.stringify(row))
+                row_new.keyCode = new Date().getTime();
+                if (that.rightTabsList.length >= 10) {
+                    layer.msg('当前窗口打开过多,请关闭部分窗口后重试!');
+                } else {
 
-                        let ifok = false;
+                    let ifok = false;
 
-                        that.loadPercentage = 0;
-                        that.showloadPercentage = true;
+                    that.loadPercentage = 0;
+                    that.showloadPercentage = true;
 
-                        let timeout = 1;
-                        let getLoadProgress = () => {
-                            if (!ifok) {
-                                if (that.loadPercentage < 50) {
-                                    timeout = 10;
-                                }
-                                if (that.loadPercentage < 70 && that.loadPercentage >= 50) {
-                                    timeout = 100;
-                                }
-                                if (that.loadPercentage < 80 && that.loadPercentage >= 70) {
-                                    timeout = 500;
-                                }
-                                if (that.loadPercentage < 90 && that.loadPercentage >= 80) {
-                                    timeout = 2000;
-                                }
-                                if (that.loadPercentage < 95 && that.loadPercentage >= 90) {
-                                    timeout = 5000;
-                                }
-                                if (that.loadPercentage < 98 && that.loadPercentage >= 95) {
-                                    timeout = 20000;
-                                }
-                                if (that.loadPercentage < 100 && that.loadPercentage >= 98) {
-                                    timeout = 99999999999999999;
-                                }
+                    let timeout = 1;
+                    let getLoadProgress = () => {
+                        if (!ifok) {
+                            if (that.loadPercentage < 50) {
+                                timeout = 10;
                             }
-
-                            if (that.loadPercentage >= 100) {
-                                
-                                let webview = $('#pane-' + that.rightTabsActive).find('webview');
-                                setTimeout(()=>{
-                                    that.showloadPercentage = false;
-                                    webview.css({'opacity':1});
-                                },800)
-                                
-                                return false;
+                            if (that.loadPercentage < 70 && that.loadPercentage >= 50) {
+                                timeout = 100;
                             }
-                            that.loadPercentage += 1
-                            setTimeout(() => {
-                                getLoadProgress();
-                            }, timeout)
-
+                            if (that.loadPercentage < 80 && that.loadPercentage >= 70) {
+                                timeout = 500;
+                            }
+                            if (that.loadPercentage < 90 && that.loadPercentage >= 80) {
+                                timeout = 2000;
+                            }
+                            if (that.loadPercentage < 95 && that.loadPercentage >= 90) {
+                                timeout = 5000;
+                            }
+                            if (that.loadPercentage < 98 && that.loadPercentage >= 95) {
+                                timeout = 20000;
+                            }
+                            if (that.loadPercentage < 100 && that.loadPercentage >= 98) {
+                                timeout = 99999999999999999;
+                            }
                         }
-                        getLoadProgress();
 
-                        that.rightTabsActive = row.Id + '_' + row.Name;
-                        that.rightTabsList.push(row);
+                        if (that.loadPercentage >= 100) {
 
-                        that.$nextTick(() => {
                             let webview = $('#pane-' + that.rightTabsActive).find('webview');
-                            webview.css({'opacity':0});
-                            webview[0].addEventListener('dom-ready', () => {
-                                timeout = 1;
-                                ifok = true;
+                            setTimeout(() => {
+                                that.showloadPercentage = false;
+                                webview.css({ 'opacity': 1 });
+                            }, 800)
 
-                            })
-                        })
+                            return false;
+                        }
+                        that.loadPercentage += 1
+                        setTimeout(() => {
+                            getLoadProgress();
+                        }, timeout)
+
                     }
+                    getLoadProgress();
 
+                    that.rightTabsActive = row_new.Id + '_' + row_new.Name + '_' + row_new.keyCode;
+                    that.rightTabsList.push(row_new);
+
+                    that.$nextTick(() => {
+                        let webview = $('#pane-' + that.rightTabsActive).find('webview');
+                        webview.css({ 'opacity': 0 });
+                        webview[0].addEventListener('dom-ready', () => {
+                            timeout = 1;
+                            ifok = true;
+
+                        })
+                    })
                 }
             },
             //左侧树收起/展开
@@ -1488,10 +1490,10 @@
                 let activeName = this.rightTabsActive;
                 if (activeName === targetName) {
                     tabs.forEach((tab, index) => {
-                        if ((tab.Id + '_' + tab.Name) === targetName) {
+                        if ((tab.Id + '_' + tab.Name + '_' + tab.keyCode) === targetName) {
                             let nextTab = tabs[index + 1] || tabs[index - 1];
                             if (nextTab) {
-                                activeName = nextTab.Id + '_' + nextTab.Name;
+                                activeName = nextTab.Id + '_' + nextTab.Name + '_' + nextTab.keyCode;
                             } else {
                                 activeName = '首页'
                             }
@@ -1500,7 +1502,7 @@
                 }
                 this.showloadPercentage = false;
                 this.rightTabsActive = activeName;
-                this.rightTabsList = tabs.filter(tab => (tab.Id + '_' + tab.Name) !== targetName);
+                this.rightTabsList = tabs.filter(tab => (tab.Id + '_' + tab.Name + '_' + tab.keyCode) !== targetName);
 
             },
             //顶部大分类切换
@@ -1670,9 +1672,9 @@
                     that.oldPassWord = '';
                     that.newPassWord1 = '';
                     that.newPassWord2 = '';
-                } else if (command == '关于软件'){
+                } else if (command == '关于软件') {
                     that.showAboutAPP = true;
-                }else if(command=='插件下载'){
+                } else if (command == '插件下载') {
                     that.showPluginDownload = true;
                 }
 
@@ -1726,7 +1728,7 @@
                 file.remove();
                 debugger;
                 if (datas.status == 200) {
-                    vm.userInfo.HeadImg = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port+datas.data.origin;
+                    vm.userInfo.HeadImg = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + datas.data.origin;
                 } else {
                     layer.msg('文件未上传!');
                 }

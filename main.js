@@ -312,14 +312,12 @@ function updateHandle() {
   };
 
   //如下应用程序的路径请自行替换成自己应用程序的路径
-  let updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/win/64/';
+  let updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/win/32/';
 
-  if(process.platform == 'win64'){
+  if(process.arch == 'x64'){
     updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/win/64/';
-  }else if(process.platform == 'win32'){
+  }else{
     updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/win/32/';
-  }else if(process.platform == 'darwin'){
-    updateFeedUrl = 'http://' + Config.Http_config.ip + ':' + Config.Http_config.port + '/download/mac/';
   }
 
   autoUpdater.setFeedURL(updateFeedUrl);
