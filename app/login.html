@@ -314,7 +314,7 @@
                     vm.form.checkedPwd = true;
                     vm.form.pwd = aesDecode(userLoginPwd, vm.cryptoKey);
                 }
-                vm.form.name = localStorage.getItem("userLoginName") || '';
+                vm.form.name = localStorage.getItem("UserCode") || '';
             }, 500)
         },
         methods: {
@@ -396,7 +396,6 @@
                                         if (vm.form.checkedPwd) {
                                             var encodePwd = aesEncode(vm.form.pwd, vm.cryptoKey);
                                             localStorage.setItem("userLoginPwd", encodePwd);
-                                            localStorage.setItem("userLoginName", vm.form.name);
                                         }
                                         else {
                                             localStorage.setItem("userLoginPwd", '');

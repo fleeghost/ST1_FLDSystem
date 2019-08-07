@@ -666,7 +666,7 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" hidden>
 
         <el-container v-cloak>
             <el-header>
@@ -1074,6 +1074,7 @@
 
 
     $(function () {
+        $('#app').show();
         $('body').click(function () {
             lockTime = new Date().getTime();
         })
@@ -1116,7 +1117,7 @@
             ifDebugger: false,
             pageLock: false,
             lockPassword: '',
-            userName: localStorage.getItem("userLoginName"),
+            userName: localStorage.getItem("UserCode"),
             showErrLog: false,
             errData: [],
             logSearch: {
