@@ -247,13 +247,38 @@ let moduleFunction = () => {
     if(billList.length>0){
         if(billList[0]["T_Value"]!='-1'){
           filterSQL+='(';
-          if(billList[0]["SC_ColA"]){
-            filterSQL+=billList[0]["SC_ColA"]+"='"+ billList[0]["T_Value"] +"'";
-          }
-          if(billList[0]["SC_ColB"]){
-            filterSQL+= " or "+ billList[0]["SC_ColA"]+"='"+ billList[0]["T_Value"] +"'";
-          }
-          filterSQL+=')';
+          //权限业务逻辑
+          let colTypes = [];//已执行过的类型列
+          let colSQLType = [];//多类型SQL集合
+          billList.forEach(item=>{
+            if(item["SC_ColA"]){
+              if(colTypes.filter(x=>x==item["SC_ColA"]).length==0){
+                let sc_colAs = [];
+                let sc_colBs = [];
+                let current_filterSQL = "";
+                let current_billType = billList.filter(x=>x["SC_ColA"]==item["SC_ColA"]);
+                for(var i=0;i<current_billType.length;i++){
+                  sc_colAs.push("'"+ current_billType[i]["T_Value"] +"'");
+                  if(current_billType[i]["SC_ColB"]){
+                    sc_colBs.push("'"+ current_billType[i]["T_Value"] +"'");
+                  }
+                }
+                if(sc_colAs.length>0){
+                  current_filterSQL+=' '+item["SC_ColA"]+" in ("+ sc_colAs.join(",") +")"
+                  if(sc_colBs.length>0){
+                    current_filterSQL+=" or "+current_billType[0]["SC_ColB"]+" in ("+ sc_colBs.join(",") +") "
+                  }
+                }
+                if(current_filterSQL){
+                  current_filterSQL= " ("+current_filterSQL+") ";
+                  colSQLType.push(current_filterSQL);
+                }
+                colTypes.push(item["SC_ColA"]);
+              }
+            }
+          })
+          filterSQL+=colSQLType.join(" and ");
+          filterSQL+=" ) "
         }
     }
     e.returnValue = filterSQL;
