@@ -685,7 +685,7 @@
                     </div>
                     <div class="system-operation">
                         <div class="item" @click="showIM">
-                            <el-badge value="8" :max="99">
+                            <el-badge :value="unReadCount" :max="99">
                                 <i class="el-icon-s-comment" style="font-size: 22px;"></i>
                             </el-badge>
                         </div>
@@ -1148,7 +1148,8 @@
             downloadList: [{
                 show: false,
                 percentage: 0
-            }]
+            }],
+            unReadCount:0
         },
         created: function () {
             let that = this;
