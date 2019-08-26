@@ -1,6 +1,6 @@
 {
   "name": "st1_fldsystem",
-  "version": "4.0.5",
+  "version": "1.0.0",
   "description": "福路德信息化平台",
   "buildDate": "2019-07-29",
   "main": "main.js",
@@ -23,7 +23,7 @@
   "homepage": "https://github.com/fleeghost/ST1_FLDSystem#readme",
   "build": {
     "productName": "福路德信息化平台",
-    "appId": "com.fld.app",
+    "appId": "com.fld_zb.app",
     "copyright": "宁波汇智云创信息科技有限公司",
     "directories": {
       "output": "build"
@@ -44,16 +44,13 @@
       "installerHeaderIcon": "./logo.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "福路德云平台"
+      "shortcutName": "福路德信息化平台"
     },
     "win": {
       "icon": "./logo.ico",
       "target": [
         {
-          "target": "nsis",
-          "arch": [
-            "ia32"
-          ]
+          "target": "nsis"
         }
       ]
     }
