@@ -375,7 +375,7 @@
             line-height: normal;
         }
 
-        .el-badge__content {
+        .system-operation .el-badge__content {
             background-color: #fff;
             color: #b91727;
             top: 4px;
@@ -669,6 +669,10 @@
             height: 350px;
             font-size: 12px;
         }
+        .el-tabs__item .el-badge{
+            padding-top: 2px;
+            padding-left:5px;
+        }
     </style>
 </head>
 
@@ -742,7 +746,10 @@
                         @tab-click="categoryToggle">
                         <el-tab-pane v-for="(row,index) in categoryList" :name="row.Id + '_' + row.Name">
                             <span slot="label"><i class="iconfont" :class="row.ImageUrl"
-                                    style="margin-right:10px;font-size:17px;"></i>{{row.Name}}</span>
+                                    style="margin-right:10px;font-size:17px;"></i>{{row.Name}} 
+                                    <el-badge class="mark" :value="unDealCount" v-if="row.Name=='待处理管理'"  />
+                            </span>
+                            
                         </el-tab-pane>
                     </el-tabs>
                     <!-- <div class="calendar"></div> -->
@@ -774,7 +781,7 @@
             <el-container>
                 <el-aside>
                     <div class="tree-list">
-                        <menu-template :collapse="isCollapse" :openeds="openeds" :menu_data="nodeList"
+                        <menu-template :collapse="isCollapse" :openeds="openeds" :menu_data="nodeList" :undealformcount="unDealFormCount" :undealapplycount="unDealApplyCount"
                             @item-click="treeSelect"></menu-template>
                     </div>
                 </el-aside>
@@ -1149,7 +1156,11 @@
                 show: false,
                 percentage: 0
             }],
-            unReadCount:0
+            unReadCount:0,
+            //待处理表单数据
+            unDealCount:0,
+            unDealFormCount:0,
+            unDealApplyCount:0
         },
         created: function () {
             let that = this;
@@ -1173,6 +1184,27 @@
             }
             setInterval(getPing, 2000)
             getPing();
+
+            //获取待处理表单数据
+            let getUnDealCount = function(){
+                post({
+                    path: '/Frame/SqlData'
+                }, {
+                        cmdname: 'PC_DCLDPN',
+                        P_UserID:localStorage.getItem("UserID")
+                    }, (ret) => {
+                        let data = JSON.parse(ret);
+                        if(data.status == 200){
+                            vm.unDealCount = data.data.ds[0]["DCL"]+data.data.ds[0]["DSP"];
+                            vm.unDealFormCount = data.data.ds[0]["DCL"];
+                            vm.unDealApplyCount = data.data.ds[0]["DSP"];
+                        }
+
+
+                    });
+            }
+            setInterval(getUnDealCount,1000*10);
+            getUnDealCount();
 
             //获取用户菜单
             post({

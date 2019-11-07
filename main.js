@@ -9,6 +9,7 @@ const { RewriteUrl } = SelfModules('urlRewriter')
 const { writeFile, readFile } = SelfModules('fileHelper');
 const Config = require('./config/config.json');
 const { dialog } = require('electron')
+const nodeCmd = require('node-cmd');
 
 
 colors.setTheme({
@@ -76,6 +77,10 @@ function createWindow() {
     winLogin = null
   })
   moduleFunction()
+
+  //运行进程
+  //nodeCmd.run('start D:\\汇智云创\\福路德信息化平台\\Program\\ST1_FLDSystem\\build\\win-unpacked\\ST1系统更新程序.exe');
+
 }
 
 
@@ -196,6 +201,10 @@ let moduleFunction = () => {
       winMain.setSize(1366, 768);
       winMain.center();
     }
+    else{
+      winLogin.setSize(1366, 768);
+      winLogin.center();
+    }
   })
 
   ipcMain.on('toggleWindow_max', (e, arg) => {
@@ -203,6 +212,11 @@ let moduleFunction = () => {
       const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
       winMain.setSize(width, height);
       winMain.center();
+    }
+    else{
+      const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
+      winLogin.setSize(width, height);
+      winLogin.center();
     }
   })
 
