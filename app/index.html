@@ -781,7 +781,7 @@
             <el-container>
                 <el-aside>
                     <div class="tree-list">
-                        <menu-template :collapse="isCollapse" :openeds="openeds" :menu_data="nodeList"
+                        <menu-template :collapse="isCollapse" :openeds="openeds" :menu_data="nodeList" :undealformcount="unDealFormCount" :undealapplycount="unDealApplyCount"
                             @item-click="treeSelect"></menu-template>
                     </div>
                 </el-aside>
@@ -1158,7 +1158,9 @@
             }],
             unReadCount:0,
             //待处理表单数据
-            unDealCount:0
+            unDealCount:0,
+            unDealFormCount:0,
+            unDealApplyCount:0
         },
         created: function () {
             let that = this;
@@ -1194,12 +1196,15 @@
                         let data = JSON.parse(ret);
                         if(data.status == 200){
                             vm.unDealCount = data.data.ds[0]["DCL"]+data.data.ds[0]["DSP"];
+                            vm.unDealFormCount = data.data.ds[0]["DCL"];
+                            vm.unDealApplyCount = data.data.ds[0]["DSP"];
                         }
 
 
                     });
             }
             setInterval(getUnDealCount,1000*10);
+            getUnDealCount();
 
             //获取用户菜单
             post({
