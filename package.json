@@ -1,8 +1,8 @@
 {
   "name": "st1_fldsystem",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "福路德信息化平台",
-  "buildDate": "2019-07-29",
+  "buildDate": "2019-08-26",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -50,7 +50,11 @@
       "icon": "./logo.ico",
       "target": [
         {
-          "target": "nsis"
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
         }
       ]
     }

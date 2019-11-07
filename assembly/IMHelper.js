@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-08-26 19:08:54
+ * @LastEditTime: 2019-08-26 19:08:54
+ * @LastEditors: your name
+ */
 (function () {
     const { post } = SelfModules('httpHelper')
     const Config = require(ipcRenderer.sendSync('getRootPath') + '/config/config.json');
