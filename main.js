@@ -72,6 +72,7 @@ function createWindow() {
     protocol: 'file:',
     slashes: true
   }))
+  //winLogin.webContents.openDevTools()
 
   winLogin.on('closed', () => {
     winLogin = null
