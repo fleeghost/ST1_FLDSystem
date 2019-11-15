@@ -38,7 +38,7 @@
         });
 
         req.on('error', function (e) {
-            layer.msg('网络出现问题，ERROR:' + e.message);
+            // layer.msg('网络出现问题，ERROR:' + e.message);
             //console.log('problem with request: ' + e.message);  
             if (failCallBack) {
                 failCallBack(e);

@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2019-11-07 10:28:03
+ * @LastEditTime: 2019-11-07 10:29:07
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ST1_FLDSystem\app\assets\utils\vue-tree.js
+ */
 Vue.component('menu-template-sub', {
     props: ['menu_data'],
     template: '<div>' +
@@ -19,7 +27,6 @@ Vue.component('menu-template-sub', {
             this.$emit('sub-item-click', row);
         }
     }
-
 })
 Vue.component('menu-template', {
     props: ['menu_data', 'collapse', 'openeds','undealformcount','undealapplycount'],
