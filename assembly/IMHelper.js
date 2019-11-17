@@ -31,6 +31,7 @@
                             {
                                 name: "onChatMsg",
                                 method: function (userId, msg, timestap) {
+                                    debugger;
                                     $.clientCallBacks["onChatMsg"](userId, msg, timestap);
                                 }
                             },
@@ -308,7 +309,7 @@
                                     ret = JSON.parse(ret);
                                     if (ret.status == 200) {
                                         //获取总未读记录数
-                                        
+
                                         for (var i = 0; i < ret.data.ds.length; i++) {
                                             //每条消息重新发送给当前用户
                                             let fs = friend.filter(item => item.id == ret.data.ds[i].FromUserID);
@@ -351,10 +352,6 @@
                                     }
                                 });
                         }, 200);
-
-
-
-
                     } else {
                         layer.msg('接口数据异常!请稍后再试');
                     }
