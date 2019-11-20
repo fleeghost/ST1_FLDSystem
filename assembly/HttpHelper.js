@@ -50,10 +50,11 @@
 
 
     module.exports.ajaxPost = (url, queryObj, callBack) => {
+        debugger;
         var cookieArray = [];
         try {
             for (const key in $.cookie()) {
-                cookieArray.push(key + "=" + encodeURI($.cookie()[key]));
+                cookieArray.push(key + "=" + $.cookie()[key]);
             }
             cookieArray = cookieArray;
         }
@@ -76,25 +77,7 @@
         queryObj["platform"] = "pc";
         //请求参数
         var postQueryObj = {};
-        // for (const key in queryObj) {
-        //     if(typeof(queryObj[key])=="object"){
-        //         try{
-        //             if(queryObj[key].length>0){
-        //                 for(var i=0;i<queryObj[key].length;i++){
-        //                     queryObj[key][i] = JSON.stringify(queryObj[key][i]);
-        //                 }
-        //             }
-        //             else{
-        //                 queryObj[key] = JSON.stringify(queryObj[key]);
-        //             }
-        //         }
-        //         catch(e){
-        //             JSON.stringify(queryObj[key]);
-        //         }
-        //     }
-        // }
         getObjPostParams("", queryObj, postQueryObj);
-        debugger;
         let queryData = querystring.stringify(postQueryObj);
         options.headers["Content-Length"] = Buffer.byteLength(queryData);
 
