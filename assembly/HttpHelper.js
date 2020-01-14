@@ -49,12 +49,12 @@
     }
 
 
-    module.exports.ajaxPost = (url, queryObj, callBack) => {
+    module.exports.ajaxPost = (url, queryObj, callBack,format) => {
         debugger;
         var cookieArray = [];
         try {
             for (const key in $.cookie()) {
-                cookieArray.push(key + "=" + $.cookie()[key]);
+                cookieArray.push(key + "=" + encodeURI($.cookie()[key]));
             }
             cookieArray = cookieArray;
         }
@@ -89,6 +89,9 @@
                 //callBack(chunk);
             });
             res.on('end', () => {
+                if(format=="json"){
+                    rawData = JSON.parse(rawData);
+                }
                 callBack(rawData);
             })
 
@@ -106,58 +109,96 @@
     }
     //获取请求参数对象
     function getObjPostParams(prevName, currentObj, postQueryObj) {
-        for (const key in currentObj) {
-            let currentName = "";
-            if (prevName.indexOf('[') >= 0) {
-                currentName = prevName + "[" + key + "]";
-            }
-            else {
-                currentName = prevName + key;
-            }
-            if (typeof (currentObj[key]) == "object") {
-                try {
-                    if (currentObj[key].length > 0) {
-                        for (var i = 0; i < currentObj[key].length; i++) {
-                            try {
-                                if (typeof (currentObj[key][i]) == "object" && currentObj[key][i].length > 0) {
-                                    getObjPostParams(currentName + "[" + i + "]", currentObj[key][i], postQueryObj);
-                                }
-                                else if(typeof (currentObj[key][i]) == "object"){
-                                    for (const subKey in currentObj[key][i]) {
-                                        postQueryObj[currentName + "[" + i + "]["+ subKey +"]"] = currentObj[key][i][subKey];
+        if(typeof(currentObj) == "object"){
+            for (const key in currentObj) {
+                let currentName = "";
+                if (prevName.indexOf('[') >= 0) {
+                    currentName = prevName + "[" + key + "]";
+                }
+                else {
+                    currentName = prevName + key;
+                }
+                if (typeof (currentObj[key]) == "object") {
+                    try {
+                        if (currentObj[key].length > 0) {
+                            for (var i = 0; i < currentObj[key].length; i++) {
+                                try {
+                                    if (typeof (currentObj[key][i]) == "object" && currentObj[key][i].length > 0) {
+                                        getObjPostParams(currentName + "[" + i + "]", currentObj[key][i], postQueryObj);
+                                    }
+                                    else if(typeof (currentObj[key][i]) == "object"){
+                                        for (const subKey in currentObj[key][i]) {
+                                            getObjPostParams(currentName + "[" + i + "]["+ subKey +"]",currentObj[key][i][subKey],postQueryObj);
+                                            //postQueryObj[currentName + "[" + i + "]["+ subKey +"]"] = currentObj[key][i][subKey];
+                                        }
+                                    }
+                                    else{
+                                        postQueryObj[currentName + "[" + i + "]"] = currentObj[key][i];
                                     }
                                 }
-                                else{
+                                catch (e) {
                                     postQueryObj[currentName + "[" + i + "]"] = currentObj[key][i];
                                 }
                             }
-                            catch (e) {
-                                postQueryObj[currentName + "[" + i + "]"] = currentObj[key][i];
+                        }
+                        else {
+                            for (const subKey in currentObj[key]) {
+                                getObjPostParams(currentName +"["+ subKey +"]",currentObj[key][subKey],postQueryObj);
+                                //postQueryObj[currentName +"["+ subKey +"]"] = currentObj[key][subKey];
                             }
                         }
                     }
-                    else {
-                        for (const subKey in currentObj[key]) {
-                            postQueryObj[currentName +"["+ subKey +"]"] = currentObj[key][subKey];
-                        }
+                    catch (e) {
+                        postQueryObj[currentName] = currentObj[key];
                     }
                 }
-                catch (e) {
+                else{
                     postQueryObj[currentName] = currentObj[key];
                 }
             }
-            else{
-                postQueryObj[currentName] = currentObj[key];
-            }
         }
+        else{
+            postQueryObj[prevName] = currentObj
+        }
+        
     }
 
+    // module.erports.ajaxAsyncPost = function(url,queryObj,callBack){
+    //     var cookieArray = [];
+    //     try {
+    //         for (const key in $.cookie()) {
+    //             cookieArray.push(key + "=" + $.cookie()[key]);
+    //         }
+    //         cookieArray = cookieArray;
+    //     }
+    //     catch (e) { }
+
+    //     //添加平台
+    //     queryObj["platform"] = "pc";
+    //     //请求参数
+    //     var postQueryObj = {};
+    //     getObjPostParams("", queryObj, postQueryObj);
+
+    //     let headers = {
+    //         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    //         'Cookie': cookieArray
+    //     }
+    //     let res = requestSync("POST","http://"+Config.Http_config.ip+Config.Http_config.port+url,{
+    //         headers:headers,
+    //         json:postQueryObj
+    //     })
+    //     var res = JSON.parse(res.getBody('utf8'));
+    // }
 
 
 
 
 
-    module.exports.ajaxAsyncPost = function (url, queryObj, callBack) {
+
+
+
+
+    module.exports.ajaxAsyncPost2 = function (url, queryObj) {
         let ajaxAsync = function (url, queryObj) {
             //设置默认值
             let options = {

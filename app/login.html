@@ -305,6 +305,7 @@
         },
         created: function () {
             let that = this;
+            that.checkUpdateProgram();
             that.checkUpdate();
             setTimeout(function () {
                 that.showAnimate = true;
@@ -318,6 +319,9 @@
             }, 500)
         },
         methods: {
+            checkUpdateProgram(){
+                ipcRenderer.send('checkUpdateProgram');
+            },
             checkUpdate() {
                 let that = this;
                 post({
