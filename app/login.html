@@ -242,7 +242,7 @@
                         <div class="update-button">
                             <el-row :gutter="20" v-show="!isUpdateNow">
                                 <el-col :span="12" style="text-align:center;">
-                                    <el-button block type="primary" style="width: 150px;" @click="updateAPP">更新
+                                    <el-button block type="primary" style="width: 150px;" @click="updateAPP(updateInfo.F_Ver)">更新
                                     </el-button>
                                 </el-col>
                                 <el-col :span="12" style="text-align:center;">
@@ -343,9 +343,9 @@
 
                     });
             },
-            updateAPP() {
+            updateAPP(version) {
                 let that = this;
-                ipcRenderer.send('update', 1);
+                ipcRenderer.send('update', version);
             },
             cancelUpdate() {
                 let that = this;
